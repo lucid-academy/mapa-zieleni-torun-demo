@@ -77,8 +77,8 @@ a:hover{ color:var(--akcent) }
 /* ---------- pasek co teraz ---------- */
 .teraz{ background:var(--papier); background:color-mix(in srgb, var(--akcent) 11%, var(--papier));
         border-bottom:1px solid var(--linia); transition:background-color .28s ease }
-.teraz__in{ padding:1.15rem 0 1.25rem }
-.teraz__top{ display:flex; align-items:baseline; gap:.8rem 1.6rem; flex-wrap:wrap; margin-bottom:.9rem }
+.teraz__in{ padding:.75rem 0 .85rem }
+.teraz__top{ display:flex; align-items:baseline; gap:.6rem 1.6rem; flex-wrap:wrap; margin-bottom:.6rem }
 .teraz h2{ font-size:1.05rem; font-weight:600; white-space:nowrap }
 .teraz h2::after{ content:''; display:inline-block; width:26px; height:3px; background:var(--akcent);
                   vertical-align:.28em; margin-left:.55rem }
@@ -103,19 +103,19 @@ input[type=range]::-moz-range-thumb{ width:16px; height:16px; border-radius:50%;
 .zj{ flex:1 1 190px; min-width:0; padding:0 1.4rem; border-left:1px solid var(--linia);
      display:flex; flex-direction:column }
 .zj:first-child{ padding-left:0; border-left:0 }
-.zj__nazwa{ font-family:'Bitter',Georgia,serif; font-weight:600; font-size:clamp(1.3rem,2vw,1.9rem);
+.zj__nazwa{ font-family:'Bitter',Georgia,serif; font-weight:600; font-size:clamp(1.2rem,1.7vw,1.6rem);
             line-height:1.12; letter-spacing:-.015em; margin-bottom:.22rem; overflow-wrap:break-word }
-.zj__gdzie{ font-size:.9rem; color:var(--cichy); margin-bottom:.45rem }
+.zj__gdzie{ font-size:.9rem; color:var(--cichy); margin-bottom:.3rem }
 .zj__gdzie b{ color:var(--atrament); font-weight:600 }
 .zj__ile{ align-self:flex-start; margin-top:auto; font-size:.85rem; font-weight:700; padding:.18rem .5rem;
           background:var(--akcent2); color:var(--na-akcencie2); border-radius:var(--r);
           transition:background-color .28s ease, color .28s ease }
 .zj--pusto{ flex-basis:100%; padding-left:0; border-left:0 }
-.teraz__wiecej{ font-size:.85rem; color:var(--cichy); margin-top:.85rem }
+.teraz__wiecej{ font-size:.85rem; color:var(--cichy); margin-top:.5rem }
 
 /* ---------- filtry ---------- */
 .filtry{ border-bottom:1px solid var(--linia) }
-.filtry__in{ display:flex; gap:.5rem 2rem; flex-wrap:wrap; align-items:flex-start; padding:.85rem 0 .9rem }
+.filtry__in{ display:flex; gap:.5rem 1.6rem; flex-wrap:wrap; align-items:flex-start; padding:.6rem 0 .65rem }
 .grp{ display:flex; flex-direction:column; gap:.4rem }
 .grp__lab{ font-size:.78rem; color:var(--cichy); display:flex; align-items:center; gap:.4rem }
 .grp__row{ display:flex; gap:.35rem; flex-wrap:wrap; align-items:center }
@@ -131,13 +131,13 @@ input[type=range]::-moz-range-thumb{ width:16px; height:16px; border-radius:50%;
 .chip--sw[aria-pressed="true"]::before{ background:var(--na-akcencie); border-color:var(--na-akcencie);
                    box-shadow:inset -12px 0 0 -1px var(--akcent) }
 select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid var(--linia); border-radius:var(--r);
-        padding:.35rem .5rem; color:inherit; max-width:15rem }
-.grp--budowa{ border:1px dashed var(--linia); border-radius:var(--r); padding:.45rem .7rem .55rem }
+        padding:.35rem .5rem; color:inherit; max-width:13rem }
+.grp--budowa{ border:1px dashed var(--linia); border-radius:var(--r); padding:.35rem .6rem .4rem }
 .grp--budowa .chip{ background:transparent }
 .grp--budowa .chip[aria-pressed="true"]{ background:var(--akcent) }
-.pusto-lab{ font-size:.78rem; color:var(--cichy); font-style:italic; max-width:26rem }
+.pusto-lab{ font-size:.78rem; color:var(--cichy); font-style:italic; max-width:30rem }
 
-.stan{ display:flex; align-items:center; gap:.6rem; margin-left:auto; align-self:center; padding-top:.9rem }
+.stan{ display:flex; align-items:center; gap:.6rem; margin-left:auto; align-self:flex-end; padding-bottom:.15rem }
 .licznik{ font-size:.92rem; white-space:nowrap }
 .licznik b{ font-family:'Bitter',Georgia,serif; font-size:1.15rem; font-weight:600 }
 .zeruj{ background:none; border:1px solid var(--linia); border-radius:var(--r); padding:.3rem .6rem;
@@ -154,7 +154,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 
 /* ---------- mapa + lista ---------- */
 .robocze{ display:grid; grid-template-columns:minmax(0,1fr) clamp(360px,29vw,460px);
-          height:clamp(440px,64vh,780px); border-bottom:1px solid var(--linia) }
+          height:clamp(300px,calc(100vh - 330px),820px); border-bottom:1px solid var(--linia) }
 .mapa{ position:relative; min-width:0; border-right:1px solid var(--linia) }
 #map{ position:absolute; inset:0; background:var(--papier); z-index:1 }
 .leaflet-container{ font-family:'Raleway',system-ui,sans-serif; background:var(--papier) }
@@ -330,11 +330,25 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 .dalej li{ font-size:.92rem; line-height:1.55 }
 
 /* ---------- stopka ---------- */
-.stopka{ border-top:1px solid var(--linia); padding:1.2rem 0 2rem; font-size:.82rem; color:var(--cichy);
-         display:flex; gap:.6rem 2rem; flex-wrap:wrap }
-.stopka p{ max-width:46ch; line-height:1.6 }
+.stopka{ border-top:1px solid var(--linia); padding:.7rem 0 .9rem; font-size:.78rem; color:var(--cichy) }
+.stopka p{ max-width:none; line-height:1.5 }
 
 /* ---------- waskie ekrany ---------- */
+/* Niskie ekrany laptopow: pasek „co teraz” i filtry oddaja mapie tyle pionu,
+   ile sie da, zeby mapa byla widoczna od razu po wejsciu. */
+@media (max-height:820px){
+  .teraz__in{ padding:.55rem 0 .6rem }
+  .teraz__top{ margin-bottom:.45rem }
+  .zj__nazwa{ font-size:clamp(1.1rem,1.45vw,1.35rem); margin-bottom:.15rem }
+  .zj__gdzie{ margin-bottom:.25rem; font-size:.86rem }
+  .teraz__wiecej{ margin-top:.35rem; font-size:.8rem }
+  .filtry__in{ padding:.45rem 0 .5rem; gap:.4rem 1.1rem }
+  .grp{ gap:.3rem }
+  .robocze{ height:clamp(280px,calc(100vh - 300px),820px) }
+  .stopka{ padding:.55rem 0 .7rem }
+  .legenda{ font-size:.74rem; padding:.4rem .6rem; line-height:1.55 }
+}
+
 @media (max-width:1080px){
   .planer__grid{ grid-template-columns:1fr }
 }
@@ -409,7 +423,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
         <div class="grp">
           <span class="grp__lab" id="lab-teraz">Okna kwitnienia</span>
           <div class="grp__row" aria-labelledby="lab-teraz">
-            <button class="chip chip--sw" id="fTeraz" type="button" aria-pressed="false">Tylko to, co trwa w wybranym dniu</button>
+            <button class="chip chip--sw" id="fTeraz" type="button" aria-pressed="false">Tylko to, co trwa</button>
           </div>
         </div>
 
@@ -421,14 +435,13 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
         </div>
 
         <div class="grp grp--budowa">
-          <span class="grp__lab" id="lab-cien">Cień <span class="tag">warstwa w budowie</span></span>
+          <span class="grp__lab" id="lab-cien" title="Skala 0 (pełne słońce) – 3 (pełny cień). Docelowo pokaże, gdzie schować się przed upałem.">Cień 0–3 <span class="tag">warstwa w budowie</span></span>
           <div class="grp__row" id="fCien" role="group" aria-labelledby="lab-cien"></div>
-          <span class="pusto-lab" id="cienOpis"></span>
         </div>
 
         <div class="stan">
           <p class="licznik" id="licznik" role="status"></p>
-          <button class="zeruj" id="zeruj" type="button">Wyczyść filtry</button>
+          <button class="zeruj" id="zeruj" type="button">Wyczyść</button>
         </div>
       </div>
       <div class="pustka" id="pustka" hidden></div>
@@ -504,11 +517,11 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 </div>
 
 <footer class="stopka">
-  <div class="wrap" style="display:flex; gap:.6rem 2.5rem; flex-wrap:wrap">
+  <div class="wrap">
     <p>Dane: Urząd Miasta Torunia (parki kieszonkowe) i Toruń Ukryty (rekomendacje mieszkańców).
-       Okna kwitnienia są oszacowane dla szerokości Torunia i mają charakter orientacyjny.</p>
-    <p>W kolejnych wersjach: warstwa cienia i dostępności, zdjęcia miejsc z Torunia Ukrytego
-       oraz rozbudowa mapy do czterdziestu punktów.</p>
+       Okna kwitnienia są oszacowane dla szerokości Torunia i mają charakter orientacyjny.
+       W kolejnych wersjach między innymi: warstwa cienia i dostępności, zdjęcia miejsc
+       z Torunia Ukrytego oraz rozbudowa mapy do czterdziestu punktów.</p>
   </div>
 </footer>
 
@@ -1999,7 +2012,8 @@ function ikona(p, aktywny, wybrany){
 }
 
 function zbudujMape(){
-  map = L.map('map', { zoomControl:true, attributionControl:true, scrollWheelZoom:true })
+  map = L.map('map', { zoomControl:true, attributionControl:true, scrollWheelZoom:true,
+                       zoomSnap:0.25, zoomDelta:0.5 })
          .setView([53.019, 18.606], 12);
   map.attributionControl.setPrefix('');
   warstwa = L.layerGroup().addTo(map);
@@ -2072,7 +2086,7 @@ function rysujListe(lista){
     'Lista jest pusta, bo żaden punkt nie przechodzi przez ustawione filtry. Powód i sposób cofnięcia są nad mapą.';
 
   var trwaIle = lista.filter(function(p){ return trwajace(p, stan.doba).length > 0; }).length;
-  $('listahead').innerHTML = '<span>Punkty w bieżącym widoku</span><span>' +
+  $('listahead').innerHTML = '<span>Punkty w widoku</span><span>' +
     (trwaIle ? trwaIle + ' z nich ma coś w trakcie ' + esc(dataTekst(stan.doba)) : 'nic nie trwa ' + esc(dataTekst(stan.doba))) +
     '</span>';
 }
@@ -2274,8 +2288,6 @@ function zbudujFiltry(){
     stan.cien = (stan.cien === v) ? '*' : v;
     odswiez();
   });
-  $('cienOpis').textContent = 'Skala 0 (pełne słońce) – 3 (pełny cień). Warstwa dopiero powstaje, więc wybór poziomu nie zwróci na razie ' +
-    'punktów. Docelowo pokaże, gdzie w mieście schować się przed upałem.';
 
   $('zeruj').addEventListener('click', function(){
     stan.sezon = null; stan.tylkoTrwa = false; stan.dzielnica = '*'; stan.cien = '*'; odswiez();
@@ -2313,7 +2325,10 @@ function rysujStan(lista){
   });
   var html;
   if (winni.length) {
+    var cienWinny = winni.some(function(f){ return f.k === 'cien'; }) && stan.cien !== '*' && stan.cien !== BEZ_CIENIA;
     html = '<p class="pustka__t">Nic nie zostało. ' +
+      (cienWinny ? 'Poziom cienia nie jest jeszcze oceniony przy żadnym z ' + PUNKTY.length +
+                   ' punktów — ta warstwa dopiero powstaje. ' : '') +
       (winni.length === 1 ? 'Blokuje to jeden filtr — ' : 'Blokują to filtry — ') +
       '<b>' + winni.map(function(f){ return esc(f.opis); }).join('</b>, <b>') + '</b>.</p>';
     winni.forEach(function(f, i){
@@ -2528,7 +2543,7 @@ function start(){
   odswiez();
 
   var b = L.latLngBounds(PUNKTY.map(function(p){ return [p.lat, p.lng]; }));
-  map.fitBounds(b, { padding:[45, 45] });
+  map.fitBounds(b, { padding:[35, 35], maxZoom:12 });
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
