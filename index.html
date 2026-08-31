@@ -1,0 +1,2407 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapa zieleni Torunia — demo</title>
+<meta name="description" content="Mapa zieleni Torunia: co kwitnie dziś, gdzie i jak długo jeszcze. Dwadzieścia miejsc, filtry i planer tras.">
+<link rel="stylesheet" href="vendor/leaflet.css">
+<style>
+/* ---------- kroje ---------- */
+@font-face{font-family:'Bitter';src:url('vendor/fonts/bitter-roman-latin-ext.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Bitter';src:url('vendor/fonts/bitter-roman-latin.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Bitter';src:url('vendor/fonts/bitter-italic-latin-ext.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap;
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Bitter';src:url('vendor/fonts/bitter-italic-latin.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Raleway';src:url('vendor/fonts/raleway-roman-latin-ext.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Raleway';src:url('vendor/fonts/raleway-roman-latin.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Raleway';src:url('vendor/fonts/raleway-italic-latin-ext.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap;
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Raleway';src:url('vendor/fonts/raleway-italic-latin.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+
+/* ---------- paleta ---------- */
+:root{
+  --papier:#F7F8F5; --atrament:#1D2B21; --linia:#D6DBD4;
+  --cichy:#5E6D62;
+  --ark:#FFFFFF;
+  --akcent:#7FB069; --akcent2:#E8A0BF; --na-akcencie:#1D2B21; --na-akcencie2:#1D2B21;
+  --r:3px;
+}
+body[data-sezon="wiosna"]{ --akcent:#7FB069; --akcent2:#E8A0BF; --na-akcencie:#1D2B21; --na-akcencie2:#1D2B21 }
+body[data-sezon="lato"]  { --akcent:#2E7D52; --akcent2:#E9C46A; --na-akcencie:#F7F8F5; --na-akcencie2:#1D2B21 }
+body[data-sezon="jesien"]{ --akcent:#B5651D; --akcent2:#7A3B2E; --na-akcencie:#F7F8F5; --na-akcencie2:#F7F8F5 }
+body[data-sezon="zima"]  { --akcent:#5B7C8D; --akcent2:#C1443B; --na-akcencie:#F7F8F5; --na-akcencie2:#F7F8F5 }
+.teraz, .tab, .chip, .zj__ile, .cytat, .okno__k, .okno__t em, .zdejmij, .kropka::before,
+.legenda i.a, .quest, .trasa li::before, .pin, .karta__typ i.a, .przyklad, .wiersz,
+input[type=range]::-webkit-slider-thumb, input[type=range]::-moz-range-thumb{
+  transition: background-color .28s ease, border-color .28s ease, color .28s ease }
+
+/* ---------- podstawy ---------- */
+*{ box-sizing:border-box }
+html{ -webkit-text-size-adjust:100% }
+body{
+  margin:0; background:var(--papier); color:var(--atrament);
+  font-family:'Raleway',system-ui,'Segoe UI',sans-serif; font-size:16px; line-height:1.55;
+  font-variant-numeric:tabular-nums;
+}
+h1,h2,h3,h4{ font-family:'Bitter',Georgia,'Times New Roman',serif; font-weight:600; margin:0; line-height:1.2 }
+p{ margin:0 }
+button{ font:inherit; color:inherit }
+a{ color:var(--atrament); text-underline-offset:.18em; text-decoration-color:var(--akcent); text-decoration-thickness:2px }
+a:hover{ color:var(--akcent) }
+:focus-visible{ outline:2px solid var(--atrament); outline-offset:2px; border-radius:2px }
+.skip{ position:absolute; left:-9999px; top:0; background:var(--ark); padding:.6rem 1rem; z-index:2000 }
+.skip:focus{ left:.5rem; top:.5rem }
+.wrap{ max-width:1560px; margin:0 auto; padding:0 clamp(.9rem,2.4vw,2rem) }
+
+/* ---------- naglowek ---------- */
+.top{ border-bottom:1px solid var(--linia); background:var(--papier) }
+.top__in{ display:flex; align-items:flex-end; gap:1.5rem; justify-content:space-between; padding:.85rem 0 0 }
+.top h1{ font-size:clamp(1.15rem,1.6vw,1.45rem); letter-spacing:-.01em }
+.top__sub{ font-size:.8rem; color:var(--cichy); margin-top:.1rem }
+.tabs{ display:flex; gap:.15rem; align-self:flex-end }
+.tab{ background:none; border:0; border-bottom:3px solid transparent; padding:.55rem .95rem .6rem;
+      cursor:pointer; font-size:.95rem; font-weight:600; color:var(--cichy); display:flex; align-items:center; gap:.45rem }
+.tab:hover{ color:var(--atrament) }
+.tab[aria-selected="true"]{ color:var(--atrament); border-bottom-color:var(--akcent) }
+.tag{ font-size:.7rem; font-weight:700; letter-spacing:.04em; padding:.1rem .38rem; border:1px solid var(--linia);
+      border-radius:999px; color:var(--cichy); background:var(--ark) }
+.tab[aria-selected="true"] .tag{ border-color:var(--akcent); color:var(--atrament) }
+
+/* ---------- pasek co teraz ---------- */
+.teraz{ background:var(--papier); background:color-mix(in srgb, var(--akcent) 11%, var(--papier));
+        border-bottom:1px solid var(--linia); transition:background-color .28s ease }
+.teraz__in{ padding:1.15rem 0 1.25rem }
+.teraz__top{ display:flex; align-items:baseline; gap:.8rem 1.6rem; flex-wrap:wrap; margin-bottom:.9rem }
+.teraz h2{ font-size:1.05rem; font-weight:600; white-space:nowrap }
+.teraz h2::after{ content:''; display:inline-block; width:26px; height:3px; background:var(--akcent);
+                  vertical-align:.28em; margin-left:.55rem }
+.lead{ font-size:.95rem; color:var(--cichy); flex:1 1 16rem; min-width:0 }
+.lead b{ color:var(--atrament); font-weight:600 }
+
+.data{ display:flex; align-items:center; gap:.7rem; flex-wrap:wrap }
+.data__lab{ font-size:.82rem; color:var(--cichy); white-space:nowrap; display:flex; gap:.4rem; align-items:baseline }
+.data__out{ font-family:'Bitter',Georgia,serif; font-weight:600; font-size:1rem; color:var(--atrament) }
+input[type=range]{ -webkit-appearance:none; appearance:none; width:clamp(150px,17vw,260px); height:22px; background:none; cursor:pointer }
+input[type=range]::-webkit-slider-runnable-track{ height:3px; background:var(--linia) }
+input[type=range]::-moz-range-track{ height:3px; background:var(--linia) }
+input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:16px; height:16px; border-radius:50%;
+  background:var(--akcent); border:2px solid var(--papier); box-shadow:0 0 0 1px var(--atrament); margin-top:-7px }
+input[type=range]::-moz-range-thumb{ width:16px; height:16px; border-radius:50%; background:var(--akcent);
+  border:2px solid var(--papier); box-shadow:0 0 0 1px var(--atrament) }
+.lnk{ background:none; border:0; padding:.2rem .1rem; cursor:pointer; font-size:.82rem; color:var(--cichy);
+      border-bottom:1px solid var(--linia) }
+.lnk:hover{ color:var(--atrament); border-bottom-color:var(--akcent) }
+
+.teraz__items{ list-style:none; margin:0; padding:0; display:flex; gap:0; flex-wrap:wrap }
+.zj{ flex:1 1 190px; min-width:0; padding:0 1.4rem; border-left:1px solid var(--linia);
+     display:flex; flex-direction:column }
+.zj:first-child{ padding-left:0; border-left:0 }
+.zj__nazwa{ font-family:'Bitter',Georgia,serif; font-weight:600; font-size:clamp(1.3rem,2vw,1.9rem);
+            line-height:1.12; letter-spacing:-.015em; margin-bottom:.22rem; overflow-wrap:break-word }
+.zj__gdzie{ font-size:.9rem; color:var(--cichy); margin-bottom:.45rem }
+.zj__gdzie b{ color:var(--atrament); font-weight:600 }
+.zj__ile{ align-self:flex-start; margin-top:auto; font-size:.85rem; font-weight:700; padding:.18rem .5rem;
+          background:var(--akcent2); color:var(--na-akcencie2); border-radius:var(--r);
+          transition:background-color .28s ease, color .28s ease }
+.zj--pusto{ flex-basis:100%; padding-left:0; border-left:0 }
+.teraz__wiecej{ font-size:.85rem; color:var(--cichy); margin-top:.85rem }
+
+/* ---------- filtry ---------- */
+.filtry{ border-bottom:1px solid var(--linia) }
+.filtry__in{ display:flex; gap:.5rem 2rem; flex-wrap:wrap; align-items:flex-start; padding:.85rem 0 .9rem }
+.grp{ display:flex; flex-direction:column; gap:.4rem }
+.grp__lab{ font-size:.78rem; color:var(--cichy); display:flex; align-items:center; gap:.4rem }
+.grp__row{ display:flex; gap:.35rem; flex-wrap:wrap; align-items:center }
+.chip{ background:var(--ark); border:1px solid var(--linia); border-radius:var(--r); padding:.35rem .7rem;
+       font-size:.88rem; cursor:pointer; white-space:nowrap;
+       transition:background-color .18s ease, border-color .18s ease, color .18s ease }
+.chip:hover{ border-color:var(--atrament) }
+.chip[aria-pressed="true"]{ background:var(--akcent); background:color-mix(in srgb, var(--akcent) 88%, var(--atrament));
+       border-color:var(--akcent); color:var(--na-akcencie); font-weight:600 }
+.chip--sw{ display:flex; align-items:center; gap:.45rem }
+.chip--sw::before{ content:''; width:26px; height:14px; border-radius:999px; background:var(--linia);
+                   border:1px solid var(--linia); flex:none; box-shadow:inset 12px 0 0 -1px var(--ark) }
+.chip--sw[aria-pressed="true"]::before{ background:var(--na-akcencie); border-color:var(--na-akcencie);
+                   box-shadow:inset -12px 0 0 -1px var(--akcent) }
+select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid var(--linia); border-radius:var(--r);
+        padding:.35rem .5rem; color:inherit; max-width:15rem }
+.grp--budowa{ border:1px dashed var(--linia); border-radius:var(--r); padding:.45rem .7rem .55rem }
+.grp--budowa .chip{ background:transparent }
+.grp--budowa .chip[aria-pressed="true"]{ background:var(--akcent) }
+.pusto-lab{ font-size:.78rem; color:var(--cichy); font-style:italic; max-width:26rem }
+
+.stan{ display:flex; align-items:center; gap:.6rem; margin-left:auto; align-self:center; padding-top:.9rem }
+.licznik{ font-size:.92rem; white-space:nowrap }
+.licznik b{ font-family:'Bitter',Georgia,serif; font-size:1.15rem; font-weight:600 }
+.zeruj{ background:none; border:1px solid var(--linia); border-radius:var(--r); padding:.3rem .6rem;
+        font-size:.82rem; cursor:pointer; color:var(--cichy) }
+.zeruj:hover{ color:var(--atrament); border-color:var(--atrament) }
+
+.pustka{ border-top:1px solid var(--linia); padding:.85rem 0 1rem; display:flex; gap:.7rem;
+         align-items:baseline; flex-wrap:wrap }
+.pustka__t{ font-size:.95rem }
+.pustka__t b{ font-weight:700 }
+.zdejmij{ background:var(--akcent); background:color-mix(in srgb, var(--akcent) 88%, var(--atrament));
+          border:1px solid var(--akcent); color:var(--na-akcencie);
+          border-radius:var(--r); padding:.32rem .65rem; font-size:.85rem; font-weight:600; cursor:pointer }
+
+/* ---------- mapa + lista ---------- */
+.robocze{ display:grid; grid-template-columns:minmax(0,1fr) clamp(360px,29vw,460px);
+          height:clamp(440px,64vh,780px); border-bottom:1px solid var(--linia) }
+.mapa{ position:relative; min-width:0; border-right:1px solid var(--linia) }
+#map{ position:absolute; inset:0; background:var(--papier); z-index:1 }
+.leaflet-container{ font-family:'Raleway',system-ui,sans-serif; background:var(--papier) }
+.mapnota{ position:absolute; left:12px; right:12px; top:12px; z-index:600; background:var(--ark);
+          border:1px solid var(--linia); border-left:3px solid var(--akcent2); border-radius:var(--r);
+          padding:.55rem .75rem; font-size:.85rem; max-width:36rem }
+.mapnota:not([hidden]) ~ .legenda{ top:auto; bottom:22px }
+.legenda{ position:absolute; left:12px; top:12px; z-index:600; background:var(--ark); border:1px solid var(--linia);
+          border-radius:var(--r); padding:.5rem .7rem; font-size:.78rem; color:var(--cichy); line-height:1.75;
+          max-width:calc(100% - 24px) }
+.legenda i{ font-style:normal; display:inline-block; width:11px; height:11px; border:2px solid var(--atrament);
+            background:var(--papier); vertical-align:-1px; margin-right:.4rem; border-radius:50% }
+.legenda i.d{ transform:rotate(45deg); border-radius:2px }
+.legenda i.a{ background:var(--akcent); border-color:var(--atrament) }
+
+.pin{ display:block; width:16px; height:16px; border:2px solid var(--atrament); background:var(--papier);
+      border-radius:50%; box-shadow:0 1px 2px rgba(29,43,33,.35) }
+.pin--ukryte{ border-radius:2px; transform:rotate(45deg) }
+.pin.jest{ background:var(--akcent) }
+.pin.sel{ transform:scale(1.45); box-shadow:0 0 0 4px var(--akcent2), 0 1px 3px rgba(29,43,33,.4) }
+.pin--ukryte.sel{ transform:rotate(45deg) scale(1.45) }
+.pinwrap{ transition:transform .16s ease }
+.pinwrap.sel{ z-index:900 !important }
+
+/* ---------- panel boczny ---------- */
+.bok{ min-width:0; display:flex; flex-direction:column; overflow:hidden; background:var(--papier) }
+.bok__scroll{ overflow-y:auto; overscroll-behavior:contain; flex:1; min-height:0 }
+.lista{ list-style:none; margin:0; padding:0 }
+.wiersz{ width:100%; text-align:left; background:none; border:0; border-bottom:1px solid var(--linia);
+         border-left:3px solid transparent; padding:.7rem clamp(.8rem,1.5vw,1.1rem); cursor:pointer; display:block }
+.wiersz:hover{ background:var(--ark) }
+.wiersz[aria-current="true"]{ border-left-color:var(--akcent); background:var(--ark) }
+.wiersz__g{ display:flex; align-items:baseline; gap:.5rem }
+.wiersz__ik{ font-size:1rem; flex:none; line-height:1; font-family:'Segoe UI Emoji',system-ui,sans-serif }
+.wiersz__n{ font-family:'Bitter',Georgia,serif; font-weight:600; font-size:1.02rem; line-height:1.25 }
+.wiersz__m{ font-size:.82rem; color:var(--cichy); margin-top:.2rem; display:flex; gap:.5rem; flex-wrap:wrap }
+.kropka{ display:inline-flex; align-items:center; gap:.32rem; color:var(--atrament); font-weight:600 }
+.kropka::before{ content:''; width:8px; height:8px; border-radius:50%; background:var(--akcent); flex:none }
+.listahead{ padding:.55rem clamp(.8rem,1.5vw,1.1rem); border-bottom:1px solid var(--linia);
+            font-size:.78rem; color:var(--cichy); display:flex; justify-content:space-between; gap:.5rem; align-items:baseline }
+.listapusta{ padding:1.4rem clamp(.8rem,1.5vw,1.1rem); font-size:.92rem; color:var(--cichy) }
+
+/* ---------- karta punktu ---------- */
+.karta__pas{ position:sticky; top:0; z-index:5; background:var(--papier); border-bottom:1px solid var(--linia);
+             padding:.5rem clamp(.8rem,1.5vw,1.1rem) }
+.wroc{ background:none; border:0; cursor:pointer; font-size:.85rem; color:var(--cichy); padding:.2rem 0 }
+.wroc:hover{ color:var(--atrament) }
+.karta__body{ padding:.9rem clamp(.8rem,1.5vw,1.1rem) 2.5rem }
+.foto{ display:block; width:100%; aspect-ratio:16/10; object-fit:cover; background:var(--linia); margin:0 0 1rem }
+.brakfoto{ border:1px dashed var(--linia); display:flex; align-items:center; justify-content:center;
+           text-align:center; padding:.8rem 1.1rem; margin:0 0 1rem; color:var(--cichy); font-size:.85rem; line-height:1.55 }
+.karta__typ{ font-size:.78rem; color:var(--cichy); display:flex; align-items:center; gap:.45rem; margin-bottom:.3rem }
+.karta__typ i{ font-style:normal; display:inline-block; width:9px; height:9px; border:2px solid var(--atrament);
+               background:var(--papier); flex:none }
+.karta__typ i.k{ border-radius:50% }
+.karta__typ i.d{ transform:rotate(45deg); border-radius:1px }
+.karta__typ i.a{ background:var(--akcent) }
+.karta h3{ font-size:clamp(1.35rem,2.1vw,1.7rem); letter-spacing:-.015em; margin-bottom:.5rem }
+.karta h3 .em{ font-family:'Segoe UI Emoji',system-ui,sans-serif; font-size:.85em }
+.cytat{ margin:1.1rem 0 1.15rem; padding-left:1.05rem; border-left:3px solid var(--akcent2);
+        transition:border-color .28s ease }
+.cytat q{ font-family:'Bitter',Georgia,serif; font-style:italic; font-size:clamp(1.2rem,1.9vw,1.5rem);
+          line-height:1.34; display:block }
+.cytat__kto{ font-size:.85rem; color:var(--cichy); margin-top:.55rem }
+.cytat__kto b{ color:var(--atrament); font-weight:600; font-style:normal }
+.opis{ font-size:.95rem; line-height:1.65; margin:.9rem 0 0 }
+.sekcja{ border-top:1px solid var(--linia); padding-top:.9rem; margin-top:1.15rem }
+.sekcja h4{ font-size:.95rem; margin-bottom:.65rem }
+.okna{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.55rem }
+.okno{ display:flex; gap:.6rem; align-items:flex-start; font-size:.9rem; line-height:1.5 }
+.okno__k{ width:9px; height:9px; border-radius:50%; border:2px solid var(--linia); flex:none; margin-top:.42rem }
+.okno.jest .okno__k{ background:var(--akcent); border-color:var(--akcent) }
+.okno__t b{ font-weight:600 }
+.okno__t span{ color:var(--cichy) }
+.okno__t em{ font-style:normal; font-weight:700; background:var(--akcent2); color:var(--na-akcencie2);
+             padding:.05rem .35rem; border-radius:var(--r); white-space:nowrap;
+             transition:background-color .28s ease, color .28s ease }
+.przyb{ font-size:.78rem; color:var(--cichy); margin-top:.7rem; font-style:italic }
+.fakty{ margin:0; display:grid; grid-template-columns:minmax(6.5rem,auto) 1fr; gap:.42rem .9rem; font-size:.88rem }
+.fakty dt{ color:var(--cichy) }
+.fakty dd{ margin:0 }
+.brak{ color:var(--cichy); font-style:italic }
+.quest{ border:1px solid var(--linia); border-left:3px solid var(--akcent); border-radius:var(--r);
+        padding:.85rem .9rem; margin-top:1.15rem }
+.quest__n{ font-size:.78rem; color:var(--cichy); margin-bottom:.2rem }
+.quest h4{ font-size:1rem; margin-bottom:.35rem }
+.quest__m{ font-size:.85rem; color:var(--cichy); margin-bottom:.55rem }
+.quest__d{ font-size:.8rem; color:var(--cichy); margin-top:.55rem; line-height:1.5 }
+.zrodlo{ font-size:.78rem; color:var(--cichy); margin-top:1.3rem; padding-top:.7rem; border-top:1px solid var(--linia) }
+
+/* ---------- planer ---------- */
+.planer{ padding:1.6rem 0 3rem }
+.planer__grid{ display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); gap:clamp(1.5rem,4vw,3.5rem);
+               align-items:start }
+.planer h2{ font-size:clamp(1.5rem,2.4vw,2rem); letter-spacing:-.015em; display:flex; align-items:center;
+            gap:.7rem; flex-wrap:wrap; margin-bottom:.5rem }
+.planer__lead{ font-size:.95rem; color:var(--cichy); max-width:44ch; margin-bottom:1.4rem }
+.pole{ position:relative; border:1px solid var(--linia); border-radius:var(--r); background:var(--ark) }
+.pole textarea{ width:100%; border:0; background:none; resize:none; font:inherit; font-size:1rem;
+                padding:.85rem .95rem 2.2rem; color:var(--cichy); min-height:5.5rem; border-radius:var(--r) }
+.pole textarea:disabled{ cursor:not-allowed; opacity:1 }
+.pole__stopka{ position:absolute; left:.95rem; bottom:.6rem; font-size:.76rem; color:var(--cichy);
+               display:flex; align-items:center; gap:.4rem }
+.pole__stopka::before{ content:''; width:7px; height:7px; border-radius:50%; background:var(--linia); flex:none }
+.przyklady{ display:flex; flex-direction:column; gap:.45rem; margin-top:1rem }
+.przyklad{ text-align:left; background:var(--ark); border:1px solid var(--linia); border-radius:var(--r);
+           padding:.6rem .8rem; cursor:pointer; font-size:.95rem; line-height:1.4 }
+.przyklad:hover{ border-color:var(--atrament) }
+.przyklad[aria-pressed="true"]{ border-color:var(--akcent); border-left-width:3px; font-weight:600 }
+.odp{ border:1px solid var(--linia); border-radius:var(--r); background:var(--ark); padding:1.1rem 1.2rem 1.2rem }
+.odp__pyt{ font-family:'Bitter',Georgia,serif; font-size:1.05rem; font-weight:600; line-height:1.35; margin-bottom:.3rem }
+.odp__kiedy{ font-size:.8rem; color:var(--cichy); margin-bottom:1rem }
+.trasa{ list-style:none; margin:0; padding:0; counter-reset:krok }
+.trasa li{ display:grid; grid-template-columns:1.6rem 1fr; gap:.7rem; padding-bottom:1rem; position:relative }
+.trasa li::before{ counter-increment:krok; content:counter(krok); font-family:'Bitter',Georgia,serif; font-weight:600;
+                   font-size:.85rem; width:1.6rem; height:1.6rem; border-radius:50%; background:var(--akcent);
+                   background:color-mix(in srgb, var(--akcent) 88%, var(--atrament));
+                   color:var(--na-akcencie); display:flex; align-items:center; justify-content:center; flex:none }
+.trasa li:not(:last-child)::after{ content:''; position:absolute; left:.78rem; top:1.75rem; bottom:.25rem;
+                                   width:1px; background:var(--linia) }
+.trasa__n{ background:none; border:0; padding:0; cursor:pointer; font-family:'Bitter',Georgia,serif; font-weight:600;
+           font-size:1rem; text-align:left; border-bottom:2px solid var(--linia); line-height:1.3 }
+.trasa__n:hover{ border-bottom-color:var(--akcent) }
+.trasa__d{ font-size:.9rem; line-height:1.55; margin-top:.25rem; color:var(--atrament) }
+.trasa__leg{ font-size:.78rem; color:var(--cichy); margin-top:.35rem }
+.odp__suma{ border-top:1px solid var(--linia); padding-top:.8rem; display:flex; gap:1.4rem; flex-wrap:wrap;
+            align-items:baseline }
+.odp__suma b{ font-family:'Bitter',Georgia,serif; font-size:1.15rem; font-weight:600 }
+.odp__suma span{ font-size:.82rem; color:var(--cichy) }
+.odp__uwaga{ font-size:.8rem; color:var(--cichy); margin-top:.8rem; line-height:1.55; font-style:italic }
+.nota{ margin-top:1.6rem; border-top:1px solid var(--linia); padding-top:1rem }
+.nota h3{ font-size:1.05rem; margin-bottom:.55rem }
+.nota p{ font-size:.92rem; line-height:1.65; color:var(--atrament); max-width:62ch }
+.dalej{ margin-top:1.5rem; border-top:1px solid var(--linia); padding-top:1rem }
+.dalej h3{ font-size:1.05rem; margin-bottom:.6rem }
+.dalej ul{ margin:0; padding-left:1.1rem; display:flex; flex-direction:column; gap:.45rem }
+.dalej li{ font-size:.92rem; line-height:1.55 }
+
+/* ---------- stopka ---------- */
+.stopka{ border-top:1px solid var(--linia); padding:1.2rem 0 2rem; font-size:.82rem; color:var(--cichy);
+         display:flex; gap:.6rem 2rem; flex-wrap:wrap }
+.stopka p{ max-width:46ch; line-height:1.6 }
+
+/* ---------- waskie ekrany ---------- */
+@media (max-width:1080px){
+  .planer__grid{ grid-template-columns:1fr }
+}
+@media (max-width:560px){
+  .legenda{ font-size:.72rem; padding:.4rem .55rem; line-height:1.6 }
+}
+@media (max-width:860px){
+  .robocze{ display:block; height:auto }
+  .mapa{ height:56vh; min-height:320px; border-right:0; border-bottom:1px solid var(--linia) }
+  .bok{ height:auto; overflow:visible }
+  .bok__scroll{ overflow:visible }
+  .zj{ flex-basis:100%; padding:0 0 .9rem; border-left:0; border-bottom:1px solid var(--linia); margin-bottom:.9rem }
+  .zj:last-child{ border-bottom:0; margin-bottom:0; padding-bottom:0 }
+  .stan{ margin-left:0; padding-top:0 }
+  .top__in{ flex-direction:column; align-items:flex-start; gap:.5rem }
+  .tabs{ align-self:flex-start }
+  .fakty{ grid-template-columns:1fr; gap:.1rem .5rem }
+  .fakty dd{ margin-bottom:.45rem }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{ transition-duration:.001ms !important; animation-duration:.001ms !important }
+}
+</style>
+</head>
+<body data-sezon="wiosna">
+<a class="skip" href="#tresc">Przejdź do treści</a>
+
+<header class="top">
+  <div class="wrap top__in">
+    <div>
+      <h1>Mapa zieleni Torunia</h1>
+      <p class="top__sub">Wersja pokazowa · 20 z 40 punktów · dane: UM Toruń i mieszkańcy</p>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Sekcje demo">
+      <button class="tab" role="tab" id="tab-mapa" aria-controls="panel-mapa" aria-selected="true">Mapa</button>
+      <button class="tab" role="tab" id="tab-planer" aria-controls="panel-planer" aria-selected="false" tabindex="-1">Planer <span class="tag">podgląd</span></button>
+    </nav>
+  </div>
+</header>
+
+<main id="tresc">
+
+<section id="panel-mapa" role="tabpanel" aria-labelledby="tab-mapa">
+
+  <section class="teraz" aria-labelledby="teraz-h">
+    <div class="wrap teraz__in">
+      <div class="teraz__top">
+        <h2 id="teraz-h">Co teraz</h2>
+        <p class="lead" id="lead"></p>
+        <div class="data">
+          <label class="data__lab" for="suwak">Data w mapie <output class="data__out" id="dataOut" for="suwak"></output></label>
+          <input type="range" id="suwak" min="1" max="365" step="1" aria-describedby="suwakOpis">
+          <button class="lnk" id="dzis" type="button">wróć do dziś</button>
+          <span class="pusto-lab" id="suwakOpis">przewiń rok, żeby zobaczyć, jak zmienia się mapa</span>
+        </div>
+      </div>
+      <ul class="teraz__items" id="terazItems"></ul>
+      <p class="teraz__wiecej" id="terazWiecej" role="status"></p>
+    </div>
+  </section>
+
+  <section class="filtry" aria-label="Filtry punktów">
+    <div class="wrap">
+      <div class="filtry__in">
+
+        <div class="grp">
+          <span class="grp__lab" id="lab-sezon">Pora roku</span>
+          <div class="grp__row" id="fSezon" role="group" aria-labelledby="lab-sezon"></div>
+        </div>
+
+        <div class="grp">
+          <span class="grp__lab" id="lab-teraz">Okna kwitnienia</span>
+          <div class="grp__row" aria-labelledby="lab-teraz">
+            <button class="chip chip--sw" id="fTeraz" type="button" aria-pressed="false">Tylko to, co trwa w wybranym dniu</button>
+          </div>
+        </div>
+
+        <div class="grp">
+          <label class="grp__lab" for="fDzielnica">Dzielnica</label>
+          <div class="grp__row">
+            <select id="fDzielnica"></select>
+          </div>
+        </div>
+
+        <div class="grp grp--budowa">
+          <span class="grp__lab" id="lab-cien">Cień <span class="tag">warstwa w budowie</span></span>
+          <div class="grp__row" id="fCien" role="group" aria-labelledby="lab-cien"></div>
+          <span class="pusto-lab" id="cienOpis"></span>
+        </div>
+
+        <div class="stan">
+          <p class="licznik" id="licznik" role="status"></p>
+          <button class="zeruj" id="zeruj" type="button">Wyczyść filtry</button>
+        </div>
+      </div>
+      <div class="pustka" id="pustka" hidden></div>
+    </div>
+  </section>
+
+  <div class="robocze">
+    <div class="mapa">
+      <div id="map"></div>
+      <p class="mapnota" id="mapnota" hidden></p>
+      <div class="legenda">
+        <i></i>park kieszonkowy<br>
+        <i class="d"></i>miejsce polecane przez mieszkańców<br>
+        <i class="a"></i>wypełnienie = coś się tam dzieje w wybranym dniu
+      </div>
+    </div>
+    <div class="bok">
+      <div class="listahead" id="listahead"></div>
+      <div class="bok__scroll" id="bokScroll">
+        <ol class="lista" id="lista"></ol>
+        <p class="listapusta" id="listapusta" hidden></p>
+        <div id="karta" hidden></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="panel-planer" role="tabpanel" aria-labelledby="tab-planer" hidden>
+  <div class="wrap planer">
+    <div class="planer__grid">
+      <div>
+        <h2>Planer <span class="tag">zapowiedź</span></h2>
+        <p class="planer__lead">Tak będzie wyglądać rozmowa z mapą: piszesz zwykłym zdaniem, dostajesz trasę
+          złożoną z punktów tej mapy. Poniżej trzy gotowe przykłady.</p>
+
+        <div class="pole">
+          <textarea id="poleWpis" rows="3" disabled
+            placeholder="Napisz, ile masz czasu, gdzie jesteś i czego szukasz…"></textarea>
+          <span class="pole__stopka">pole nieaktywne w podglądzie</span>
+        </div>
+
+        <div class="przyklady" id="przyklady" role="group" aria-label="Przykładowe pytania"></div>
+
+        <div class="nota">
+          <h3>Czym planer będzie w pełnej wersji</h3>
+          <p id="notaTresc"></p>
+        </div>
+
+        <div class="dalej">
+          <h3>Co jeszcze wchodzi w pełnej wersji</h3>
+          <ul>
+            <li>Galeria zdjęć od mieszkańców — miejsca z Torunia Ukrytego dostaną kadry od tych, którzy je polecili.</li>
+            <li>Krótkie pętle wideo przy wybranych punktach, żeby zobaczyć miejsce, zanim się tam pojedzie.</li>
+            <li>Korekta okien kwitnienia danymi pogodowymi — ciepła wiosna potrafi przesunąć magnolie o tydzień.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="odpowiedz" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="stopka">
+  <div class="wrap" style="display:flex; gap:.6rem 2.5rem; flex-wrap:wrap">
+    <p>Dane: Urząd Miasta Torunia (parki kieszonkowe) i Toruń Ukryty (rekomendacje mieszkańców).
+       Okna kwitnienia są oszacowane dla szerokości Torunia i mają charakter orientacyjny.</p>
+    <p>W kolejnych wersjach: warstwa cienia i dostępności, zdjęcia miejsc z Torunia Ukrytego
+       oraz rozbudowa mapy do czterdziestu punktów.</p>
+  </div>
+</footer>
+
+<!-- Dane punktow. -->
+<script>
+window.DANE = {
+ "meta": {
+  "projekt": "Mapa zieleni Torunia — demo",
+  "wersja": "0.1",
+  "punktow": 20,
+  "cel": 40,
+  "brakuje": 20,
+  "sezony": [
+   "wiosna",
+   "lato",
+   "jesien",
+   "zima"
+  ],
+  "uwagi": [
+   "Okna kwitnienia w `species` są PRZYBLIŻONE (szacunek dla Torunia, ~53°N). Do weryfikacji przez Ogród Zoobotaniczny lub Wydział Środowiska UM.",
+   "`seasons` jest tablicą wyliczoną z okien w `highlights` — punkt może należeć do kilku pór roku.",
+   "`seasonPrimary` to redakcyjny wybór głównej pory roku (z Torunia Ukrytego), używany do sortowania i etykiet, nie do filtrowania.",
+   "Usunięto: `lezaczki` (decyzja) i `wystawy-sztuki` (nie jest punktem przyrodniczym)."
+  ],
+  "do_uzupelnienia": [
+   "shade (0–3) — dla wszystkich punktów, ręcznie",
+   "accessible (bool) — dostępność wózkiem / osobom z ograniczoną mobilnością",
+   "district — dla 9 punktów z Torunia Ukrytego",
+   "media.photo — dla 9 punktów z Torunia Ukrytego",
+   "quote + recommender — dla 11 parków kieszonkowych",
+   "20 nowych punktów do czterdziestki"
+  ]
+ },
+ "species": {
+  "krokus": {
+   "label": "Krokusy",
+   "from": "03-05",
+   "to": "04-05"
+  },
+  "zonkil": {
+   "label": "Żonkile",
+   "from": "04-01",
+   "to": "04-25"
+  },
+  "tulipan": {
+   "label": "Tulipany",
+   "from": "04-15",
+   "to": "05-20"
+  },
+  "magnolia": {
+   "label": "Magnolie",
+   "from": "04-10",
+   "to": "04-25"
+  },
+  "lilak": {
+   "label": "Bzy (lilak)",
+   "from": "04-25",
+   "to": "05-25"
+  },
+  "glog": {
+   "label": "Głóg jednoszyjkowy",
+   "from": "05-05",
+   "to": "05-31"
+  },
+  "rosliny-alpejskie": {
+   "label": "Rośliny alpejskie",
+   "from": "04-15",
+   "to": "06-30"
+  },
+  "swierzop": {
+   "label": "Świerzop",
+   "from": "05-01",
+   "to": "08-31"
+  },
+  "kalina": {
+   "label": "Kalina",
+   "from": "05-10",
+   "to": "06-15"
+  },
+  "deren-kwiat": {
+   "label": "Dereń biały (kwitnienie)",
+   "from": "05-15",
+   "to": "06-15"
+  },
+  "jasminowiec": {
+   "label": "Jaśminowiec wonny",
+   "from": "06-01",
+   "to": "06-30"
+  },
+  "bez-czarny-kwiat": {
+   "label": "Bez czarny (kwitnienie)",
+   "from": "06-01",
+   "to": "06-30"
+  },
+  "roza": {
+   "label": "Róże",
+   "from": "06-01",
+   "to": "09-15"
+  },
+  "lipa": {
+   "label": "Lipa drobnolistna",
+   "from": "06-20",
+   "to": "07-15"
+  },
+  "laka-kwietna": {
+   "label": "Łąka kwietna",
+   "from": "06-01",
+   "to": "09-15"
+  },
+  "gryka": {
+   "label": "Gryka",
+   "from": "07-01",
+   "to": "08-31"
+  },
+  "lawenda": {
+   "label": "Lawenda",
+   "from": "07-01",
+   "to": "08-20"
+  },
+  "hortensja": {
+   "label": "Hortensje",
+   "from": "07-01",
+   "to": "09-30"
+  },
+  "czarna-porzeczka": {
+   "label": "Czarna porzeczka (owoce)",
+   "from": "07-01",
+   "to": "07-31"
+  },
+  "rabaty": {
+   "label": "Rabaty kwiatowe",
+   "from": "05-15",
+   "to": "09-30"
+  },
+  "pergola": {
+   "label": "Pergola kwiatowa",
+   "from": "06-01",
+   "to": "09-15"
+  },
+  "dywan-kwiatowy": {
+   "label": "Dywan kwiatowy",
+   "from": "05-15",
+   "to": "09-30"
+  },
+  "bez-czarny-owoc": {
+   "label": "Bez czarny (owoce)",
+   "from": "08-15",
+   "to": "09-30"
+  },
+  "trawy-ozdobne": {
+   "label": "Trawy ozdobne (struktura, szron)",
+   "from": "08-15",
+   "to": "02-28"
+  },
+  "irga-owoce": {
+   "label": "Irga (owoce)",
+   "from": "09-01",
+   "to": "12-31"
+  },
+  "przebarwienia": {
+   "label": "Przebarwienia liści",
+   "from": "10-01",
+   "to": "11-05"
+  },
+  "buk-jesien": {
+   "label": "Bukowe liście",
+   "from": "10-05",
+   "to": "11-10"
+  },
+  "deren-pedy": {
+   "label": "Dereń biały (czerwone pędy zimą)",
+   "from": "11-15",
+   "to": "03-15"
+  }
+ },
+ "points": [
+  {
+   "id": "szwajcarski-zakatek",
+   "name": "Szwajcarski Zakątek",
+   "type": "park-kieszonkowy",
+   "icon": "🏔️",
+   "badge": "🇨🇭",
+   "lat": 53.0358,
+   "lng": 18.6036,
+   "district": "Wrzosy I",
+   "address": "ul. Zagonowa/Narcyzowa",
+   "area_m2": 3222,
+   "seasons": [
+    "wiosna",
+    "lato",
+    "jesien"
+   ],
+   "seasonPrimary": "wiosna",
+   "description": "Park o charakterze alpejskim. Alpinarium i dywan kwiatowy w kształcie zegara. Zdobył 1. miejsce w 28. Edycji Ogólnopolskiego Konkursu Modernizacja Roku 2023.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": "krokus",
+     "label": "Krokusy",
+     "from": "03-05",
+     "to": "04-05"
+    },
+    {
+     "species": "dywan-kwiatowy",
+     "label": "Dywan kwiatowy",
+     "from": "05-15",
+     "to": "09-30"
+    },
+    {
+     "species": "rosliny-alpejskie",
+     "label": "Rośliny alpejskie",
+     "from": "04-15",
+     "to": "06-30"
+    }
+   ],
+   "features": [
+    "krokusy",
+    "dywan-kwiatowy",
+    "rosliny-alpejskie",
+    "alpinarium",
+    "ogrod-deszczowy"
+   ],
+   "shade": null,
+   "accessible": null,
+   "transport": null,
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/szwajcarski-zakatek.jpg",
+    "video": null
+   },
+   "source": "UM Toruń (parki kieszonkowe)",
+   "quest": null
+  },
+  {
+   "id": "greckie-klimaty",
+   "name": "Greckie Klimaty",
+   "type": "park-kieszonkowy",
+   "icon": "🏛️",
+   "badge": "🇬🇷",
+   "lat": 53.0289,
+   "lng": 18.6631,
+   "district": "Rubinkowo",
+   "address": "ul. Rydygiera 6-8",
+   "area_m2": 1517,
+   "seasons": [
+    "lato"
+   ],
+   "seasonPrimary": "lato",
+   "description": "Inspirowany krajobrazami Grecji, z roślinami śródziemnomorskimi i elementami nawiązującymi do greckich wysp.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": "lawenda",
+     "label": "Lawenda",
+     "from": "07-01",
+     "to": "08-20"
+    }
+   ],
+   "features": [
+    "lawenda",
+    "rozmaryn",
+    "rosliny-srodziemnomorskie",
+    "drzewa-formowane",
+    "ogrod-deszczowy"
+   ],
+   "shade": null,
+   "accessible": null,
+   "transport": null,
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/greckie-klimaty.jpg",
+    "video": null
+   },
+   "source": "UM Toruń (parki kieszonkowe)",
+   "quest": {
+    "pk": "PK 1",
+    "title": "Adaptacja do zmian klimatu – Toruń wie, jak!",
+    "time": "30 minut",
+    "dist": "1 km",
+    "tagline": "Toruń wie, jak!",
+    "intro": "Quest zaczyna się przy wejściu do parku kieszonkowego Greckie Klimaty w Toruniu, ul. Rydygiera. Dowiesz się, jak działania można podjąć, by zaadaptować się do zmian klimatycznych.",
+    "app": "www.Questy.org.pl",
+    "code_hint": "Hasło końcowe jest czterocyfrowe. Wpisz je na stronie www.Questy.org.pl lub w aplikacji Questy.",
+    "steps": [
+     {
+      "text": "Stoisz przy fontannie – zauważ, że woda jest tu ozdobna, ale też praktyczna. Poczytaj, jak fontanny wpływają na mikroklimat.",
+      "answer": ""
+     },
+     {
+      "text": "Znajdź punkt przed pustymi prostokątami podzielonymi pionowo. Obok roślin masz wiele rodzajów karmników – są to hotele dla zapylaczy.",
+      "answer": ""
+     },
+     {
+      "text": "Idź do tablicy karmnika dla ptaków – znajdź cyferkę do skarbu. Z prawej strony na jednej desce wpisz litery na zapylacze.",
+      "answer": ""
+     },
+     {
+      "text": "Policz ile koszy na odpady bio obok boksu się znajduje. Niech ta cyferka do kratki skoku wskoczy.",
+      "answer": ""
+     },
+     {
+      "text": "Specjalna nawierzchnia – na tablicy na tę zagadkę: co jest adaptacją do zmian klimatu, a tak możemy pomóc wodzie przepuszczać.",
+      "answer": ""
+     },
+     {
+      "text": "Złóż litery i wpisz hasło końcowe czterocyfrowe!",
+      "answer": ""
+     }
+    ]
+   }
+  },
+  {
+   "id": "zacisze-holandii",
+   "name": "Zacisze Holandii",
+   "type": "park-kieszonkowy",
+   "icon": "🌷",
+   "badge": "🇳🇱",
+   "lat": 52.9934,
+   "lng": 18.6234,
+   "district": "Stawki",
+   "address": "ul. Szuwarów/Tataraków",
+   "area_m2": 1868,
+   "seasons": [
+    "wiosna",
+    "lato",
+    "jesien"
+   ],
+   "seasonPrimary": "wiosna",
+   "description": "Park nawiązujący do holenderskich ogrodów, z bogatą paletą barw i wiosennym czarem.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": "tulipan",
+     "label": "Tulipany",
+     "from": "04-15",
+     "to": "05-20"
+    },
+    {
+     "species": "zonkil",
+     "label": "Żonkile",
+     "from": "04-01",
+     "to": "04-25"
+    },
+    {
+     "species": "laka-kwietna",
+     "label": "Łąka kwietna",
+     "from": "06-01",
+     "to": "09-15"
+    }
+   ],
+   "features": [
+    "tulipany",
+    "zonkile",
+    "rosliny-tematyczne",
+    "laka-kwietna",
+    "ogrod-deszczowy"
+   ],
+   "shade": null,
+   "accessible": null,
+   "transport": null,
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/zacisze-holandii.jpg",
+    "video": null
+   },
+   "source": "UM Toruń (parki kieszonkowe)",
+   "quest": {
+    "pk": "PK 2i3",
+    "title": "Małe rzeczy, duże cuda – w Toruniu klimat ocalić się uda!",
+    "time": "90 minut",
+    "dist": "2,0 km (+1,7 km powrót)",
+    "intro": "Quest prezentuje dwa parki kieszonkowe: Zacisze Holandii i Fiński Relaks. Podejmuje tematykę zmian klimatycznych i zachęca do dobrych nawyków prośrodowiskowych. Start przy ul. Szuwarów.",
+    "app": "www.Questy.org.pl",
+    "code_hint": "Hasło końcowe: dwa wyrazy i liczba czterocyfrowa (oddzielone spacją). Wpisz na www.Questy.org.pl.",
+    "steps": [
+     {
+      "text": "Jadąc samochodem, wybierz spalające mniej paliwa. Najbardziej przyjazna klimatowi jest kolej, za to samolotem przybywają największe ślady.",
+      "answer": ""
+     },
+     {
+      "text": "Policz stojaków na rowery w pobliżu tablicy z mapą. Będzie idealnie, gdy w kratce o trzy więcej ich dasz.",
+      "answer": ""
+     },
+     {
+      "text": "Zieleń ważną rolę pełni dla jakości życia w mieście – oczyszcza, zatrzymuje wodę, schładza powietrze.",
+      "answer": ""
+     },
+     {
+      "text": "Im bardziej zróżnicowane rośliny w parku, tym bardziej odporne środowisko na wahania klimatu.",
+      "answer": ""
+     },
+     {
+      "text": "Specjalna nawierzchnia alej pozwala na retencję wody i jest skutecznym rozwiązaniem przy obfitych deszczach.",
+      "answer": ""
+     },
+     {
+      "text": "Idź dalej do parku Fiński Relaks. Sprawdź: jaką część parku wyłożono hydro-fugą? Wpisz jego nazwę.",
+      "answer": ""
+     },
+     {
+      "text": "Zbierz litery ze wszystkich zagadek i ułóż hasło końcowe – dwa wyrazy i liczba czterocyfrowa!",
+      "answer": ""
+     }
+    ]
+   }
+  },
+  {
+   "id": "litewska-ojczyzna",
+   "name": "Litewska Ojczyzna",
+   "type": "park-kieszonkowy",
+   "icon": "🌲",
+   "badge": "🇱🇹",
+   "lat": 53.0101,
+   "lng": 18.5898,
+   "district": "Bydgoskie",
+   "address": "ul. Matejki/Słowackiego",
+   "area_m2": 472,
+   "seasons": [
+    "wiosna",
+    "lato",
+    "jesien"
+   ],
+   "seasonPrimary": "wiosna",
+   "description": "Najmniejszy z parków, inspirowany litewskim dziedzictwem kulturowym i przyrodą Litwy.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": "swierzop",
+     "label": "Świerzop",
+     "from": "05-01",
+     "to": "08-31"
+    },
+    {
+     "species": "gryka",
+     "label": "Gryka",
+     "from": "07-01",
+     "to": "08-31"
+    },
+    {
+     "species": "laka-kwietna",
+     "label": "Łąka kwietna",
+     "from": "06-01",
+     "to": "09-15"
+    }
+   ],
+   "features": [
+    "swierzop",
+    "gryka",
+    "laka-kwietna",
+    "rosliny-tematyczne",
+    "hotel-dla-owadow"
+   ],
+   "shade": null,
+   "accessible": null,
+   "transport": null,
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/litewska-ojczyzna.jpg",
+    "video": null
+   },
+   "source": "UM Toruń (parki kieszonkowe)",
+   "quest": null
+  },
+  {
+   "id": "francuskie-inspiracje",
+   "name": "Francuskie Inspiracje",
+   "type": "park-kieszonkowy",
+   "icon": "🗼",
+   "badge": "🇫🇷",
+   "lat": 53.0427,
+   "lng": 18.6045,
+   "district": "Wrzosy II",
+   "address": "ul. Polna/Strehla/Fieldorfa Nila",
+   "area_m2": 3646,
+   "seasons": [
+    "wiosna",
+    "lato",
+    "jesien"
+   ],
+   "seasonPrimary": "wiosna",
+   "description": "Park natchniony francuską estetyką, inspirowany Place de Gaulle’a z pergolą nawiązującą do Łuku Triumfalnego.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": "rabaty",
+     "label": "Rabaty kwiatowe",
+     "from": "05-15",
+     "to": "09-30"
+    },
+    {
+     "species": "pergola",
+     "label": "Pergola kwiatowa",
+     "from": "06-01",
+     "to": "09-15"
+    }
+   ],
+   "features": [
+    "rosliny-tematyczne",
+    "rabaty",
+    "pergola",
+    "fontanna"
+   ],
+   "shade": null,
+   "accessible": null,
+   "transport": null,
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/francuskie-inspiracje.png",
+    "video": null
+   },
+   "source": "UM Toruń (parki kieszonkowe)",
+   "quest": null
+  },
+  {
+   "id": "finski-relaks",
+   "name": "Fiński Relaks",
+   "type": "park-kieszonkowy",
+   "icon": "🌿",
+   "badge": "🇫🇮",
+   "lat": 52.9902,
+   "lng": 18.6369,
+   "district": "Rudak",
+   "address": "ul. Strzałowa/Artyleryjska",
+   "area_m2": 1584,
+   "seasons": [
+    "jesien"
+   ],
+   "seasonPrimary": "jesien",
+   "description": "Park inspirowany fińskim bliskim kontaktem człowieka z naturą, ze spokojną atmosferą i drewnianymi elementami.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": "przebarwienia",
+     "label": "Przebarwienia liści",
+     "from": "10-01",
+     "to": "11-05"
+    }
+   ],
+   "features": [
+    "drewno",
+    "zielen-lisciasta",
+    "lawki",
+    "sciezka-edukacyjna",
+    "ogrod-deszczowy"
+   ],
+   "shade": null,
+   "accessible": null,
+   "transport": null,
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/finski-relaks.jpg",
+    "video": null
+   },
+   "source": "UM Toruń (parki kieszonkowe)",
+   "quest": {
+    "pk": "PK 2i3",
+    "title": "Małe rzeczy, duże cuda!",
+    "time": "90 minut",
+    "dist": "2,0 km",
+    "note": "Ten quest obejmuje dwa parki: Zacisze Holandii (start przy ul. Szuwarów) i Fiński Relaks. Zacznij od parku Zacisze Holandii.",
+    "intro": "Fiński Relaks to drugi park w questowej trasie PK 2i3. Pełny quest i zagadki znajdziesz w opisie Zacisza Holandii.",
+    "app": "www.Questy.org.pl",
+    "code_hint": "Wpisz hasło na www.Questy.org.pl lub w aplikacji Questy – Wyprawy Odkrywców.",
+    "steps": []
+   }
+  },
+  {
+   "id": "ustronie-ukrainskie",
+   "name": "Ustronie Ukraińskie",
+   "type": "park-kieszonkowy",
+   "icon": "🌻",
+   "badge": "🇺🇦",
+   "lat": 53.0177,
+   "lng": 18.5721,
+   "district": "Bydgoskie",
+   "address": "ul. Sienkiewicza/Gagarina",
+   "area_m2": 2937,
+   "seasons": [
+    "lato"
+   ],
+   "seasonPrimary": "lato",
+   "description": "Park nawiązujący do ukraińskiego dziedzictwa, z bogatą szatą roślinną i kolorystyką ogrodów ukraińskich.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [],
+   "features": [
+    "rosliny-tematyczne",
+    "sztuka-w-parku",
+    "ogrod-deszczowy",
+    "oswietlenie",
+    "bioroznorodnosc"
+   ],
+   "shade": null,
+   "accessible": null,
+   "transport": null,
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/ustronie-ukrainskie.jpg",
+    "video": null
+   },
+   "source": "UM Toruń (parki kieszonkowe)",
+   "quest": null
+  },
+  {
+   "id": "angielski-ogrod",
+   "name": "Angielski Ogród",
+   "type": "park-kieszonkowy",
+   "icon": "🌹",
+   "badge": "🇬🇧",
+   "lat": 53.0336,
+   "lng": 18.675,
+   "district": "Bielawy-Grębosin",
+   "address": "ul. Tarnowska",
+   "area_m2": 1597,
+   "seasons": [
+    "lato",
+    "jesien"
+   ],
+   "seasonPrimary": "lato",
+   "description": "Park inspirowany angielskim romantycznym ogrodem, z miękkimi formami i bogatą roślinnością.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": "jasminowiec",
+     "label": "Jaśminowiec wonny",
+     "from": "06-01",
+     "to": "06-30"
+    },
+    {
+     "species": "roza",
+     "label": "Róże",
+     "from": "06-01",
+     "to": "09-15"
+    },
+    {
+     "species": "bez-czarny-kwiat",
+     "label": "Bez czarny (kwitnienie)",
+     "from": "06-01",
+     "to": "06-30"
+    },
+    {
+     "species": "bez-czarny-owoc",
+     "label": "Bez czarny (owoce)",
+     "from": "08-15",
+     "to": "09-30"
+    },
+    {
+     "species": "laka-kwietna",
+     "label": "Łąka kwietna",
+     "from": "06-01",
+     "to": "09-15"
+    }
+   ],
+   "features": [
+    "jasminowiec",
+    "roze",
+    "bez-czarny",
+    "rosliny-miododajne",
+    "retencja"
+   ],
+   "shade": null,
+   "accessible": null,
+   "transport": null,
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/angielski-ogrod.jpg",
+    "video": null
+   },
+   "source": "UM Toruń (parki kieszonkowe)",
+   "quest": null
+  },
+  {
+   "id": "sensoryczna-szwecja",
+   "name": "Sensoryczna Szwecja",
+   "type": "park-kieszonkowy",
+   "icon": "👃",
+   "badge": "🇸🇪",
+   "lat": 53.0239,
+   "lng": 18.6253,
+   "district": "Jakubskie-Mokre",
+   "address": "ul. Chrobrego/Wojska Polskiego",
+   "area_m2": 2245,
+   "seasons": [
+    "wiosna",
+    "lato",
+    "jesien",
+    "zima"
+   ],
+   "seasonPrimary": "wiosna",
+   "description": "Park eksperymentalny zwracający uwagę na wszystkie zmysły. Z tablicami Braille’a i szeroką dostępnością dla osób z niepełnosprawnościami.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": "hortensja",
+     "label": "Hortensje",
+     "from": "07-01",
+     "to": "09-30"
+    },
+    {
+     "species": "roza",
+     "label": "Róże",
+     "from": "06-01",
+     "to": "09-15"
+    },
+    {
+     "species": "czarna-porzeczka",
+     "label": "Czarna porzeczka (owoce)",
+     "from": "07-01",
+     "to": "07-31"
+    },
+    {
+     "species": "kalina",
+     "label": "Kalina",
+     "from": "05-10",
+     "to": "06-15"
+    },
+    {
+     "species": "lawenda",
+     "label": "Lawenda",
+     "from": "07-01",
+     "to": "08-20"
+    },
+    {
+     "species": "jasminowiec",
+     "label": "Jaśminowiec wonny",
+     "from": "06-01",
+     "to": "06-30"
+    },
+    {
+     "species": "bez-czarny-kwiat",
+     "label": "Bez czarny (kwitnienie)",
+     "from": "06-01",
+     "to": "06-30"
+    },
+    {
+     "species": "bez-czarny-owoc",
+     "label": "Bez czarny (owoce)",
+     "from": "08-15",
+     "to": "09-30"
+    },
+    {
+     "species": "trawy-ozdobne",
+     "label": "Trawy ozdobne (struktura, szron)",
+     "from": "08-15",
+     "to": "02-28"
+    }
+   ],
+   "features": [
+    "hortensje",
+    "roze",
+    "czarna-porzeczka",
+    "kalina",
+    "lawenda",
+    "jasminowiec",
+    "bez-czarny",
+    "trawy-ozdobne"
+   ],
+   "shade": null,
+   "accessible": null,
+   "transport": null,
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/sensoryczna-szwecja.jpg",
+    "video": null
+   },
+   "source": "UM Toruń (parki kieszonkowe)",
+   "quest": null
+  },
+  {
+   "id": "skwer-polski",
+   "name": "Skwer Polski",
+   "type": "park-kieszonkowy",
+   "icon": "🇵🇱",
+   "badge": "🇵🇱",
+   "lat": 53.0219,
+   "lng": 18.5947,
+   "district": "Chełmińskie",
+   "address": "ul. Szosa Chełmińska 75",
+   "area_m2": 2560,
+   "seasons": [
+    "wiosna",
+    "lato",
+    "jesien",
+    "zima"
+   ],
+   "seasonPrimary": "wiosna",
+   "description": "Park patriotyczny nawiązujący do polskiego dziedzictwa i przyrody. Przy Liceum Akademickim.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": "lipa",
+     "label": "Lipa drobnolistna",
+     "from": "06-20",
+     "to": "07-15"
+    },
+    {
+     "species": "glog",
+     "label": "Głóg jednoszyjkowy",
+     "from": "05-05",
+     "to": "05-31"
+    },
+    {
+     "species": "deren-kwiat",
+     "label": "Dereń biały (kwitnienie)",
+     "from": "05-15",
+     "to": "06-15"
+    },
+    {
+     "species": "deren-pedy",
+     "label": "Dereń biały (czerwone pędy zimą)",
+     "from": "11-15",
+     "to": "03-15"
+    },
+    {
+     "species": "irga-owoce",
+     "label": "Irga (owoce)",
+     "from": "09-01",
+     "to": "12-31"
+    }
+   ],
+   "features": [
+    "sztuka-w-parku",
+    "rosliny-tematyczne",
+    "lipa",
+    "glog",
+    "deren",
+    "irga"
+   ],
+   "shade": null,
+   "accessible": null,
+   "transport": null,
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/skwer-polski.jpg",
+    "video": null
+   },
+   "source": "UM Toruń (parki kieszonkowe)",
+   "quest": null
+  },
+  {
+   "id": "park-linearny-wrzosy-ii",
+   "name": "Park Linearny – Wrzosy II",
+   "type": "park-kieszonkowy",
+   "icon": "🌳",
+   "badge": "compass",
+   "lat": 53.0425,
+   "lng": 18.6025,
+   "district": "Wrzosy II",
+   "address": "ul. Polna",
+   "area_m2": 12440,
+   "seasons": [
+    "lato",
+    "jesien"
+   ],
+   "seasonPrimary": "lato",
+   "description": "Największy park kieszonkowy, o charakterze liniowym. Zawiera wszystkie elementy zagospodarowania parków kieszonkowych.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": "laka-kwietna",
+     "label": "Łąka kwietna",
+     "from": "06-01",
+     "to": "09-15"
+    }
+   ],
+   "features": [
+    "alejki",
+    "ogrod-deszczowy",
+    "rosliny-miododajne",
+    "laka-kwietna",
+    "zielen-zacieniajaca"
+   ],
+   "shade": null,
+   "accessible": null,
+   "transport": null,
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/park-linearny-wrzosy-ii.jpg",
+    "video": null
+   },
+   "source": "UM Toruń (parki kieszonkowe)",
+   "quest": null
+  },
+  {
+   "id": "aleja-jasminow",
+   "name": "Sekretna alejka jaśminów",
+   "type": "miejsce-ukryte",
+   "icon": "🤍",
+   "badge": null,
+   "lat": 53.008343,
+   "lng": 18.601507,
+   "district": null,
+   "address": null,
+   "area_m2": null,
+   "seasons": [
+    "wiosna"
+   ],
+   "seasonPrimary": "wiosna",
+   "description": "Alpinarium przy Ślimaku Getyńskim — przez kilkanaście dni w maju jaśminy tworzą tu biały, pachnący tunel. Większość torunian nie ma pojęcia, że to miejsce istnieje. Wejdziesz przypadkiem i staniesz w pół kroku, bo zapach zatrzyma Cię szybciej niż widok. Najlepiej rano, kiedy rosa jeszcze lśni na płatkach.",
+   "quote": "Pachnie tak, że nie chce się wracać do domu.",
+   "recommender": "Piotr",
+   "recommenderRole": "wykładowca UMK",
+   "highlights": [
+    {
+     "species": "jasminowiec",
+     "label": "Jaśminowiec wonny",
+     "from": "05-05",
+     "to": "05-25"
+    }
+   ],
+   "features": [],
+   "shade": null,
+   "accessible": null,
+   "transport": "Pieszo lub rowerem",
+   "time": "Rano lub wieczorem",
+   "free": true,
+   "media": {
+    "photo": null,
+    "video": null
+   },
+   "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+   "quest": null
+  },
+  {
+   "id": "magnolie-spacer",
+   "name": "Szlak kwitnących magnolii",
+   "type": "miejsce-ukryte",
+   "icon": "🌸",
+   "badge": null,
+   "lat": 53.011513,
+   "lng": 18.60168,
+   "district": null,
+   "address": null,
+   "area_m2": null,
+   "seasons": [
+    "wiosna"
+   ],
+   "seasonPrimary": "wiosna",
+   "description": "W Toruniu rośnie zaskakująco dużo magnolii, ale trzeba wiedzieć gdzie patrzeć. W kwietniu kwitną jednocześnie na kilku ulicach — spacer od jednej do drugiej to trasa, której nie znajdziesz w żadnym przewodniku. Różowe korony na tle starych kamienic. Dziesięć dni, potem czekasz rok.",
+   "quote": "Kwiecień — magnolie eksplodują różem. Musisz złapać moment.",
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": "magnolia",
+     "label": "Magnolie",
+     "from": "04-10",
+     "to": "04-25"
+    }
+   ],
+   "features": [],
+   "shade": null,
+   "accessible": null,
+   "transport": "Pieszo",
+   "time": "Dowolna pora dnia",
+   "free": true,
+   "media": {
+    "photo": null,
+    "video": null
+   },
+   "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+   "quest": null
+  },
+  {
+   "id": "magnolia-bydgoska",
+   "name": "Magnolia na tle muru pruskiego",
+   "type": "miejsce-ukryte",
+   "icon": "📸",
+   "badge": null,
+   "lat": 53.010092,
+   "lng": 18.586013,
+   "district": null,
+   "address": null,
+   "area_m2": null,
+   "seasons": [
+    "wiosna"
+   ],
+   "seasonPrimary": "wiosna",
+   "description": "Okazała magnolia na tle kamienicy z murem pruskim — to zestawienie wygląda jak specjalnie wyreżyserowane. Różowe kwiaty, czarno-biała faktura ścian, kawałek nieba. Kwitnie dosłownie kilka dni. Kto wie, ten łapie. Kto nie wie — przechodzi obok i nie podnosi głowy.",
+   "quote": "Róg Bydgoskiej i Konopnickiej. Kilka dni w roku. Jedno zdjęcie. Perfekcja.",
+   "recommender": "Piotr",
+   "recommenderRole": "wykładowca UMK",
+   "highlights": [
+    {
+     "species": "magnolia",
+     "label": "Magnolie",
+     "from": "04-12",
+     "to": "04-22"
+    }
+   ],
+   "features": [],
+   "shade": null,
+   "accessible": null,
+   "transport": "Pieszo",
+   "time": "Rano (najlepsze światło)",
+   "free": true,
+   "media": {
+    "photo": null,
+    "video": null
+   },
+   "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+   "quest": null
+  },
+  {
+   "id": "bydgoskie-bzy",
+   "name": "Bzy na Bydgoskim Przedmieściu",
+   "type": "miejsce-ukryte",
+   "icon": "💜",
+   "badge": null,
+   "lat": 53.009625,
+   "lng": 18.583394,
+   "district": null,
+   "address": null,
+   "area_m2": null,
+   "seasons": [
+    "wiosna"
+   ],
+   "seasonPrimary": "wiosna",
+   "description": "Bydgoskie od kwietnia zamienia się w ogród, do którego nikt nie sprzedaje biletów. Bzy, jaśminy i kwitnące drzewa w przydomowych ogródkach tworzą kolorowy korytarz wzdłuż bocznych uliczek. Każda brama to inny zapach, każdy zakręt to nowa paleta. Nie musisz nigdzie iść. Po prostu idź.",
+   "quote": "Spacer przez cudze ogrody — bez wchodzenia do środka.",
+   "recommender": "Piotr",
+   "recommenderRole": "wykładowca UMK",
+   "highlights": [
+    {
+     "species": "lilak",
+     "label": "Bzy (lilak)",
+     "from": "04-25",
+     "to": "05-25"
+    }
+   ],
+   "features": [],
+   "shade": null,
+   "accessible": null,
+   "transport": "Pieszo",
+   "time": "Popołudnie",
+   "free": true,
+   "media": {
+    "photo": null,
+    "video": null
+   },
+   "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+   "quest": null
+  },
+  {
+   "id": "ogrodki-etnograficzne",
+   "name": "Ogródki Muzeum Etnograficznego",
+   "type": "miejsce-ukryte",
+   "icon": "🌿",
+   "badge": null,
+   "lat": 53.014717,
+   "lng": 18.603966,
+   "district": null,
+   "address": null,
+   "area_m2": null,
+   "seasons": [
+    "wiosna",
+    "lato",
+    "jesien"
+   ],
+   "seasonPrimary": "lato",
+   "description": "Za budynkiem Muzeum Etnograficznego kryją się ogródki tematyczne — zioła, kwiaty, tradycyjne uprawy. Właściwie w centrum miasta, a czujesz się jak na wsi u babci. Cicho, zielono, bez tłumów. Idealne kiedy Starówka jest zbyt głośna, a Ty potrzebujesz dwudziestu minut spokoju.",
+   "quote": "Wszyscy znają muzeum. Prawie nikt nie wie o ogródkach za nim.",
+   "recommender": "Piotr",
+   "recommenderRole": "wykładowca UMK",
+   "highlights": [
+    {
+     "species": null,
+     "label": "maj – wrzesień",
+     "from": "05-01",
+     "to": "09-30"
+    }
+   ],
+   "features": [],
+   "shade": null,
+   "accessible": null,
+   "transport": "Pieszo",
+   "time": "Przed południem (mniej ludzi)",
+   "free": true,
+   "media": {
+    "photo": null,
+    "video": null
+   },
+   "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+   "quest": null
+  },
+  {
+   "id": "zachody-lotnisko",
+   "name": "Zachody słońca na lotnisku",
+   "type": "miejsce-ukryte",
+   "icon": "🌅",
+   "badge": null,
+   "lat": 53.027536,
+   "lng": 18.559491,
+   "district": null,
+   "address": null,
+   "area_m2": null,
+   "seasons": [
+    "lato"
+   ],
+   "seasonPrimary": "lato",
+   "description": "Teren przy lotnisku Toruń-Bielany to najlepszy punkt widokowy na zachód słońca w mieście. Zero zabudowy na horyzoncie, samo niebo. Dojazd rowerem to połowa przyjemności — droga wiedzie przez tereny zielone, coraz ciszej, coraz szerzej. Na miejscu siadasz w trawie i patrzysz jak miasto tonie w pomarańczowym świetle.",
+   "quote": "Płaski horyzont, pas startowy w złocie, cisza. Toruń znika — zostaje niebo.",
+   "recommender": "Piotr",
+   "recommenderRole": "wykładowca UMK",
+   "highlights": [
+    {
+     "species": null,
+     "label": "czerwiec – sierpień",
+     "from": "06-01",
+     "to": "08-31"
+    }
+   ],
+   "features": [],
+   "shade": null,
+   "accessible": null,
+   "transport": "Rowerem (najlepiej)",
+   "time": "Wieczór, ok. 1h przed zachodem",
+   "free": true,
+   "media": {
+    "photo": null,
+    "video": null
+   },
+   "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+   "quest": null
+  },
+  {
+   "id": "ogrod-wfosigw",
+   "name": "Ogród parkowy przy WFOŚiGW",
+   "type": "miejsce-ukryte",
+   "icon": "📖",
+   "badge": null,
+   "lat": 53.009755,
+   "lng": 18.597279,
+   "district": null,
+   "address": null,
+   "area_m2": null,
+   "seasons": [
+    "wiosna",
+    "lato",
+    "jesien"
+   ],
+   "seasonPrimary": "lato",
+   "description": "Ogród parkowy przy alei 500-lecia to jeden z najlepiej strzeżonych sekretów Torunia — i to nie dlatego, że jest zamknięty. Jest otwarty. Po rewitalizacji wygląda przepięknie: ławki, zieleń, cisza. Problem w tym, że ludzie nie wiedzą, że mogą tu wejść. A mogą. I warto — szczególnie z książką.",
+   "quote": "Zrewitalizowany, piękny i pusty. Miliony wydane — nikt nie przychodzi.",
+   "recommender": "Piotr",
+   "recommenderRole": "wykładowca UMK",
+   "highlights": [
+    {
+     "species": null,
+     "label": "maj – październik",
+     "from": "05-01",
+     "to": "10-31"
+    }
+   ],
+   "features": [],
+   "shade": null,
+   "accessible": null,
+   "transport": "Pieszo / rowerem",
+   "time": "Dowolna pora dnia",
+   "free": true,
+   "media": {
+    "photo": null,
+    "video": null
+   },
+   "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+   "quest": null
+  },
+  {
+   "id": "barbarka-jesien",
+   "name": "Bukowe liście na Barbarce",
+   "type": "miejsce-ukryte",
+   "icon": "🍂",
+   "badge": null,
+   "lat": 53.056436,
+   "lng": 18.546755,
+   "district": null,
+   "address": null,
+   "area_m2": null,
+   "seasons": [
+    "jesien"
+   ],
+   "seasonPrimary": "jesien",
+   "description": "Barbarka jesienią to osobny świat. Stare buki przybierają odcienie złota, miedzi i czerwieni, a kiedy liście opadną — tworzą gruby dywan, który szeleści pod każdym krokiem. Światło przebija przez koronę drzew w smugach, zapach wilgotnej ziemi miesza się z chłodnym powietrzem. Spacer tutaj w październikowy poranek to jedno z tych doświadczeń, o których potem opowiadasz znajomym.",
+   "quote": "Szeleszczący dywan pod stopami. Las, który jesienią mówi kolorami.",
+   "recommender": "Piotr",
+   "recommenderRole": "wykładowca UMK",
+   "highlights": [
+    {
+     "species": "buk-jesien",
+     "label": "Bukowe liście",
+     "from": "10-05",
+     "to": "11-10"
+    }
+   ],
+   "features": [],
+   "shade": null,
+   "accessible": null,
+   "transport": "Rowerem lub autobusem",
+   "time": "Przed południem (najlepsze światło)",
+   "free": true,
+   "media": {
+    "photo": null,
+    "video": null
+   },
+   "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+   "quest": null
+  },
+  {
+   "id": "bydgoskie-zima",
+   "name": "Tajemnicze drzewa na Bydgoskim",
+   "type": "miejsce-ukryte",
+   "icon": "🌙",
+   "badge": null,
+   "lat": 53.008378,
+   "lng": 18.574947,
+   "district": null,
+   "address": null,
+   "area_m2": null,
+   "seasons": [
+    "zima"
+   ],
+   "seasonPrimary": "zima",
+   "description": "Park na Bydgoskim zimą zmienia się nie do poznania. Bezlistne drzewa odsłaniają swoje kształty — powykręcane konary, rozłożyste pnie, sylwetki jakby wyrwane z baśni. Kiedy spadnie śnieg i zapali się latarnie, ciepłe światło rysuje cienie na białym tle i robi się niesamowicie. Niewielu ludzi, cisza, lekki mróz. Wchodzisz w to jak w kadr z filmu, którego nikt jeszcze nie nakręcił.",
+   "quote": "Latarnie podświetlają pnie i konary zastygłe w dziwnych pozach. Cicho. Biało. Dziwnie pięknie.",
+   "recommender": "Piotr",
+   "recommenderRole": "wykładowca UMK",
+   "highlights": [
+    {
+     "species": null,
+     "label": "grudzień – luty (szczególnie po śniegu)",
+     "from": "12-01",
+     "to": "02-28"
+    }
+   ],
+   "features": [],
+   "shade": null,
+   "accessible": null,
+   "transport": "Pieszo",
+   "time": "Wieczór (po zmroku)",
+   "free": true,
+   "media": {
+    "photo": null,
+    "video": null
+   },
+   "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+   "quest": null
+  }
+ ]
+};
+</script>
+<script src="vendor/leaflet.js"></script>
+<script>
+(function(){
+'use strict';
+
+/* ================= dane ================= */
+var DANE = window.DANE;
+var PUNKTY = DANE.points;
+var $ = function(id){ return document.getElementById(id); };
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+/* ================= kalendarz ================= */
+var PRZED = [0,31,59,90,120,151,181,212,243,273,304,334];
+var MIES  = ['stycznia','lutego','marca','kwietnia','maja','czerwca',
+             'lipca','sierpnia','września','października','listopada','grudnia'];
+
+function doba(mmdd){ var m = +mmdd.slice(0,2), d = +mmdd.slice(3,5); return PRZED[m-1] + d; }
+function naDate(n){
+  n = ((n - 1) % 365 + 365) % 365 + 1;
+  var m = 11; while (PRZED[m] >= n) m--;
+  return { m: m + 1, d: n - PRZED[m] };
+}
+function dobaZDaty(dt){
+  var y = dt.getFullYear(), m = dt.getMonth(), d = dt.getDate();
+  var przest = y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0);
+  var n = PRZED[m] + d;
+  if (przest) { if (m === 1 && d === 29) n = PRZED[1] + 28; else if (m > 1) n -= 1; }
+  return n;
+}
+function dataTekst(n){ var x = naDate(n); return x.d + ' ' + MIES[x.m - 1]; }
+
+function trwa(n, h){ var a = doba(h.from), b = doba(h.to);
+  return a <= b ? (n >= a && n <= b) : (n >= a || n <= b); }
+function zostaloDni(n, h){ var x = doba(h.to) - n; if (x < 0) x += 365; return x + 1; }
+function zaDni(n, h){ var x = doba(h.from) - n; if (x < 0) x += 365; return x; }
+
+function sezonDoby(n){
+  if (n >= doba('03-01') && n <= doba('05-31')) return 'wiosna';
+  if (n >= doba('06-01') && n <= doba('08-31')) return 'lato';
+  if (n >= doba('09-01') && n <= doba('11-30')) return 'jesien';
+  return 'zima';
+}
+
+/* ================= polszczyzna ================= */
+function pl(n, jeden, kilka, wiele){
+  if (n === 1) return jeden;
+  var d = n % 10, s = n % 100;
+  return (d >= 2 && d <= 4 && !(s >= 12 && s <= 14)) ? kilka : wiele;
+}
+function dniZostalo(n){
+  if (n === 1) return 'ostatni dzień';
+  return pl(n, 'został', 'zostały', 'zostało') + ' ' + n + ' ' + pl(n, 'dzień', 'dni', 'dni');
+}
+function dniZa(n){
+  if (n === 0) return 'zaczyna się dziś';
+  if (n === 1) return 'jutro';
+  return 'za ' + n + ' ' + pl(n, 'dzień', 'dni', 'dni');
+}
+function liczba(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+
+function oknoTekst(h){
+  var a = naDate(doba(h.from)), b = naDate(doba(h.to));
+  if (a.m === b.m) return a.d + '–' + b.d + ' ' + MIES[a.m - 1];
+  return a.d + ' ' + MIES[a.m - 1] + ' – ' + b.d + ' ' + MIES[b.m - 1];
+}
+
+/* ================= stan ================= */
+var SEZONY = [
+  { id:'wiosna', label:'Wiosna' }, { id:'lato', label:'Lato' },
+  { id:'jesien', label:'Jesień' }, { id:'zima', label:'Zima' }
+];
+var KOLEJ = { wiosna:0, lato:1, jesien:2, zima:3 };
+var BEZ_DZIELNICY = '__poza';
+var BEZ_CIENIA = '__brak';
+
+var stan = {
+  doba: dobaZDaty(new Date()),
+  sezon: null,
+  tylkoTrwa: false,
+  dzielnica: '*',
+  cien: '*',
+  wybrany: null
+};
+
+/* ================= filtrowanie ================= */
+function trwajace(p, n){
+  return p.highlights.filter(function(h){ return trwa(n, h); });
+}
+function testy(p){
+  return {
+    sezon: !stan.sezon || p.seasons.indexOf(stan.sezon) !== -1,
+    trwa: !stan.tylkoTrwa || trwajace(p, stan.doba).length > 0,
+    dzielnica: stan.dzielnica === '*' ||
+      (stan.dzielnica === BEZ_DZIELNICY ? p.district == null : p.district === stan.dzielnica),
+    cien: stan.cien === '*' ||
+      (stan.cien === BEZ_CIENIA ? p.shade == null : String(p.shade) === stan.cien)
+  };
+}
+function przechodzi(p, pomin){
+  var t = testy(p);
+  for (var k in t) { if (k !== pomin && !t[k]) return false; }
+  return true;
+}
+function widoczne(){ return PUNKTY.filter(function(p){ return przechodzi(p); }); }
+
+function aktywneFiltry(){
+  var out = [];
+  if (stan.sezon) out.push({ k:'sezon', opis:'pora roku: ' + stan.sezon, zdejmij:function(){ stan.sezon = null; } });
+  if (stan.tylkoTrwa) out.push({ k:'trwa', opis:'tylko to, co trwa ' + dataTekst(stan.doba), zdejmij:function(){ stan.tylkoTrwa = false; } });
+  if (stan.dzielnica !== '*') out.push({ k:'dzielnica',
+      opis:'dzielnica: ' + (stan.dzielnica === BEZ_DZIELNICY ? 'poza podziałem' : stan.dzielnica),
+      zdejmij:function(){ stan.dzielnica = '*'; } });
+  if (stan.cien !== '*') out.push({ k:'cien',
+      opis:'cień: ' + (stan.cien === BEZ_CIENIA ? 'bez oceny' : stan.cien + '/3'),
+      zdejmij:function(){ stan.cien = '*'; } });
+  return out;
+}
+
+/* ================= pasek „co teraz” ================= */
+function zjawiska(n){
+  var mapa = {}, kolejnosc = [];
+  PUNKTY.forEach(function(p){
+    p.highlights.forEach(function(h){
+      if (!trwa(n, h)) return;
+      var klucz = h.species || ('pkt:' + p.id);
+      if (!mapa[klucz]) { mapa[klucz] = { klucz:klucz, species:h.species, label:h.label, punkty:[], dni:1e9 }; kolejnosc.push(klucz); }
+      var g = mapa[klucz], dni = zostaloDni(n, h);
+      g.punkty.push({ p:p, dni:dni });
+      if (dni < g.dni) g.dni = dni;
+    });
+  });
+  var out = kolejnosc.map(function(k){ return mapa[k]; });
+  out.forEach(function(g){ g.punkty.sort(function(a, b){ return a.dni - b.dni; }); });
+  out.sort(function(a, b){ return a.dni - b.dni || a.label.localeCompare(b.label, 'pl'); });
+  return out;
+}
+function najblizsze(n){
+  var best = null;
+  PUNKTY.forEach(function(p){
+    p.highlights.forEach(function(h){
+      var za = zaDni(n, h);
+      if (!best || za < best.za) best = { za:za, h:h, p:p };
+    });
+  });
+  return best;
+}
+
+function rysujTeraz(){
+  var n = stan.doba, g = zjawiska(n);
+  var items = $('terazItems'), wiecej = $('terazWiecej'), lead = $('lead');
+  $('dataOut').textContent = dataTekst(n);
+
+  if (!g.length) {
+    var nb = najblizsze(n);
+    lead.innerHTML = '<b>' + esc(dataTekst(n)) + '</b> — w tym dniu nie trwa żadne z opisanych zjawisk.';
+    items.innerHTML = nb ? ('<li class="zj zj--pusto">' +
+        '<p class="zj__nazwa">' + esc(nb.h.species ? nb.h.label : nb.p.name) + '</p>' +
+        '<p class="zj__gdzie">Najbliższe okno w kalendarzu · <b>' + esc(nb.p.name) + '</b></p>' +
+        '<span class="zj__ile">' + esc(dniZa(nb.za)) + '</span></li>') : '';
+    wiecej.textContent = 'Pusty dzień nie znaczy pusta mapa — przewiń suwak, żeby zobaczyć, kiedy znów coś się zacznie.';
+    return;
+  }
+
+  var miejsca = {};
+  g.forEach(function(x){ x.punkty.forEach(function(y){ miejsca[y.p.id] = 1; }); });
+  var lm = Object.keys(miejsca).length;
+  lead.innerHTML = '<b>' + esc(dataTekst(n)) + '</b> — ' + pl(g.length, 'trwa', 'trwają', 'trwa') +
+    ' <b>' + g.length + '</b> ' + pl(g.length, 'zjawisko', 'zjawiska', 'zjawisk') +
+    ' w <b>' + lm + '</b> ' + pl(lm, 'miejscu', 'miejscach', 'miejscach') + '.';
+
+  items.innerHTML = g.slice(0, 4).map(function(x){
+    var pierwszy = x.punkty[0].p, ile = x.punkty.length, nazwa, gdzie;
+    if (x.species) {
+      nazwa = x.label;
+      gdzie = '<b>' + esc(pierwszy.name) + '</b>' + (ile === 2 ? ' i jeszcze jedno miejsce'
+        : ile > 2 ? ' i ' + (ile - 1) + ' ' + pl(ile - 1, 'inne miejsce', 'inne miejsca', 'innych miejsc')
+        : '');
+    } else {
+      nazwa = pierwszy.name;
+      gdzie = 'Sezon miejsca · <b>' + esc(x.label) + '</b>';
+    }
+    return '<li class="zj"><p class="zj__nazwa">' + esc(nazwa) + '</p>' +
+           '<p class="zj__gdzie">' + gdzie + '</p>' +
+           '<span class="zj__ile">' + esc(dniZostalo(x.dni)) + '</span></li>';
+  }).join('');
+
+  var reszta = g.length - 4;
+  wiecej.textContent = reszta > 0
+    ? 'Poza tą czwórką trwa jeszcze ' + reszta + ' ' + pl(reszta, 'zjawisko', 'zjawiska', 'zjawisk') +
+      ' — widać je na mapie po wypełnionych pinezkach.'
+    : '';
+}
+
+/* ================= mapa ================= */
+var map, warstwa, kafle, markery = {}, mapaPadla = false;
+
+function ikona(p, aktywny, wybrany){
+  var kl = 'pin' + (p.type === 'miejsce-ukryte' ? ' pin--ukryte' : '') +
+           (aktywny ? ' jest' : '') + (wybrany ? ' sel' : '');
+  return L.divIcon({
+    className: 'pinwrap' + (wybrany ? ' sel' : ''),
+    html: '<span class="' + kl + '"></span>',
+    iconSize: [16, 16], iconAnchor: [8, 8]
+  });
+}
+
+function zbudujMape(){
+  map = L.map('map', { zoomControl:true, attributionControl:true, scrollWheelZoom:true })
+         .setView([53.019, 18.606], 12);
+  map.attributionControl.setPrefix('');
+  warstwa = L.layerGroup().addTo(map);
+
+  kafle = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19, attribution: '&copy; OpenStreetMap'
+  }).addTo(map);
+
+  var wstalo = false, bledy = 0;
+  kafle.on('tileload', function(){ wstalo = true; });
+  kafle.on('tileerror', function(){ bledy++; if (!wstalo && bledy >= 4) bezPodkladu(); });
+  setTimeout(function(){ if (!wstalo) bezPodkladu(); }, 3000);
+}
+function bezPodkladu(){
+  if (mapaPadla) return;
+  mapaPadla = true;
+  if (map.hasLayer(kafle)) map.removeLayer(kafle);
+  var nota = $('mapnota');
+  nota.textContent = 'Podkład mapy się nie wczytał. Pinezki stoją na własnych współrzędnych ' +
+    'i działają dalej — możesz przybliżać i klikać jak wcześniej.';
+  nota.hidden = false;
+}
+
+function rysujPinezki(lista){
+  warstwa.clearLayers(); markery = {};
+  lista.forEach(function(p){
+    var akt = trwajace(p, stan.doba).length > 0;
+    var m = L.marker([p.lat, p.lng], {
+      icon: ikona(p, akt, p.id === stan.wybrany),
+      keyboard: true,
+      title: p.name,
+      alt: p.name + (akt ? ' — coś się tam dzieje w wybranym dniu' : '')
+    });
+    m.bindTooltip(p.name, { direction:'top', offset:[0, -10] });
+    m.on('click', function(){ wybierz(p.id, 'mapa'); });
+    m.addTo(warstwa);
+    markery[p.id] = m;
+  });
+}
+
+/* ================= lista ================= */
+function sortuj(a, b){
+  var aa = trwajace(a, stan.doba).length > 0, bb = trwajace(b, stan.doba).length > 0;
+  if (aa !== bb) return aa ? -1 : 1;
+  var ka = KOLEJ[a.seasonPrimary], kb = KOLEJ[b.seasonPrimary];
+  if (ka !== kb) return ka - kb;
+  return a.name.localeCompare(b.name, 'pl');
+}
+
+function rysujListe(lista){
+  var ol = $('lista');
+  ol.innerHTML = lista.slice().sort(sortuj).map(function(p){
+    var akt = trwajace(p, stan.doba);
+    var meta = [];
+    meta.push(p.type === 'park-kieszonkowy' ? 'park kieszonkowy' : 'miejsce polecane');
+    meta.push(p.district ? p.district : 'poza podziałem');
+    var teraz = akt.length
+      ? '<span class="kropka">' + esc(akt[0].species ? akt[0].label : 'sezon otwarty') + '</span>'
+      : '';
+    return '<li><button class="wiersz" type="button" data-id="' + esc(p.id) + '"' +
+      (p.id === stan.wybrany ? ' aria-current="true"' : '') + '>' +
+      '<span class="wiersz__g"><span class="wiersz__ik" aria-hidden="true">' + esc(p.icon || '') + '</span>' +
+      '<span class="wiersz__n">' + esc(p.name) + '</span></span>' +
+      '<span class="wiersz__m">' + teraz + '<span>' + esc(meta.join(' · ')) + '</span></span>' +
+      '</button></li>';
+  }).join('');
+
+  $('listapusta').hidden = lista.length > 0;
+  if (!lista.length) $('listapusta').textContent =
+    'Lista jest pusta, bo żaden punkt nie przechodzi przez ustawione filtry. Powód i sposób cofnięcia są nad mapą.';
+
+  var trwaIle = lista.filter(function(p){ return trwajace(p, stan.doba).length > 0; }).length;
+  $('listahead').innerHTML = '<span>Punkty w bieżącym widoku</span><span>' +
+    (trwaIle ? trwaIle + ' z nich ma coś w trakcie ' + esc(dataTekst(stan.doba)) : 'nic nie trwa ' + esc(dataTekst(stan.doba))) +
+    '</span>';
+}
+
+/* ================= karta punktu ================= */
+function kartaHtml(p){
+  var akt = trwajace(p, stan.doba);
+  var h = [];
+
+  h.push('<div class="karta__pas"><button class="wroc" type="button" id="wroc">← wróć do listy punktów</button></div>');
+  h.push('<div class="karta__body">');
+
+  if (p.media && p.media.photo) {
+    h.push('<img class="foto" src="' + esc(p.media.photo) + '" alt="' + esc(p.name) + '" loading="lazy">');
+  } else {
+    h.push('<div class="brakfoto">Zdjęcie w przygotowaniu.<br>Kadry do miejsc z Torunia Ukrytego dołożą ' +
+           'mieszkańcy, którzy je polecili.</div>');
+  }
+
+  var park = p.type === 'park-kieszonkowy';
+  h.push('<p class="karta__typ"><i class="' + (park ? 'k' : 'd') + (akt.length ? ' a' : '') + '"></i>' +
+         (park ? 'Park kieszonkowy · inwestycja miasta' : 'Miejsce polecone przez mieszkańców') + '</p>');
+  h.push('<h3>' + esc(p.name) + (p.badge ? ' <span class="em" aria-hidden="true">' + esc(p.badge) + '</span>' : '') + '</h3>');
+
+  if (p.quote) {
+    h.push('<figure class="cytat"><q>' + esc(p.quote) + '</q>' +
+      (p.recommender
+        ? '<figcaption class="cytat__kto">poleca <b>' + esc(p.recommender) + '</b>' +
+          (p.recommenderRole ? ', ' + esc(p.recommenderRole) : '') + '</figcaption>'
+        : '<figcaption class="cytat__kto">z rekomendacji mieszkańców</figcaption>') +
+      '</figure>');
+  }
+
+  h.push('<p class="opis">' + esc(p.description) + '</p>');
+
+  if (p.highlights.length) {
+    h.push('<div class="sekcja"><h4>Co tu zobaczysz i kiedy</h4><ul class="okna">');
+    p.highlights.slice().sort(function(a, b){ return doba(a.from) - doba(b.from); }).forEach(function(x){
+      var jest = trwa(stan.doba, x);
+      var tytul = x.species ? x.label : 'Sezon miejsca';
+      var kiedy = x.species ? 'zwykle ' + oknoTekst(x) : x.label;
+      var znacznik = jest
+        ? ' <em>' + esc(dniZostalo(zostaloDni(stan.doba, x))) + '</em>'
+        : ' <span>· ' + esc(dniZa(zaDni(stan.doba, x))) + '</span>';
+      h.push('<li class="okno' + (jest ? ' jest' : '') + '"><span class="okno__k"></span>' +
+             '<span class="okno__t"><b>' + esc(tytul) + '</b> <span>' + esc(kiedy) + '</span>' + znacznik + '</span></li>');
+    });
+    h.push('</ul><p class="przyb">Terminy są oszacowane dla Torunia i mogą się przesunąć o kilka dni w obie strony ' +
+           'zależnie od pogody — nie traktuj ich jak rozkładu jazdy.</p></div>');
+  }
+
+  h.push('<div class="sekcja"><h4>Konkrety</h4><dl class="fakty">');
+  h.push('<dt>Dzielnica</dt><dd>' + (p.district ? esc(p.district)
+        : '<span class="brak">poza podziałem</span>') + '</dd>');
+  if (p.address)  h.push('<dt>Adres</dt><dd>' + esc(p.address) + '</dd>');
+  if (p.area_m2)  h.push('<dt>Powierzchnia</dt><dd>' + liczba(p.area_m2) + ' m²</dd>');
+  if (p.transport)h.push('<dt>Dojazd</dt><dd>' + esc(p.transport) + '</dd>');
+  if (p.time)     h.push('<dt>Dobra pora</dt><dd>' + esc(p.time) + '</dd>');
+  if (p.free)     h.push('<dt>Wstęp</dt><dd>wolny</dd>');
+  h.push('<dt>Cień</dt><dd><span class="brak">warstwa w przygotowaniu</span></dd>');
+  h.push('<dt>Dostępność</dt><dd><span class="brak">w przygotowaniu</span></dd>');
+  h.push('</dl>');
+
+  h.push('</div>');
+
+  if (p.quest) {
+    h.push('<div class="quest"><p class="quest__n">Quest ' + esc(p.quest.pk) + ' · do przejścia na miejscu</p>' +
+      '<h4>' + esc(p.quest.title) + '</h4>' +
+      '<p class="quest__m">' + esc(p.quest.time) + ' · ' + esc(p.quest.dist) + '</p>' +
+      '<p><a href="https://questy.org.pl/" target="_blank" rel="noopener">Questy.org.pl</a></p>' +
+      '<p class="quest__d">Zadania i hasło końcowe znajdziesz w aplikacji i broszurze Questy.</p></div>');
+  }
+
+  h.push('<p class="zrodlo">Źródło: ' + esc(p.source) + '</p>');
+  h.push('</div>');
+  return h.join('');
+}
+
+function pokazKarte(p){
+  var k = $('karta');
+  k.innerHTML = kartaHtml(p);
+  k.hidden = false;
+  $('lista').hidden = true;
+  $('listapusta').hidden = true;
+  $('listahead').innerHTML = '<span>Karta punktu</span><span>' +
+    (p.type === 'park-kieszonkowy' ? 'park kieszonkowy' : 'Toruń Ukryty') + '</span>';
+  $('bokScroll').scrollTop = 0;
+  var w = $('wroc');
+  w.addEventListener('click', function(){ stan.wybrany = null; odswiez(); });
+  w.focus();
+}
+function schowajKarte(){ $('karta').hidden = true; $('karta').innerHTML = ''; $('lista').hidden = false; }
+
+/* ================= wybór punktu ================= */
+function wybierz(id, skad){
+  stan.wybrany = (stan.wybrany === id) ? null : id;
+  odswiez();
+  if (stan.wybrany && skad === 'lista' && markery[stan.wybrany]) {
+    map.panInside(markery[stan.wybrany].getLatLng(), { padding:[50, 50] });
+  }
+}
+
+/* ================= filtry: kontrolki ================= */
+function zbudujFiltry(){
+  $('fSezon').innerHTML = SEZONY.map(function(s){
+    return '<button class="chip" type="button" data-sezon="' + s.id + '" aria-pressed="false">' + s.label + '</button>';
+  }).join('');
+  $('fSezon').addEventListener('click', function(e){
+    var b = e.target.closest('[data-sezon]'); if (!b) return;
+    var v = b.dataset.sezon;
+    stan.sezon = (stan.sezon === v) ? null : v;
+    odswiez();
+  });
+
+  $('fTeraz').addEventListener('click', function(){ stan.tylkoTrwa = !stan.tylkoTrwa; odswiez(); });
+
+  var dz = {}, bezDz = 0;
+  PUNKTY.forEach(function(p){ if (p.district) dz[p.district] = (dz[p.district] || 0) + 1; else bezDz++; });
+  var nazwy = Object.keys(dz).sort(function(a, b){ return a.localeCompare(b, 'pl'); });
+  $('fDzielnica').innerHTML =
+    '<option value="*">Wszystkie dzielnice (' + PUNKTY.length + ')</option>' +
+    nazwy.map(function(k){ return '<option value="' + esc(k) + '">' + esc(k) + ' (' + dz[k] + ')</option>'; }).join('') +
+    '<option value="' + BEZ_DZIELNICY + '">poza podziałem (' + bezDz + ')</option>';
+  $('fDzielnica').addEventListener('change', function(e){ stan.dzielnica = e.target.value; odswiez(); });
+
+  var bezCienia = PUNKTY.filter(function(p){ return p.shade == null; }).length;
+  $('fCien').innerHTML =
+    ['0','1','2','3'].map(function(v){
+      return '<button class="chip" type="button" data-cien="' + v + '" aria-pressed="false">' + v + '</button>';
+    }).join('') +
+    '<button class="chip" type="button" data-cien="' + BEZ_CIENIA + '" aria-pressed="false">bez oceny (' + bezCienia + ')</button>';
+  $('fCien').addEventListener('click', function(e){
+    var b = e.target.closest('[data-cien]'); if (!b) return;
+    var v = b.dataset.cien;
+    stan.cien = (stan.cien === v) ? '*' : v;
+    odswiez();
+  });
+  $('cienOpis').textContent = 'Skala 0 (pełne słońce) – 3 (pełny cień). Warstwa dopiero powstaje, więc wybór poziomu nie zwróci na razie ' +
+    'punktów. Docelowo pokaże, gdzie w mieście schować się przed upałem.';
+
+  $('zeruj').addEventListener('click', function(){
+    stan.sezon = null; stan.tylkoTrwa = false; stan.dzielnica = '*'; stan.cien = '*'; odswiez();
+  });
+
+  $('suwak').value = stan.doba;
+  $('suwak').addEventListener('input', function(e){ stan.doba = +e.target.value; odswiez(); });
+  $('dzis').addEventListener('click', function(){
+    stan.doba = dobaZDaty(new Date()); $('suwak').value = stan.doba; odswiez();
+  });
+}
+
+function odswiezKontrolki(){
+  Array.prototype.forEach.call($('fSezon').children, function(b){
+    b.setAttribute('aria-pressed', String(b.dataset.sezon === stan.sezon));
+  });
+  $('fTeraz').setAttribute('aria-pressed', String(stan.tylkoTrwa));
+  $('fDzielnica').value = stan.dzielnica;
+  Array.prototype.forEach.call($('fCien').children, function(b){
+    b.setAttribute('aria-pressed', String(b.dataset.cien === stan.cien));
+  });
+  $('suwak').value = stan.doba;
+  $('zeruj').disabled = aktywneFiltry().length === 0;
+  $('zeruj').style.opacity = aktywneFiltry().length === 0 ? '.45' : '1';
+}
+
+function rysujStan(lista){
+  $('licznik').innerHTML = 'Na mapie: <b>' + lista.length + '</b> z ' + PUNKTY.length + ' punktów';
+
+  var box = $('pustka');
+  if (lista.length > 0) { box.hidden = true; box.innerHTML = ''; return; }
+
+  var winni = aktywneFiltry().filter(function(f){
+    return PUNKTY.some(function(p){ return przechodzi(p, f.k); });
+  });
+  var html;
+  if (winni.length) {
+    html = '<p class="pustka__t">Nic nie zostało. ' +
+      (winni.length === 1 ? 'Blokuje to jeden filtr — ' : 'Blokują to filtry — ') +
+      '<b>' + winni.map(function(f){ return esc(f.opis); }).join('</b>, <b>') + '</b>.</p>';
+    winni.forEach(function(f, i){
+      html += '<button class="zdejmij" type="button" data-zdejmij="' + i + '">zdejmij: ' + esc(f.opis) + '</button>';
+    });
+  } else {
+    html = '<p class="pustka__t">Nic nie zostało — dopiero <b>wszystkie</b> ustawione filtry razem dają pustkę, ' +
+      'żaden pojedynczy ich nie tłumaczy.</p>' +
+      '<button class="zdejmij" type="button" data-zdejmij="all">wyczyść wszystkie filtry</button>';
+  }
+  box.innerHTML = html;
+  box.hidden = false;
+  box.querySelectorAll('[data-zdejmij]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var v = b.dataset.zdejmij;
+      if (v === 'all') { stan.sezon = null; stan.tylkoTrwa = false; stan.dzielnica = '*'; stan.cien = '*'; }
+      else winni[+v].zdejmij();
+      odswiez();
+    });
+  });
+}
+
+/* ================= odświeżenie całości ================= */
+function odswiez(){
+  document.body.dataset.sezon = stan.sezon || sezonDoby(stan.doba);
+  var lista = widoczne();
+  if (stan.wybrany && !lista.some(function(p){ return p.id === stan.wybrany; })) stan.wybrany = null;
+
+  odswiezKontrolki();
+  rysujTeraz();
+  rysujStan(lista);
+  rysujPinezki(lista);
+
+  var p = stan.wybrany && PUNKTY.filter(function(x){ return x.id === stan.wybrany; })[0];
+  if (p) { rysujListe(lista); pokazKarte(p); }
+  else   { schowajKarte(); rysujListe(lista); }
+}
+
+/* ================= zakładki ================= */
+function zakladka(ktora){
+  var mapaOn = ktora === 'mapa';
+  $('tab-mapa').setAttribute('aria-selected', String(mapaOn));
+  $('tab-planer').setAttribute('aria-selected', String(!mapaOn));
+  $('tab-mapa').tabIndex = mapaOn ? 0 : -1;
+  $('tab-planer').tabIndex = mapaOn ? -1 : 0;
+  $('panel-mapa').hidden = !mapaOn;
+  $('panel-planer').hidden = mapaOn;
+  if (mapaOn && map) setTimeout(function(){ map.invalidateSize(); }, 0);
+}
+
+/* ================= planer ================= */
+var PRZYKLADY = [
+  {
+    q: 'Mam godzinę, jestem na Rynku, chcę cień',
+    kiedy: 'Przykładowa trasa. W pełnej wersji planer układa ją na żywo, pod konkretne pytanie.',
+    kroki: [
+      { id:'ogrodki-etnograficzne',
+        leg:'640 m od Rynku Staromiejskiego · 9 minut',
+        tekst:'Dziewięć minut od Rynku, a robi się cicho: stare drzewa nad zagrodami trzymają cień przez większość dnia.' },
+      { id:'aleja-jasminow',
+        leg:'950 m dalej · 13 minut',
+        tekst:'Alpinarium przy Ślimaku Getyńskim — jaśminowce tworzą tu zwarty, zacieniony tunel, o którym mało kto wie.' },
+      { id:'ogrod-wfosigw',
+        leg:'420 m dalej · 6 minut',
+        tekst:'Kameralny ogród na koniec, blisko przystanku, jeśli godzina się kończy.' }
+    ],
+    suma: { dyst:'2,0 km', czas:'27 minut marszu' },
+    uwaga: 'Cień dobrany na podstawie opisów miejsc. Kiedy warstwa cienia będzie gotowa, planer policzy go liczbowo.'
+  },
+  {
+    q: 'Gdzie iść z dzieckiem w sobotę rano',
+    kiedy: 'Przykładowa trasa. W pełnej wersji planer układa ją na żywo, pod konkretne pytanie.',
+    kroki: [
+      { id:'szwajcarski-zakatek',
+        leg:'start · Wrzosy I',
+        tekst:'Alpinarium i dywan kwiatowy w kształcie zegara — jest na co patrzeć i jest gdzie usiąść.' },
+      { id:'park-linearny-wrzosy-ii',
+        leg:'970 m dalej · 13 minut',
+        tekst:'Największy z parków kieszonkowych, 12 440 m² — tyle miejsca, żeby dziecko się rozbiegło.' },
+      { id:'francuskie-inspiracje',
+        leg:'180 m dalej · 2 minuty',
+        tekst:'Rabaty i pergola dwie minuty dalej, dobra klamra na koniec spaceru.' }
+    ],
+    suma: { dyst:'1,1 km', czas:'15 minut marszu' },
+    uwaga: 'Wszystkie trzy leżą na Wrzosach, więc trasa mieści się w jednym poranku bez samochodu.'
+  },
+  {
+    q: 'Co kwitnie w tym tygodniu, blisko Bydgoskiego',
+    kiedy: 'Przykład ułożony dla 12 maja — pełna wersja bierze dzisiejszą datę i sama przelicza okna kwitnienia.',
+    kroki: [
+      { id:'bydgoskie-bzy',
+        leg:'start · Bydgoskie Przedmieście',
+        tekst:'Lilaki kwitną tu od końca kwietnia do końca maja, więc 12 maja jesteś w środku okna.' },
+      { id:'litewska-ojczyzna',
+        leg:'560 m dalej · 7 minut',
+        tekst:'Świerzop rusza na początku maja; przy okazji najmniejszy park kieszonkowy w mieście, 472 m².' },
+      { id:'ogrod-wfosigw',
+        leg:'650 m dalej · 9 minut',
+        tekst:'Otwarty od maja do października — spokojne domknięcie spaceru w stronę centrum.' }
+    ],
+    suma: { dyst:'1,2 km', czas:'16 minut marszu' },
+    uwaga: 'Okna kwitnienia są przybliżone; po ciepłej zimie bzy potrafią ruszyć tydzień wcześniej.'
+  }
+];
+
+var NOTA =
+  'W pełnej wersji planer czyta zwykłe zdanie i oddaje trasę złożoną wyłącznie z punktów tej mapy. ' +
+  'Wyłapuje z niego czas („mam czterdzieści minut”), potrzebę („cień”, „cisza”, „coś dla dziecka”), ' +
+  'miejsce startu i porę roku. Trasa powstaje wyłącznie z punktów tej mapy — planer nie wymyśli parku, ' +
+  'którego w niej nie ma. Kiedy sieci brakuje, nie gaśnie: układa trasę sam, ' +
+  'dobierając punkty po czasie, cieniu i odległości.';
+
+function zbudujPlaner(){
+  $('notaTresc').textContent = NOTA;
+
+  $('przyklady').innerHTML = PRZYKLADY.map(function(x, i){
+    return '<button class="przyklad" type="button" data-p="' + i + '" aria-pressed="false">' + esc(x.q) + '</button>';
+  }).join('');
+
+  $('przyklady').addEventListener('click', function(e){
+    var b = e.target.closest('[data-p]'); if (!b) return;
+    pokazOdpowiedz(+b.dataset.p);
+  });
+
+  $('odpowiedz').addEventListener('click', function(e){
+    var b = e.target.closest('[data-punkt]'); if (!b) return;
+    zakladka('mapa');
+    stan.wybrany = b.dataset.punkt;
+    odswiez();
+    if (markery[stan.wybrany]) map.panInside(markery[stan.wybrany].getLatLng(), { padding:[50, 50] });
+    document.getElementById('panel-mapa').scrollIntoView({ block:'start' });
+  });
+
+  pokazOdpowiedz(0);
+}
+
+function pokazOdpowiedz(i){
+  Array.prototype.forEach.call($('przyklady').children, function(b){
+    b.setAttribute('aria-pressed', String(+b.dataset.p === i));
+  });
+  var x = PRZYKLADY[i];
+  var kroki = x.kroki.map(function(k){
+    var p = PUNKTY.filter(function(q){ return q.id === k.id; })[0];
+    if (!p) return '';
+    return '<li><div>' +
+      '<button class="trasa__n" type="button" data-punkt="' + esc(p.id) + '">' + esc(p.name) + '</button>' +
+      '<p class="trasa__d">' + esc(k.tekst) + '</p>' +
+      '<p class="trasa__leg">' + esc(k.leg) + '</p>' +
+      '</div></li>';
+  }).join('');
+
+  $('odpowiedz').innerHTML =
+    '<div class="odp">' +
+      '<p class="odp__pyt">„' + esc(x.q) + '”</p>' +
+      '<p class="odp__kiedy">' + esc(x.kiedy) + '</p>' +
+      '<ol class="trasa">' + kroki + '</ol>' +
+      '<div class="odp__suma"><b>' + esc(x.suma.dyst) + '</b><b>' + esc(x.suma.czas) + '</b>' +
+        '<span>dystans liczony ze współrzędnych punktów, z poprawką na chodzenie ulicami</span></div>' +
+      '<p class="odp__uwaga">' + esc(x.uwaga) + '</p>' +
+    '</div>';
+}
+
+/* ================= start ================= */
+function start(){
+  zbudujMape();
+  zbudujFiltry();
+  zbudujPlaner();
+
+  $('lista').addEventListener('click', function(e){
+    var b = e.target.closest('[data-id]'); if (!b) return;
+    wybierz(b.dataset.id, 'lista');
+  });
+
+  $('tab-mapa').addEventListener('click', function(){ zakladka('mapa'); });
+  $('tab-planer').addEventListener('click', function(){ zakladka('planer'); });
+  document.querySelector('.tabs').addEventListener('keydown', function(e){
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    e.preventDefault();
+    var doMapy = document.activeElement === $('tab-planer');
+    zakladka(doMapy ? 'mapa' : 'planer');
+    (doMapy ? $('tab-mapa') : $('tab-planer')).focus();
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && stan.wybrany) { stan.wybrany = null; odswiez(); }
+  });
+
+  odswiez();
+
+  var b = L.latLngBounds(PUNKTY.map(function(p){ return [p.lat, p.lng]; }));
+  map.fitBounds(b, { padding:[45, 45] });
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+else start();
+
+})();
+</script>
+</body>
+</html>

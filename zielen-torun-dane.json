@@ -1,0 +1,1276 @@
+{
+  "meta": {
+    "projekt": "Mapa zieleni Torunia — demo",
+    "wersja": "0.1",
+    "punktow": 20,
+    "cel": 40,
+    "brakuje": 20,
+    "sezony": [
+      "wiosna",
+      "lato",
+      "jesien",
+      "zima"
+    ],
+    "uwagi": [
+      "Okna kwitnienia w `species` są PRZYBLIŻONE (szacunek dla Torunia, ~53°N). Do weryfikacji przez Ogród Zoobotaniczny lub Wydział Środowiska UM.",
+      "`seasons` jest tablicą wyliczoną z okien w `highlights` — punkt może należeć do kilku pór roku.",
+      "`seasonPrimary` to redakcyjny wybór głównej pory roku (z Torunia Ukrytego), używany do sortowania i etykiet, nie do filtrowania.",
+      "Usunięto: `lezaczki` (decyzja) i `wystawy-sztuki` (nie jest punktem przyrodniczym)."
+    ],
+    "do_uzupelnienia": [
+      "shade (0–3) — dla wszystkich punktów, ręcznie",
+      "accessible (bool) — dostępność wózkiem / osobom z ograniczoną mobilnością",
+      "district — dla 9 punktów z Torunia Ukrytego",
+      "media.photo — dla 9 punktów z Torunia Ukrytego",
+      "quote + recommender — dla 11 parków kieszonkowych",
+      "20 nowych punktów do czterdziestki"
+    ]
+  },
+  "species": {
+    "krokus": {
+      "label": "Krokusy",
+      "from": "03-05",
+      "to": "04-05"
+    },
+    "zonkil": {
+      "label": "Żonkile",
+      "from": "04-01",
+      "to": "04-25"
+    },
+    "tulipan": {
+      "label": "Tulipany",
+      "from": "04-15",
+      "to": "05-20"
+    },
+    "magnolia": {
+      "label": "Magnolie",
+      "from": "04-10",
+      "to": "04-25"
+    },
+    "lilak": {
+      "label": "Bzy (lilak)",
+      "from": "04-25",
+      "to": "05-25"
+    },
+    "glog": {
+      "label": "Głóg jednoszyjkowy",
+      "from": "05-05",
+      "to": "05-31"
+    },
+    "rosliny-alpejskie": {
+      "label": "Rośliny alpejskie",
+      "from": "04-15",
+      "to": "06-30"
+    },
+    "swierzop": {
+      "label": "Świerzop",
+      "from": "05-01",
+      "to": "08-31"
+    },
+    "kalina": {
+      "label": "Kalina",
+      "from": "05-10",
+      "to": "06-15"
+    },
+    "deren-kwiat": {
+      "label": "Dereń biały (kwitnienie)",
+      "from": "05-15",
+      "to": "06-15"
+    },
+    "jasminowiec": {
+      "label": "Jaśminowiec wonny",
+      "from": "06-01",
+      "to": "06-30"
+    },
+    "bez-czarny-kwiat": {
+      "label": "Bez czarny (kwitnienie)",
+      "from": "06-01",
+      "to": "06-30"
+    },
+    "roza": {
+      "label": "Róże",
+      "from": "06-01",
+      "to": "09-15"
+    },
+    "lipa": {
+      "label": "Lipa drobnolistna",
+      "from": "06-20",
+      "to": "07-15"
+    },
+    "laka-kwietna": {
+      "label": "Łąka kwietna",
+      "from": "06-01",
+      "to": "09-15"
+    },
+    "gryka": {
+      "label": "Gryka",
+      "from": "07-01",
+      "to": "08-31"
+    },
+    "lawenda": {
+      "label": "Lawenda",
+      "from": "07-01",
+      "to": "08-20"
+    },
+    "hortensja": {
+      "label": "Hortensje",
+      "from": "07-01",
+      "to": "09-30"
+    },
+    "czarna-porzeczka": {
+      "label": "Czarna porzeczka (owoce)",
+      "from": "07-01",
+      "to": "07-31"
+    },
+    "rabaty": {
+      "label": "Rabaty kwiatowe",
+      "from": "05-15",
+      "to": "09-30"
+    },
+    "pergola": {
+      "label": "Pergola kwiatowa",
+      "from": "06-01",
+      "to": "09-15"
+    },
+    "dywan-kwiatowy": {
+      "label": "Dywan kwiatowy",
+      "from": "05-15",
+      "to": "09-30"
+    },
+    "bez-czarny-owoc": {
+      "label": "Bez czarny (owoce)",
+      "from": "08-15",
+      "to": "09-30"
+    },
+    "trawy-ozdobne": {
+      "label": "Trawy ozdobne (struktura, szron)",
+      "from": "08-15",
+      "to": "02-28"
+    },
+    "irga-owoce": {
+      "label": "Irga (owoce)",
+      "from": "09-01",
+      "to": "12-31"
+    },
+    "przebarwienia": {
+      "label": "Przebarwienia liści",
+      "from": "10-01",
+      "to": "11-05"
+    },
+    "buk-jesien": {
+      "label": "Bukowe liście",
+      "from": "10-05",
+      "to": "11-10"
+    },
+    "deren-pedy": {
+      "label": "Dereń biały (czerwone pędy zimą)",
+      "from": "11-15",
+      "to": "03-15"
+    }
+  },
+  "points": [
+    {
+      "id": "szwajcarski-zakatek",
+      "name": "Szwajcarski Zakątek",
+      "type": "park-kieszonkowy",
+      "icon": "🏔️",
+      "badge": "🇨🇭",
+      "lat": 53.0358,
+      "lng": 18.6036,
+      "district": "Wrzosy I",
+      "address": "ul. Zagonowa/Narcyzowa",
+      "area_m2": 3222,
+      "seasons": [
+        "wiosna",
+        "lato",
+        "jesien"
+      ],
+      "seasonPrimary": "wiosna",
+      "description": "Park o charakterze alpejskim. Alpinarium i dywan kwiatowy w kształcie zegara. Zdobył 1. miejsce w 28. Edycji Ogólnopolskiego Konkursu Modernizacja Roku 2023.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": "krokus",
+          "label": "Krokusy",
+          "from": "03-05",
+          "to": "04-05"
+        },
+        {
+          "species": "dywan-kwiatowy",
+          "label": "Dywan kwiatowy",
+          "from": "05-15",
+          "to": "09-30"
+        },
+        {
+          "species": "rosliny-alpejskie",
+          "label": "Rośliny alpejskie",
+          "from": "04-15",
+          "to": "06-30"
+        }
+      ],
+      "features": [
+        "krokusy",
+        "dywan-kwiatowy",
+        "rosliny-alpejskie",
+        "alpinarium",
+        "ogrod-deszczowy"
+      ],
+      "shade": null,
+      "accessible": null,
+      "transport": null,
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/szwajcarski-zakatek.jpg",
+        "video": null
+      },
+      "source": "UM Toruń (parki kieszonkowe)",
+      "quest": null
+    },
+    {
+      "id": "greckie-klimaty",
+      "name": "Greckie Klimaty",
+      "type": "park-kieszonkowy",
+      "icon": "🏛️",
+      "badge": "🇬🇷",
+      "lat": 53.0289,
+      "lng": 18.6631,
+      "district": "Rubinkowo",
+      "address": "ul. Rydygiera 6-8",
+      "area_m2": 1517,
+      "seasons": [
+        "lato"
+      ],
+      "seasonPrimary": "lato",
+      "description": "Inspirowany krajobrazami Grecji, z roślinami śródziemnomorskimi i elementami nawiązującymi do greckich wysp.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": "lawenda",
+          "label": "Lawenda",
+          "from": "07-01",
+          "to": "08-20"
+        }
+      ],
+      "features": [
+        "lawenda",
+        "rozmaryn",
+        "rosliny-srodziemnomorskie",
+        "drzewa-formowane",
+        "ogrod-deszczowy"
+      ],
+      "shade": null,
+      "accessible": null,
+      "transport": null,
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/greckie-klimaty.jpg",
+        "video": null
+      },
+      "source": "UM Toruń (parki kieszonkowe)",
+      "quest": {
+        "pk": "PK 1",
+        "title": "Adaptacja do zmian klimatu – Toruń wie, jak!",
+        "time": "30 minut",
+        "dist": "1 km",
+        "tagline": "Toruń wie, jak!",
+        "intro": "Quest zaczyna się przy wejściu do parku kieszonkowego Greckie Klimaty w Toruniu, ul. Rydygiera. Dowiesz się, jak działania można podjąć, by zaadaptować się do zmian klimatycznych.",
+        "app": "www.Questy.org.pl",
+        "code_hint": "Hasło końcowe jest czterocyfrowe. Wpisz je na stronie www.Questy.org.pl lub w aplikacji Questy.",
+        "steps": [
+          {
+            "text": "Stoisz przy fontannie – zauważ, że woda jest tu ozdobna, ale też praktyczna. Poczytaj, jak fontanny wpływają na mikroklimat.",
+            "answer": ""
+          },
+          {
+            "text": "Znajdź punkt przed pustymi prostokątami podzielonymi pionowo. Obok roślin masz wiele rodzajów karmników – są to hotele dla zapylaczy.",
+            "answer": ""
+          },
+          {
+            "text": "Idź do tablicy karmnika dla ptaków – znajdź cyferkę do skarbu. Z prawej strony na jednej desce wpisz litery na zapylacze.",
+            "answer": ""
+          },
+          {
+            "text": "Policz ile koszy na odpady bio obok boksu się znajduje. Niech ta cyferka do kratki skoku wskoczy.",
+            "answer": ""
+          },
+          {
+            "text": "Specjalna nawierzchnia – na tablicy na tę zagadkę: co jest adaptacją do zmian klimatu, a tak możemy pomóc wodzie przepuszczać.",
+            "answer": ""
+          },
+          {
+            "text": "Złóż litery i wpisz hasło końcowe czterocyfrowe!",
+            "answer": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "zacisze-holandii",
+      "name": "Zacisze Holandii",
+      "type": "park-kieszonkowy",
+      "icon": "🌷",
+      "badge": "🇳🇱",
+      "lat": 52.9934,
+      "lng": 18.6234,
+      "district": "Stawki",
+      "address": "ul. Szuwarów/Tataraków",
+      "area_m2": 1868,
+      "seasons": [
+        "wiosna",
+        "lato",
+        "jesien"
+      ],
+      "seasonPrimary": "wiosna",
+      "description": "Park nawiązujący do holenderskich ogrodów, z bogatą paletą barw i wiosennym czarem.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": "tulipan",
+          "label": "Tulipany",
+          "from": "04-15",
+          "to": "05-20"
+        },
+        {
+          "species": "zonkil",
+          "label": "Żonkile",
+          "from": "04-01",
+          "to": "04-25"
+        },
+        {
+          "species": "laka-kwietna",
+          "label": "Łąka kwietna",
+          "from": "06-01",
+          "to": "09-15"
+        }
+      ],
+      "features": [
+        "tulipany",
+        "zonkile",
+        "rosliny-tematyczne",
+        "laka-kwietna",
+        "ogrod-deszczowy"
+      ],
+      "shade": null,
+      "accessible": null,
+      "transport": null,
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/zacisze-holandii.jpg",
+        "video": null
+      },
+      "source": "UM Toruń (parki kieszonkowe)",
+      "quest": {
+        "pk": "PK 2i3",
+        "title": "Małe rzeczy, duże cuda – w Toruniu klimat ocalić się uda!",
+        "time": "90 minut",
+        "dist": "2,0 km (+1,7 km powrót)",
+        "intro": "Quest prezentuje dwa parki kieszonkowe: Zacisze Holandii i Fiński Relaks. Podejmuje tematykę zmian klimatycznych i zachęca do dobrych nawyków prośrodowiskowych. Start przy ul. Szuwarów.",
+        "app": "www.Questy.org.pl",
+        "code_hint": "Hasło końcowe: dwa wyrazy i liczba czterocyfrowa (oddzielone spacją). Wpisz na www.Questy.org.pl.",
+        "steps": [
+          {
+            "text": "Jadąc samochodem, wybierz spalające mniej paliwa. Najbardziej przyjazna klimatowi jest kolej, za to samolotem przybywają największe ślady.",
+            "answer": ""
+          },
+          {
+            "text": "Policz stojaków na rowery w pobliżu tablicy z mapą. Będzie idealnie, gdy w kratce o trzy więcej ich dasz.",
+            "answer": ""
+          },
+          {
+            "text": "Zieleń ważną rolę pełni dla jakości życia w mieście – oczyszcza, zatrzymuje wodę, schładza powietrze.",
+            "answer": ""
+          },
+          {
+            "text": "Im bardziej zróżnicowane rośliny w parku, tym bardziej odporne środowisko na wahania klimatu.",
+            "answer": ""
+          },
+          {
+            "text": "Specjalna nawierzchnia alej pozwala na retencję wody i jest skutecznym rozwiązaniem przy obfitych deszczach.",
+            "answer": ""
+          },
+          {
+            "text": "Idź dalej do parku Fiński Relaks. Sprawdź: jaką część parku wyłożono hydro-fugą? Wpisz jego nazwę.",
+            "answer": ""
+          },
+          {
+            "text": "Zbierz litery ze wszystkich zagadek i ułóż hasło końcowe – dwa wyrazy i liczba czterocyfrowa!",
+            "answer": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "litewska-ojczyzna",
+      "name": "Litewska Ojczyzna",
+      "type": "park-kieszonkowy",
+      "icon": "🌲",
+      "badge": "🇱🇹",
+      "lat": 53.0101,
+      "lng": 18.5898,
+      "district": "Bydgoskie",
+      "address": "ul. Matejki/Słowackiego",
+      "area_m2": 472,
+      "seasons": [
+        "wiosna",
+        "lato",
+        "jesien"
+      ],
+      "seasonPrimary": "wiosna",
+      "description": "Najmniejszy z parków, inspirowany litewskim dziedzictwem kulturowym i przyrodą Litwy.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": "swierzop",
+          "label": "Świerzop",
+          "from": "05-01",
+          "to": "08-31"
+        },
+        {
+          "species": "gryka",
+          "label": "Gryka",
+          "from": "07-01",
+          "to": "08-31"
+        },
+        {
+          "species": "laka-kwietna",
+          "label": "Łąka kwietna",
+          "from": "06-01",
+          "to": "09-15"
+        }
+      ],
+      "features": [
+        "swierzop",
+        "gryka",
+        "laka-kwietna",
+        "rosliny-tematyczne",
+        "hotel-dla-owadow"
+      ],
+      "shade": null,
+      "accessible": null,
+      "transport": null,
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/litewska-ojczyzna.jpg",
+        "video": null
+      },
+      "source": "UM Toruń (parki kieszonkowe)",
+      "quest": null
+    },
+    {
+      "id": "francuskie-inspiracje",
+      "name": "Francuskie Inspiracje",
+      "type": "park-kieszonkowy",
+      "icon": "🗼",
+      "badge": "🇫🇷",
+      "lat": 53.0427,
+      "lng": 18.6045,
+      "district": "Wrzosy II",
+      "address": "ul. Polna/Strehla/Fieldorfa Nila",
+      "area_m2": 3646,
+      "seasons": [
+        "wiosna",
+        "lato",
+        "jesien"
+      ],
+      "seasonPrimary": "wiosna",
+      "description": "Park natchniony francuską estetyką, inspirowany Place de Gaulle’a z pergolą nawiązującą do Łuku Triumfalnego.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": "rabaty",
+          "label": "Rabaty kwiatowe",
+          "from": "05-15",
+          "to": "09-30"
+        },
+        {
+          "species": "pergola",
+          "label": "Pergola kwiatowa",
+          "from": "06-01",
+          "to": "09-15"
+        }
+      ],
+      "features": [
+        "rosliny-tematyczne",
+        "rabaty",
+        "pergola",
+        "fontanna"
+      ],
+      "shade": null,
+      "accessible": null,
+      "transport": null,
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/francuskie-inspiracje.png",
+        "video": null
+      },
+      "source": "UM Toruń (parki kieszonkowe)",
+      "quest": null
+    },
+    {
+      "id": "finski-relaks",
+      "name": "Fiński Relaks",
+      "type": "park-kieszonkowy",
+      "icon": "🌿",
+      "badge": "🇫🇮",
+      "lat": 52.9902,
+      "lng": 18.6369,
+      "district": "Rudak",
+      "address": "ul. Strzałowa/Artyleryjska",
+      "area_m2": 1584,
+      "seasons": [
+        "jesien"
+      ],
+      "seasonPrimary": "jesien",
+      "description": "Park inspirowany fińskim bliskim kontaktem człowieka z naturą, ze spokojną atmosferą i drewnianymi elementami.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": "przebarwienia",
+          "label": "Przebarwienia liści",
+          "from": "10-01",
+          "to": "11-05"
+        }
+      ],
+      "features": [
+        "drewno",
+        "zielen-lisciasta",
+        "lawki",
+        "sciezka-edukacyjna",
+        "ogrod-deszczowy"
+      ],
+      "shade": null,
+      "accessible": null,
+      "transport": null,
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/finski-relaks.jpg",
+        "video": null
+      },
+      "source": "UM Toruń (parki kieszonkowe)",
+      "quest": {
+        "pk": "PK 2i3",
+        "title": "Małe rzeczy, duże cuda!",
+        "time": "90 minut",
+        "dist": "2,0 km",
+        "note": "Ten quest obejmuje dwa parki: Zacisze Holandii (start przy ul. Szuwarów) i Fiński Relaks. Zacznij od parku Zacisze Holandii.",
+        "intro": "Fiński Relaks to drugi park w questowej trasie PK 2i3. Pełny quest i zagadki znajdziesz w opisie Zacisza Holandii.",
+        "app": "www.Questy.org.pl",
+        "code_hint": "Wpisz hasło na www.Questy.org.pl lub w aplikacji Questy – Wyprawy Odkrywców.",
+        "steps": []
+      }
+    },
+    {
+      "id": "ustronie-ukrainskie",
+      "name": "Ustronie Ukraińskie",
+      "type": "park-kieszonkowy",
+      "icon": "🌻",
+      "badge": "🇺🇦",
+      "lat": 53.0177,
+      "lng": 18.5721,
+      "district": "Bydgoskie",
+      "address": "ul. Sienkiewicza/Gagarina",
+      "area_m2": 2937,
+      "seasons": [
+        "lato"
+      ],
+      "seasonPrimary": "lato",
+      "description": "Park nawiązujący do ukraińskiego dziedzictwa, z bogatą szatą roślinną i kolorystyką ogrodów ukraińskich.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [],
+      "features": [
+        "rosliny-tematyczne",
+        "sztuka-w-parku",
+        "ogrod-deszczowy",
+        "oswietlenie",
+        "bioroznorodnosc"
+      ],
+      "shade": null,
+      "accessible": null,
+      "transport": null,
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/ustronie-ukrainskie.jpg",
+        "video": null
+      },
+      "source": "UM Toruń (parki kieszonkowe)",
+      "quest": null
+    },
+    {
+      "id": "angielski-ogrod",
+      "name": "Angielski Ogród",
+      "type": "park-kieszonkowy",
+      "icon": "🌹",
+      "badge": "🇬🇧",
+      "lat": 53.0336,
+      "lng": 18.675,
+      "district": "Bielawy-Grębosin",
+      "address": "ul. Tarnowska",
+      "area_m2": 1597,
+      "seasons": [
+        "lato",
+        "jesien"
+      ],
+      "seasonPrimary": "lato",
+      "description": "Park inspirowany angielskim romantycznym ogrodem, z miękkimi formami i bogatą roślinnością.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": "jasminowiec",
+          "label": "Jaśminowiec wonny",
+          "from": "06-01",
+          "to": "06-30"
+        },
+        {
+          "species": "roza",
+          "label": "Róże",
+          "from": "06-01",
+          "to": "09-15"
+        },
+        {
+          "species": "bez-czarny-kwiat",
+          "label": "Bez czarny (kwitnienie)",
+          "from": "06-01",
+          "to": "06-30"
+        },
+        {
+          "species": "bez-czarny-owoc",
+          "label": "Bez czarny (owoce)",
+          "from": "08-15",
+          "to": "09-30"
+        },
+        {
+          "species": "laka-kwietna",
+          "label": "Łąka kwietna",
+          "from": "06-01",
+          "to": "09-15"
+        }
+      ],
+      "features": [
+        "jasminowiec",
+        "roze",
+        "bez-czarny",
+        "rosliny-miododajne",
+        "retencja"
+      ],
+      "shade": null,
+      "accessible": null,
+      "transport": null,
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/angielski-ogrod.jpg",
+        "video": null
+      },
+      "source": "UM Toruń (parki kieszonkowe)",
+      "quest": null
+    },
+    {
+      "id": "sensoryczna-szwecja",
+      "name": "Sensoryczna Szwecja",
+      "type": "park-kieszonkowy",
+      "icon": "👃",
+      "badge": "🇸🇪",
+      "lat": 53.0239,
+      "lng": 18.6253,
+      "district": "Jakubskie-Mokre",
+      "address": "ul. Chrobrego/Wojska Polskiego",
+      "area_m2": 2245,
+      "seasons": [
+        "wiosna",
+        "lato",
+        "jesien",
+        "zima"
+      ],
+      "seasonPrimary": "wiosna",
+      "description": "Park eksperymentalny zwracający uwagę na wszystkie zmysły. Z tablicami Braille’a i szeroką dostępnością dla osób z niepełnosprawnościami.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": "hortensja",
+          "label": "Hortensje",
+          "from": "07-01",
+          "to": "09-30"
+        },
+        {
+          "species": "roza",
+          "label": "Róże",
+          "from": "06-01",
+          "to": "09-15"
+        },
+        {
+          "species": "czarna-porzeczka",
+          "label": "Czarna porzeczka (owoce)",
+          "from": "07-01",
+          "to": "07-31"
+        },
+        {
+          "species": "kalina",
+          "label": "Kalina",
+          "from": "05-10",
+          "to": "06-15"
+        },
+        {
+          "species": "lawenda",
+          "label": "Lawenda",
+          "from": "07-01",
+          "to": "08-20"
+        },
+        {
+          "species": "jasminowiec",
+          "label": "Jaśminowiec wonny",
+          "from": "06-01",
+          "to": "06-30"
+        },
+        {
+          "species": "bez-czarny-kwiat",
+          "label": "Bez czarny (kwitnienie)",
+          "from": "06-01",
+          "to": "06-30"
+        },
+        {
+          "species": "bez-czarny-owoc",
+          "label": "Bez czarny (owoce)",
+          "from": "08-15",
+          "to": "09-30"
+        },
+        {
+          "species": "trawy-ozdobne",
+          "label": "Trawy ozdobne (struktura, szron)",
+          "from": "08-15",
+          "to": "02-28"
+        }
+      ],
+      "features": [
+        "hortensje",
+        "roze",
+        "czarna-porzeczka",
+        "kalina",
+        "lawenda",
+        "jasminowiec",
+        "bez-czarny",
+        "trawy-ozdobne"
+      ],
+      "shade": null,
+      "accessible": null,
+      "transport": null,
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/sensoryczna-szwecja.jpg",
+        "video": null
+      },
+      "source": "UM Toruń (parki kieszonkowe)",
+      "quest": null
+    },
+    {
+      "id": "skwer-polski",
+      "name": "Skwer Polski",
+      "type": "park-kieszonkowy",
+      "icon": "🇵🇱",
+      "badge": "🇵🇱",
+      "lat": 53.0219,
+      "lng": 18.5947,
+      "district": "Chełmińskie",
+      "address": "ul. Szosa Chełmińska 75",
+      "area_m2": 2560,
+      "seasons": [
+        "wiosna",
+        "lato",
+        "jesien",
+        "zima"
+      ],
+      "seasonPrimary": "wiosna",
+      "description": "Park patriotyczny nawiązujący do polskiego dziedzictwa i przyrody. Przy Liceum Akademickim.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": "lipa",
+          "label": "Lipa drobnolistna",
+          "from": "06-20",
+          "to": "07-15"
+        },
+        {
+          "species": "glog",
+          "label": "Głóg jednoszyjkowy",
+          "from": "05-05",
+          "to": "05-31"
+        },
+        {
+          "species": "deren-kwiat",
+          "label": "Dereń biały (kwitnienie)",
+          "from": "05-15",
+          "to": "06-15"
+        },
+        {
+          "species": "deren-pedy",
+          "label": "Dereń biały (czerwone pędy zimą)",
+          "from": "11-15",
+          "to": "03-15"
+        },
+        {
+          "species": "irga-owoce",
+          "label": "Irga (owoce)",
+          "from": "09-01",
+          "to": "12-31"
+        }
+      ],
+      "features": [
+        "sztuka-w-parku",
+        "rosliny-tematyczne",
+        "lipa",
+        "glog",
+        "deren",
+        "irga"
+      ],
+      "shade": null,
+      "accessible": null,
+      "transport": null,
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/skwer-polski.jpg",
+        "video": null
+      },
+      "source": "UM Toruń (parki kieszonkowe)",
+      "quest": null
+    },
+    {
+      "id": "park-linearny-wrzosy-ii",
+      "name": "Park Linearny – Wrzosy II",
+      "type": "park-kieszonkowy",
+      "icon": "🌳",
+      "badge": "compass",
+      "lat": 53.0425,
+      "lng": 18.6025,
+      "district": "Wrzosy II",
+      "address": "ul. Polna",
+      "area_m2": 12440,
+      "seasons": [
+        "lato",
+        "jesien"
+      ],
+      "seasonPrimary": "lato",
+      "description": "Największy park kieszonkowy, o charakterze liniowym. Zawiera wszystkie elementy zagospodarowania parków kieszonkowych.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": "laka-kwietna",
+          "label": "Łąka kwietna",
+          "from": "06-01",
+          "to": "09-15"
+        }
+      ],
+      "features": [
+        "alejki",
+        "ogrod-deszczowy",
+        "rosliny-miododajne",
+        "laka-kwietna",
+        "zielen-zacieniajaca"
+      ],
+      "shade": null,
+      "accessible": null,
+      "transport": null,
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/park-linearny-wrzosy-ii.jpg",
+        "video": null
+      },
+      "source": "UM Toruń (parki kieszonkowe)",
+      "quest": null
+    },
+    {
+      "id": "aleja-jasminow",
+      "name": "Sekretna alejka jaśminów",
+      "type": "miejsce-ukryte",
+      "icon": "🤍",
+      "badge": null,
+      "lat": 53.008343,
+      "lng": 18.601507,
+      "district": null,
+      "address": null,
+      "area_m2": null,
+      "seasons": [
+        "wiosna"
+      ],
+      "seasonPrimary": "wiosna",
+      "description": "Alpinarium przy Ślimaku Getyńskim — przez kilkanaście dni w maju jaśminy tworzą tu biały, pachnący tunel. Większość torunian nie ma pojęcia, że to miejsce istnieje. Wejdziesz przypadkiem i staniesz w pół kroku, bo zapach zatrzyma Cię szybciej niż widok. Najlepiej rano, kiedy rosa jeszcze lśni na płatkach.",
+      "quote": "Pachnie tak, że nie chce się wracać do domu.",
+      "recommender": "Piotr",
+      "recommenderRole": "wykładowca UMK",
+      "highlights": [
+        {
+          "species": "jasminowiec",
+          "label": "Jaśminowiec wonny",
+          "from": "05-05",
+          "to": "05-25"
+        }
+      ],
+      "features": [],
+      "shade": null,
+      "accessible": null,
+      "transport": "Pieszo lub rowerem",
+      "time": "Rano lub wieczorem",
+      "free": true,
+      "media": {
+        "photo": null,
+        "video": null
+      },
+      "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+      "quest": null
+    },
+    {
+      "id": "magnolie-spacer",
+      "name": "Szlak kwitnących magnolii",
+      "type": "miejsce-ukryte",
+      "icon": "🌸",
+      "badge": null,
+      "lat": 53.011513,
+      "lng": 18.60168,
+      "district": null,
+      "address": null,
+      "area_m2": null,
+      "seasons": [
+        "wiosna"
+      ],
+      "seasonPrimary": "wiosna",
+      "description": "W Toruniu rośnie zaskakująco dużo magnolii, ale trzeba wiedzieć gdzie patrzeć. W kwietniu kwitną jednocześnie na kilku ulicach — spacer od jednej do drugiej to trasa, której nie znajdziesz w żadnym przewodniku. Różowe korony na tle starych kamienic. Dziesięć dni, potem czekasz rok.",
+      "quote": "Kwiecień — magnolie eksplodują różem. Musisz złapać moment.",
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": "magnolia",
+          "label": "Magnolie",
+          "from": "04-10",
+          "to": "04-25"
+        }
+      ],
+      "features": [],
+      "shade": null,
+      "accessible": null,
+      "transport": "Pieszo",
+      "time": "Dowolna pora dnia",
+      "free": true,
+      "media": {
+        "photo": null,
+        "video": null
+      },
+      "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+      "quest": null
+    },
+    {
+      "id": "magnolia-bydgoska",
+      "name": "Magnolia na tle muru pruskiego",
+      "type": "miejsce-ukryte",
+      "icon": "📸",
+      "badge": null,
+      "lat": 53.010092,
+      "lng": 18.586013,
+      "district": null,
+      "address": null,
+      "area_m2": null,
+      "seasons": [
+        "wiosna"
+      ],
+      "seasonPrimary": "wiosna",
+      "description": "Okazała magnolia na tle kamienicy z murem pruskim — to zestawienie wygląda jak specjalnie wyreżyserowane. Różowe kwiaty, czarno-biała faktura ścian, kawałek nieba. Kwitnie dosłownie kilka dni. Kto wie, ten łapie. Kto nie wie — przechodzi obok i nie podnosi głowy.",
+      "quote": "Róg Bydgoskiej i Konopnickiej. Kilka dni w roku. Jedno zdjęcie. Perfekcja.",
+      "recommender": "Piotr",
+      "recommenderRole": "wykładowca UMK",
+      "highlights": [
+        {
+          "species": "magnolia",
+          "label": "Magnolie",
+          "from": "04-12",
+          "to": "04-22"
+        }
+      ],
+      "features": [],
+      "shade": null,
+      "accessible": null,
+      "transport": "Pieszo",
+      "time": "Rano (najlepsze światło)",
+      "free": true,
+      "media": {
+        "photo": null,
+        "video": null
+      },
+      "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+      "quest": null
+    },
+    {
+      "id": "bydgoskie-bzy",
+      "name": "Bzy na Bydgoskim Przedmieściu",
+      "type": "miejsce-ukryte",
+      "icon": "💜",
+      "badge": null,
+      "lat": 53.009625,
+      "lng": 18.583394,
+      "district": null,
+      "address": null,
+      "area_m2": null,
+      "seasons": [
+        "wiosna"
+      ],
+      "seasonPrimary": "wiosna",
+      "description": "Bydgoskie od kwietnia zamienia się w ogród, do którego nikt nie sprzedaje biletów. Bzy, jaśminy i kwitnące drzewa w przydomowych ogródkach tworzą kolorowy korytarz wzdłuż bocznych uliczek. Każda brama to inny zapach, każdy zakręt to nowa paleta. Nie musisz nigdzie iść. Po prostu idź.",
+      "quote": "Spacer przez cudze ogrody — bez wchodzenia do środka.",
+      "recommender": "Piotr",
+      "recommenderRole": "wykładowca UMK",
+      "highlights": [
+        {
+          "species": "lilak",
+          "label": "Bzy (lilak)",
+          "from": "04-25",
+          "to": "05-25"
+        }
+      ],
+      "features": [],
+      "shade": null,
+      "accessible": null,
+      "transport": "Pieszo",
+      "time": "Popołudnie",
+      "free": true,
+      "media": {
+        "photo": null,
+        "video": null
+      },
+      "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+      "quest": null
+    },
+    {
+      "id": "ogrodki-etnograficzne",
+      "name": "Ogródki Muzeum Etnograficznego",
+      "type": "miejsce-ukryte",
+      "icon": "🌿",
+      "badge": null,
+      "lat": 53.014717,
+      "lng": 18.603966,
+      "district": null,
+      "address": null,
+      "area_m2": null,
+      "seasons": [
+        "wiosna",
+        "lato",
+        "jesien"
+      ],
+      "seasonPrimary": "lato",
+      "description": "Za budynkiem Muzeum Etnograficznego kryją się ogródki tematyczne — zioła, kwiaty, tradycyjne uprawy. Właściwie w centrum miasta, a czujesz się jak na wsi u babci. Cicho, zielono, bez tłumów. Idealne kiedy Starówka jest zbyt głośna, a Ty potrzebujesz dwudziestu minut spokoju.",
+      "quote": "Wszyscy znają muzeum. Prawie nikt nie wie o ogródkach za nim.",
+      "recommender": "Piotr",
+      "recommenderRole": "wykładowca UMK",
+      "highlights": [
+        {
+          "species": null,
+          "label": "maj – wrzesień",
+          "from": "05-01",
+          "to": "09-30"
+        }
+      ],
+      "features": [],
+      "shade": null,
+      "accessible": null,
+      "transport": "Pieszo",
+      "time": "Przed południem (mniej ludzi)",
+      "free": true,
+      "media": {
+        "photo": null,
+        "video": null
+      },
+      "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+      "quest": null
+    },
+    {
+      "id": "zachody-lotnisko",
+      "name": "Zachody słońca na lotnisku",
+      "type": "miejsce-ukryte",
+      "icon": "🌅",
+      "badge": null,
+      "lat": 53.027536,
+      "lng": 18.559491,
+      "district": null,
+      "address": null,
+      "area_m2": null,
+      "seasons": [
+        "lato"
+      ],
+      "seasonPrimary": "lato",
+      "description": "Teren przy lotnisku Toruń-Bielany to najlepszy punkt widokowy na zachód słońca w mieście. Zero zabudowy na horyzoncie, samo niebo. Dojazd rowerem to połowa przyjemności — droga wiedzie przez tereny zielone, coraz ciszej, coraz szerzej. Na miejscu siadasz w trawie i patrzysz jak miasto tonie w pomarańczowym świetle.",
+      "quote": "Płaski horyzont, pas startowy w złocie, cisza. Toruń znika — zostaje niebo.",
+      "recommender": "Piotr",
+      "recommenderRole": "wykładowca UMK",
+      "highlights": [
+        {
+          "species": null,
+          "label": "czerwiec – sierpień",
+          "from": "06-01",
+          "to": "08-31"
+        }
+      ],
+      "features": [],
+      "shade": null,
+      "accessible": null,
+      "transport": "Rowerem (najlepiej)",
+      "time": "Wieczór, ok. 1h przed zachodem",
+      "free": true,
+      "media": {
+        "photo": null,
+        "video": null
+      },
+      "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+      "quest": null
+    },
+    {
+      "id": "ogrod-wfosigw",
+      "name": "Ogród parkowy przy WFOŚiGW",
+      "type": "miejsce-ukryte",
+      "icon": "📖",
+      "badge": null,
+      "lat": 53.009755,
+      "lng": 18.597279,
+      "district": null,
+      "address": null,
+      "area_m2": null,
+      "seasons": [
+        "wiosna",
+        "lato",
+        "jesien"
+      ],
+      "seasonPrimary": "lato",
+      "description": "Ogród parkowy przy alei 500-lecia to jeden z najlepiej strzeżonych sekretów Torunia — i to nie dlatego, że jest zamknięty. Jest otwarty. Po rewitalizacji wygląda przepięknie: ławki, zieleń, cisza. Problem w tym, że ludzie nie wiedzą, że mogą tu wejść. A mogą. I warto — szczególnie z książką.",
+      "quote": "Zrewitalizowany, piękny i pusty. Miliony wydane — nikt nie przychodzi.",
+      "recommender": "Piotr",
+      "recommenderRole": "wykładowca UMK",
+      "highlights": [
+        {
+          "species": null,
+          "label": "maj – październik",
+          "from": "05-01",
+          "to": "10-31"
+        }
+      ],
+      "features": [],
+      "shade": null,
+      "accessible": null,
+      "transport": "Pieszo / rowerem",
+      "time": "Dowolna pora dnia",
+      "free": true,
+      "media": {
+        "photo": null,
+        "video": null
+      },
+      "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+      "quest": null
+    },
+    {
+      "id": "barbarka-jesien",
+      "name": "Bukowe liście na Barbarce",
+      "type": "miejsce-ukryte",
+      "icon": "🍂",
+      "badge": null,
+      "lat": 53.056436,
+      "lng": 18.546755,
+      "district": null,
+      "address": null,
+      "area_m2": null,
+      "seasons": [
+        "jesien"
+      ],
+      "seasonPrimary": "jesien",
+      "description": "Barbarka jesienią to osobny świat. Stare buki przybierają odcienie złota, miedzi i czerwieni, a kiedy liście opadną — tworzą gruby dywan, który szeleści pod każdym krokiem. Światło przebija przez koronę drzew w smugach, zapach wilgotnej ziemi miesza się z chłodnym powietrzem. Spacer tutaj w październikowy poranek to jedno z tych doświadczeń, o których potem opowiadasz znajomym.",
+      "quote": "Szeleszczący dywan pod stopami. Las, który jesienią mówi kolorami.",
+      "recommender": "Piotr",
+      "recommenderRole": "wykładowca UMK",
+      "highlights": [
+        {
+          "species": "buk-jesien",
+          "label": "Bukowe liście",
+          "from": "10-05",
+          "to": "11-10"
+        }
+      ],
+      "features": [],
+      "shade": null,
+      "accessible": null,
+      "transport": "Rowerem lub autobusem",
+      "time": "Przed południem (najlepsze światło)",
+      "free": true,
+      "media": {
+        "photo": null,
+        "video": null
+      },
+      "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+      "quest": null
+    },
+    {
+      "id": "bydgoskie-zima",
+      "name": "Tajemnicze drzewa na Bydgoskim",
+      "type": "miejsce-ukryte",
+      "icon": "🌙",
+      "badge": null,
+      "lat": 53.008378,
+      "lng": 18.574947,
+      "district": null,
+      "address": null,
+      "area_m2": null,
+      "seasons": [
+        "zima"
+      ],
+      "seasonPrimary": "zima",
+      "description": "Park na Bydgoskim zimą zmienia się nie do poznania. Bezlistne drzewa odsłaniają swoje kształty — powykręcane konary, rozłożyste pnie, sylwetki jakby wyrwane z baśni. Kiedy spadnie śnieg i zapali się latarnie, ciepłe światło rysuje cienie na białym tle i robi się niesamowicie. Niewielu ludzi, cisza, lekki mróz. Wchodzisz w to jak w kadr z filmu, którego nikt jeszcze nie nakręcił.",
+      "quote": "Latarnie podświetlają pnie i konary zastygłe w dziwnych pozach. Cicho. Biało. Dziwnie pięknie.",
+      "recommender": "Piotr",
+      "recommenderRole": "wykładowca UMK",
+      "highlights": [
+        {
+          "species": null,
+          "label": "grudzień – luty (szczególnie po śniegu)",
+          "from": "12-01",
+          "to": "02-28"
+        }
+      ],
+      "features": [],
+      "shade": null,
+      "accessible": null,
+      "transport": "Pieszo",
+      "time": "Wieczór (po zmroku)",
+      "free": true,
+      "media": {
+        "photo": null,
+        "video": null
+      },
+      "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+      "quest": null
+    }
+  ]
+}
