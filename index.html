@@ -245,6 +245,42 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 .quest__d{ font-size:.8rem; color:var(--cichy); margin-top:.55rem; line-height:1.5 }
 .zrodlo{ font-size:.78rem; color:var(--cichy); margin-top:1.3rem; padding-top:.7rem; border-top:1px solid var(--linia) }
 
+/* ---------- powiększenie zdjęcia ---------- */
+.fotoBtn{ display:block; width:100%; padding:0; border:0; background:none; cursor:zoom-in;
+          position:relative; margin:0 0 1rem }
+.fotoBtn .foto{ margin:0 }
+.fotoBtn::after{ content:'powiększ'; position:absolute; right:.5rem; bottom:.5rem; font-size:.74rem;
+          background:var(--ark); color:var(--atrament); border:1px solid var(--linia);
+          border-radius:var(--r); padding:.18rem .45rem; opacity:0; transition:opacity .15s ease }
+.fotoBtn:hover::after, .fotoBtn:focus-visible::after{ opacity:1 }
+.miniatury{ display:flex; gap:.4rem; margin:-.5rem 0 1rem; flex-wrap:wrap }
+.miniatura{ width:62px; height:46px; padding:0; border:1px solid var(--linia); background:none;
+          cursor:pointer; overflow:hidden; flex:none }
+.miniatura img{ width:100%; height:100%; object-fit:cover; display:block }
+.miniatura[aria-current="true"]{ border-color:var(--akcent); border-width:2px }
+
+.lupa{ position:fixed; inset:0; z-index:3000; background:rgba(29,43,33,.93);
+       display:flex; flex-direction:column; align-items:center; justify-content:center;
+       padding:3.2rem 4rem 1.5rem }
+.lupa[hidden]{ display:none }
+.lupa img{ max-width:100%; max-height:76vh; object-fit:contain }
+.lupa__pod{ color:var(--papier); font-size:.88rem; margin-top:.9rem; text-align:center; max-width:62ch }
+.lupa__pod b{ font-family:'Bitter',Georgia,serif; font-weight:600; font-size:1.1rem;
+       display:block; margin-bottom:.15rem }
+.lupa__x, .lupa__nav{ position:absolute; background:var(--papier); color:var(--atrament); border:0;
+       cursor:pointer; border-radius:var(--r); line-height:1; padding:.55rem .75rem; font-size:1.05rem }
+.lupa__x:hover, .lupa__nav:hover{ background:var(--akcent); color:var(--na-akcencie) }
+.lupa__x{ top:1rem; right:1rem }
+.lupa__nav{ top:50%; transform:translateY(-50%); font-size:1.5rem; padding:.4rem .7rem }
+.lupa__nav--w{ left:1rem }
+.lupa__nav--d{ right:1rem }
+.lupa__licz{ position:absolute; top:1.25rem; left:1rem; color:var(--papier); font-size:.85rem }
+.lupa :focus-visible{ outline:2px solid var(--papier); outline-offset:3px }
+@media (max-width:560px){
+  .lupa{ padding:3.2rem .75rem 1.5rem }
+  .lupa__nav{ top:auto; bottom:1rem; transform:none }
+}
+
 /* ---------- planer ---------- */
 .planer{ padding:1.6rem 0 3rem }
 .planer__grid{ display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); gap:clamp(1.5rem,4vw,3.5rem);
@@ -458,6 +494,15 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 
 </main>
 
+<div class="lupa" id="lupa" role="dialog" aria-modal="true" aria-label="Powiększone zdjęcie" hidden>
+  <p class="lupa__licz" id="lupaLicz"></p>
+  <button class="lupa__x" id="lupaX" type="button" aria-label="Zamknij podgląd">✕</button>
+  <button class="lupa__nav lupa__nav--w" id="lupaW" type="button" aria-label="Poprzednie zdjęcie">‹</button>
+  <img id="lupaImg" alt="">
+  <button class="lupa__nav lupa__nav--d" id="lupaD" type="button" aria-label="Następne zdjęcie">›</button>
+  <p class="lupa__pod" id="lupaPod"></p>
+</div>
+
 <footer class="stopka">
   <div class="wrap" style="display:flex; gap:.6rem 2.5rem; flex-wrap:wrap">
     <p>Dane: Urząd Miasta Torunia (parki kieszonkowe) i Toruń Ukryty (rekomendacje mieszkańców).
@@ -646,8 +691,8 @@ window.DANE = {
    "type": "park-kieszonkowy",
    "icon": "🏔️",
    "badge": "🇨🇭",
-   "lat": 53.0358,
-   "lng": 18.6036,
+   "lat": 53.049257,
+   "lng": 18.583381,
    "district": "Wrzosy I",
    "address": "ul. Zagonowa/Narcyzowa",
    "area_m2": 3222,
@@ -706,8 +751,8 @@ window.DANE = {
    "type": "park-kieszonkowy",
    "icon": "🏛️",
    "badge": "🇬🇷",
-   "lat": 53.0289,
-   "lng": 18.6631,
+   "lat": 53.025341,
+   "lng": 18.659529,
    "district": "Rubinkowo",
    "address": "ul. Rydygiera 6-8",
    "area_m2": 1517,
@@ -787,8 +832,8 @@ window.DANE = {
    "type": "park-kieszonkowy",
    "icon": "🌷",
    "badge": "🇳🇱",
-   "lat": 52.9934,
-   "lng": 18.6234,
+   "lat": 52.989021,
+   "lng": 18.627576,
    "district": "Stawki",
    "address": "ul. Szuwarów/Tataraków",
    "area_m2": 1868,
@@ -885,8 +930,8 @@ window.DANE = {
    "type": "park-kieszonkowy",
    "icon": "🌲",
    "badge": "🇱🇹",
-   "lat": 53.0101,
-   "lng": 18.5898,
+   "lat": 53.012607,
+   "lng": 18.589731,
    "district": "Bydgoskie",
    "address": "ul. Matejki/Słowackiego",
    "area_m2": 472,
@@ -998,8 +1043,8 @@ window.DANE = {
    "type": "park-kieszonkowy",
    "icon": "🌿",
    "badge": "🇫🇮",
-   "lat": 52.9902,
-   "lng": 18.6369,
+   "lat": 52.998305,
+   "lng": 18.629166,
    "district": "Rudak",
    "address": "ul. Strzałowa/Artyleryjska",
    "area_m2": 1584,
@@ -1396,8 +1441,8 @@ window.DANE = {
    "seasonPrimary": "wiosna",
    "description": "Alpinarium przy Ślimaku Getyńskim — przez kilkanaście dni w maju jaśminy tworzą tu biały, pachnący tunel. Większość torunian nie ma pojęcia, że to miejsce istnieje. Wejdziesz przypadkiem i staniesz w pół kroku, bo zapach zatrzyma Cię szybciej niż widok. Najlepiej rano, kiedy rosa jeszcze lśni na płatkach.",
    "quote": "Pachnie tak, że nie chce się wracać do domu.",
-   "recommender": "Piotr",
-   "recommenderRole": "wykładowca UMK",
+   "recommender": "mieszkanka Bydgoskiego",
+   "recommenderRole": null,
    "highlights": [
     {
      "species": "jasminowiec",
@@ -1476,8 +1521,8 @@ window.DANE = {
    "seasonPrimary": "wiosna",
    "description": "Okazała magnolia na tle kamienicy z murem pruskim — to zestawienie wygląda jak specjalnie wyreżyserowane. Różowe kwiaty, czarno-biała faktura ścian, kawałek nieba. Kwitnie dosłownie kilka dni. Kto wie, ten łapie. Kto nie wie — przechodzi obok i nie podnosi głowy.",
    "quote": "Róg Bydgoskiej i Konopnickiej. Kilka dni w roku. Jedno zdjęcie. Perfekcja.",
-   "recommender": "Piotr",
-   "recommenderRole": "wykładowca UMK",
+   "recommender": "fotograf amator",
+   "recommenderRole": null,
    "highlights": [
     {
      "species": "magnolia",
@@ -1516,8 +1561,8 @@ window.DANE = {
    "seasonPrimary": "wiosna",
    "description": "Bydgoskie od kwietnia zamienia się w ogród, do którego nikt nie sprzedaje biletów. Bzy, jaśminy i kwitnące drzewa w przydomowych ogródkach tworzą kolorowy korytarz wzdłuż bocznych uliczek. Każda brama to inny zapach, każdy zakręt to nowa paleta. Nie musisz nigdzie iść. Po prostu idź.",
    "quote": "Spacer przez cudze ogrody — bez wchodzenia do środka.",
-   "recommender": "Piotr",
-   "recommenderRole": "wykładowca UMK",
+   "recommender": "mieszkaniec Bydgoskiego",
+   "recommenderRole": null,
    "highlights": [
     {
      "species": "lilak",
@@ -1558,8 +1603,8 @@ window.DANE = {
    "seasonPrimary": "lato",
    "description": "Za budynkiem Muzeum Etnograficznego kryją się ogródki tematyczne — zioła, kwiaty, tradycyjne uprawy. Właściwie w centrum miasta, a czujesz się jak na wsi u babci. Cicho, zielono, bez tłumów. Idealne kiedy Starówka jest zbyt głośna, a Ty potrzebujesz dwudziestu minut spokoju.",
    "quote": "Wszyscy znają muzeum. Prawie nikt nie wie o ogródkach za nim.",
-   "recommender": "Piotr",
-   "recommenderRole": "wykładowca UMK",
+   "recommender": "studentka UMK",
+   "recommenderRole": null,
    "highlights": [
     {
      "species": null,
@@ -1598,8 +1643,8 @@ window.DANE = {
    "seasonPrimary": "lato",
    "description": "Teren przy lotnisku Toruń-Bielany to najlepszy punkt widokowy na zachód słońca w mieście. Zero zabudowy na horyzoncie, samo niebo. Dojazd rowerem to połowa przyjemności — droga wiedzie przez tereny zielone, coraz ciszej, coraz szerzej. Na miejscu siadasz w trawie i patrzysz jak miasto tonie w pomarańczowym świetle.",
    "quote": "Płaski horyzont, pas startowy w złocie, cisza. Toruń znika — zostaje niebo.",
-   "recommender": "Piotr",
-   "recommenderRole": "wykładowca UMK",
+   "recommender": "rowerzysta",
+   "recommenderRole": null,
    "highlights": [
     {
      "species": null,
@@ -1640,8 +1685,8 @@ window.DANE = {
    "seasonPrimary": "lato",
    "description": "Ogród parkowy przy alei 500-lecia to jeden z najlepiej strzeżonych sekretów Torunia — i to nie dlatego, że jest zamknięty. Jest otwarty. Po rewitalizacji wygląda przepięknie: ławki, zieleń, cisza. Problem w tym, że ludzie nie wiedzą, że mogą tu wejść. A mogą. I warto — szczególnie z książką.",
    "quote": "Zrewitalizowany, piękny i pusty. Miliony wydane — nikt nie przychodzi.",
-   "recommender": "Piotr",
-   "recommenderRole": "wykładowca UMK",
+   "recommender": "mieszkaniec Chełmińskiego",
+   "recommenderRole": null,
    "highlights": [
     {
      "species": null,
@@ -1680,8 +1725,8 @@ window.DANE = {
    "seasonPrimary": "jesien",
    "description": "Barbarka jesienią to osobny świat. Stare buki przybierają odcienie złota, miedzi i czerwieni, a kiedy liście opadną — tworzą gruby dywan, który szeleści pod każdym krokiem. Światło przebija przez koronę drzew w smugach, zapach wilgotnej ziemi miesza się z chłodnym powietrzem. Spacer tutaj w październikowy poranek to jedno z tych doświadczeń, o których potem opowiadasz znajomym.",
    "quote": "Szeleszczący dywan pod stopami. Las, który jesienią mówi kolorami.",
-   "recommender": "Piotr",
-   "recommenderRole": "wykładowca UMK",
+   "recommender": "mieszkanka Wrzosów",
+   "recommenderRole": null,
    "highlights": [
     {
      "species": "buk-jesien",
@@ -1720,8 +1765,8 @@ window.DANE = {
    "seasonPrimary": "zima",
    "description": "Park na Bydgoskim zimą zmienia się nie do poznania. Bezlistne drzewa odsłaniają swoje kształty — powykręcane konary, rozłożyste pnie, sylwetki jakby wyrwane z baśni. Kiedy spadnie śnieg i zapali się latarnie, ciepłe światło rysuje cienie na białym tle i robi się niesamowicie. Niewielu ludzi, cisza, lekki mróz. Wchodzisz w to jak w kadr z filmu, którego nikt jeszcze nie nakręcił.",
    "quote": "Latarnie podświetlają pnie i konary zastygłe w dziwnych pozach. Cicho. Biało. Dziwnie pięknie.",
-   "recommender": "Piotr",
-   "recommenderRole": "wykładowca UMK",
+   "recommender": "student",
+   "recommenderRole": null,
    "highlights": [
     {
      "species": null,
@@ -2032,6 +2077,19 @@ function rysujListe(lista){
     '</span>';
 }
 
+/* ================= zdjęcia punktu =================
+   media.photo to jedno zdjęcie, media.photos to tablica — obsługujemy oba,
+   żeby galeria zadziałała bez zmian, kiedy dojdzie po kilka kadrów na punkt. */
+function zdjecia(p){
+  var m = p.media || {};
+  if (Array.isArray(m.photos) && m.photos.length) {
+    return m.photos.map(function(x){
+      return typeof x === 'string' ? { src:x, opis:'' } : { src:x.src, opis:x.opis || '' };
+    });
+  }
+  return m.photo ? [{ src:m.photo, opis:'' }] : [];
+}
+
 /* ================= karta punktu ================= */
 function kartaHtml(p){
   var akt = trwajace(p, stan.doba);
@@ -2040,8 +2098,17 @@ function kartaHtml(p){
   h.push('<div class="karta__pas"><button class="wroc" type="button" id="wroc">← wróć do listy punktów</button></div>');
   h.push('<div class="karta__body">');
 
-  if (p.media && p.media.photo) {
-    h.push('<img class="foto" src="' + esc(p.media.photo) + '" alt="' + esc(p.name) + '" loading="lazy">');
+  var fot = zdjecia(p);
+  if (fot.length) {
+    h.push('<button class="fotoBtn" type="button" data-lupa="0" aria-label="Powiększ zdjęcie">' +
+           '<img class="foto" src="' + esc(fot[0].src) + '" alt="' + esc(p.name) + '" loading="lazy"></button>');
+    if (fot.length > 1) {
+      h.push('<div class="miniatury">' + fot.map(function(f, i){
+        return '<button class="miniatura" type="button" data-lupa="' + i + '"' +
+               (i === 0 ? ' aria-current="true"' : '') + '>' +
+               '<img src="' + esc(f.src) + '" alt="' + esc(p.name + ' — kadr ' + (i + 1)) + '" loading="lazy"></button>';
+      }).join('') + '</div>');
+    }
   } else {
     h.push('<div class="brakfoto">Zdjęcie w przygotowaniu.<br>Kadry do miejsc z Torunia Ukrytego dołożą ' +
            'mieszkańcy, którzy je polecili.</div>');
@@ -2119,7 +2186,49 @@ function pokazKarte(p){
   w.addEventListener('click', function(){ stan.wybrany = null; odswiez(); });
   w.focus();
 }
-function schowajKarte(){ $('karta').hidden = true; $('karta').innerHTML = ''; $('lista').hidden = false; }
+function schowajKarte(){
+  if (!$('lupa').hidden) zamknijLupe(); $('karta').hidden = true; $('karta').innerHTML = ''; $('lista').hidden = false; }
+
+/* ================= lupa ================= */
+var lupa = { zdj: [], i: 0, wrocDo: null };
+
+function otworzLupe(lista, idx, wrocDo){
+  if (!lista.length) return;
+  lupa.zdj = lista; lupa.i = idx; lupa.wrocDo = wrocDo || null;
+  $('lupa').hidden = false;
+  document.body.style.overflow = 'hidden';
+  odswiezLupe();
+  $('lupaX').focus();
+}
+function odswiezLupe(){
+  var f = lupa.zdj[lupa.i], wiele = lupa.zdj.length > 1;
+  $('lupaImg').src = f.src;
+  $('lupaImg').alt = f.alt || '';
+  $('lupaPod').innerHTML = '<b>' + esc(f.tytul || '') + '</b>' + esc(f.opis || '');
+  $('lupaW').hidden = !wiele;
+  $('lupaD').hidden = !wiele;
+  $('lupaLicz').textContent = wiele ? (lupa.i + 1) + ' / ' + lupa.zdj.length : '';
+  var mini = document.querySelectorAll('.miniatura');
+  Array.prototype.forEach.call(mini, function(b, i){
+    if (i === lupa.i) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
+  });
+}
+function zamknijLupe(){
+  $('lupa').hidden = true;
+  document.body.style.overflow = '';
+  $('lupaImg').removeAttribute('src');
+  if (lupa.wrocDo && document.contains(lupa.wrocDo)) lupa.wrocDo.focus();
+  lupa.wrocDo = null;
+}
+function przesunLupe(k){
+  lupa.i = (lupa.i + k + lupa.zdj.length) % lupa.zdj.length;
+  odswiezLupe();
+}
+function lupaDlaPunktu(p, idx, wrocDo){
+  otworzLupe(zdjecia(p).map(function(f){
+    return { src:f.src, opis:f.opis, tytul:p.name, alt:p.name };
+  }), idx, wrocDo);
+}
 
 /* ================= wybór punktu ================= */
 function wybierz(id, skad){
@@ -2373,6 +2482,16 @@ function start(){
   zbudujFiltry();
   zbudujPlaner();
 
+  $('karta').addEventListener('click', function(e){
+    var b = e.target.closest('[data-lupa]'); if (!b) return;
+    var p = PUNKTY.filter(function(x){ return x.id === stan.wybrany; })[0];
+    if (p) lupaDlaPunktu(p, +b.dataset.lupa, b);
+  });
+  $('lupaX').addEventListener('click', zamknijLupe);
+  $('lupaW').addEventListener('click', function(){ przesunLupe(-1); });
+  $('lupaD').addEventListener('click', function(){ przesunLupe(1); });
+  $('lupa').addEventListener('click', function(e){ if (e.target === this) zamknijLupe(); });
+
   $('lista').addEventListener('click', function(e){
     var b = e.target.closest('[data-id]'); if (!b) return;
     wybierz(b.dataset.id, 'lista');
@@ -2389,6 +2508,20 @@ function start(){
   });
 
   document.addEventListener('keydown', function(e){
+    if (!$('lupa').hidden) {
+      if (e.key === 'Escape') { e.preventDefault(); zamknijLupe(); }
+      else if (e.key === 'ArrowLeft'  && lupa.zdj.length > 1) przesunLupe(-1);
+      else if (e.key === 'ArrowRight' && lupa.zdj.length > 1) przesunLupe(1);
+      else if (e.key === 'Tab') {
+        var f = Array.prototype.filter.call($('lupa').querySelectorAll('button'),
+                                            function(b){ return !b.hidden; });
+        if (!f.length) return;
+        e.preventDefault();
+        var i = f.indexOf(document.activeElement);
+        f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
+      }
+      return;
+    }
     if (e.key === 'Escape' && stan.wybrany) { stan.wybrany = null; odswiez(); }
   });
 
