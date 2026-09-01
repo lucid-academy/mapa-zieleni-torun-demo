@@ -67,8 +67,9 @@ a:hover{ color:var(--akcent) }
          display:flex; align-items:baseline; gap:.6rem; flex-wrap:wrap }
 .tag--alpha{ font-family:'Raleway',system-ui,sans-serif; border-color:var(--akcent) }
 .top__sub{ font-size:.8rem; color:var(--cichy); margin-top:.1rem }
-.top__marka{ display:block; border:0; margin-left:auto; align-self:center; flex:none }
-.top__marka img{ display:block; width:auto; height:30px }
+.top__marka{ display:flex; align-items:center; gap:.5rem; border:0; margin-left:auto;
+             align-self:center; flex:none }
+.top__marka img{ display:block; width:auto; height:34px }
 .tabs{ display:flex; gap:.15rem; align-self:flex-end; margin-left:auto }
 .tab{ background:none; border:0; border-bottom:3px solid transparent; padding:.55rem .95rem .6rem;
       cursor:pointer; font-size:.95rem; font-weight:600; color:var(--cichy); display:flex; align-items:center; gap:.45rem }
@@ -463,6 +464,9 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
             padding-right:3.2rem }
   .top__marka{ position:absolute; right:0; top:.85rem; margin:0 }
   .top__marka img{ height:26px }
+  /* .top__marka img ma wyzsza specyficznosc niz sama klasa, wiec ukrycie
+     napisu musi byc rownie mocne */
+  .top__marka .marka__napis{ display:none }
   .tabs{ align-self:flex-start }
   .fakty{ grid-template-columns:1fr; gap:.1rem .5rem }
   .fakty dd{ margin-bottom:.45rem }
@@ -484,7 +488,8 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
     </div>
     <a class="top__marka" href="https://lucidacademy.pl" target="_blank" rel="noopener"
        aria-label="Lucid Academy — strona główna">
-      <img src="img/lucid-monogram.png" alt="Lucid Academy" width="139" height="96">
+      <img class="marka__znak" src="img/lucid-monogram.png" alt="" width="139" height="96">
+      <img class="marka__napis" src="img/lucid-napis.png" alt="" width="267" height="96">
     </a>
     <nav class="tabs" role="tablist" aria-label="Sekcje demo">
       <button class="tab" role="tab" id="tab-mapa" aria-controls="panel-mapa" aria-selected="true">Mapa</button>
