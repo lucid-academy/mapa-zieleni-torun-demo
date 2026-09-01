@@ -117,7 +117,7 @@ a:hover{ color:var(--akcent) }
 .top__marka{ display:flex; align-items:center; gap:.5rem; border:0; margin-left:auto;
              align-self:center; flex:none }
 .top__marka img{ display:block; width:auto; height:34px }
-.tabs{ display:flex; gap:.15rem; align-self:flex-end; margin-left:auto }
+.tabs{ display:flex; gap:.15rem; align-self:flex-end; margin-left:auto; flex-wrap:wrap }
 .tab{ background:none; border:0; border-bottom:3px solid transparent; padding:.55rem .95rem .6rem;
       cursor:pointer; font-size:.95rem; font-weight:600; color:var(--cichy); display:flex; align-items:center; gap:.45rem }
 .tab:hover{ color:var(--atrament) }
@@ -724,6 +724,13 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
             padding-right:3.2rem }
   .top__marka{ position:absolute; right:0; top:.85rem; margin:0 }
   .top__marka img{ height:26px }
+  /* cztery zakładki w 375 px: ciaśniej i bez etykiety podglądu,
+     inaczej pasek rozpycha stronę i z prawej wychodzi pusty margines */
+  .tabs{ width:100%; margin-left:0; gap:0 }
+  .tab{ padding:.5rem .5rem .55rem; font-size:.88rem; flex:1 1 auto; justify-content:center }
+  .tab .tag{ display:none }
+  .page{ padding:1.1rem 1rem }
+  .pp__gora{ gap:.6rem }
   /* .top__marka img ma wyzsza specyficznosc niz sama klasa, wiec ukrycie
      napisu musi byc rownie mocne */
   .top__marka .marka__napis{ display:none }
