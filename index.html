@@ -153,9 +153,13 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
           border-radius:var(--r); padding:.32rem .65rem; font-size:.85rem; font-weight:600; cursor:pointer }
 
 /* ---------- mapa + lista ---------- */
-.robocze{ display:grid; grid-template-columns:minmax(0,1fr) clamp(360px,29vw,460px);
-          height:clamp(300px,calc(100vh - 330px),820px); border-bottom:1px solid var(--linia) }
-.mapa{ position:relative; min-width:0; border-right:1px solid var(--linia) }
+/* Mapa przykleja się do góry okna, a lista i karta płyną w normalnym biegu strony.
+   Wcześniej panel boczny miał własny, łatwy do przeoczenia pasek przewijania,
+   przez co zdjęcia w karcie oglądało się przez wąską szczelinę. */
+.robocze{ display:grid; grid-template-columns:minmax(0,1fr) clamp(380px,34vw,560px);
+          align-items:start; border-bottom:1px solid var(--linia) }
+.mapa{ position:sticky; top:0; min-width:0; border-right:1px solid var(--linia);
+       height:clamp(340px,calc(100vh - 8px),900px) }
 #map{ position:absolute; inset:0; background:var(--papier); z-index:1 }
 .leaflet-container{ font-family:'Raleway',system-ui,sans-serif; background:var(--papier) }
 .mapnota{ position:absolute; left:12px; right:12px; top:12px; z-index:600; background:var(--ark);
@@ -206,6 +210,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
              font-size:.85rem; line-height:1.5 }
 .trasa-info b{ font-family:'Bitter',Georgia,serif; font-size:1.05rem; font-weight:600 }
 .trasa-info__m{ color:var(--cichy); margin-top:.15rem }
+.trasa-info__n{ margin-top:.35rem; font-size:.82rem; line-height:1.45 }
 .trasa-info__u{ color:var(--cichy); font-size:.78rem; font-style:italic; margin-top:.35rem }
 .wiersz__nr{ display:inline-flex; align-items:center; justify-content:center; width:1.35rem; height:1.35rem;
              border-radius:50%; background:var(--akcent);
@@ -215,8 +220,8 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 .wiersz__leg{ font-size:.78rem; color:var(--cichy) }
 
 /* ---------- panel boczny ---------- */
-.bok{ min-width:0; display:flex; flex-direction:column; overflow:hidden; background:var(--papier) }
-.bok__scroll{ overflow-y:auto; overscroll-behavior:contain; flex:1; min-height:0 }
+.bok{ min-width:0; display:flex; flex-direction:column; background:var(--papier) }
+.bok__scroll{ min-height:0 }
 .lista{ list-style:none; margin:0; padding:0 }
 .wiersz{ width:100%; text-align:left; background:none; border:0; border-bottom:1px solid var(--linia);
          border-left:3px solid transparent; padding:.7rem clamp(.8rem,1.5vw,1.1rem); cursor:pointer; display:block }
@@ -228,12 +233,13 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 .wiersz__m{ font-size:.82rem; color:var(--cichy); margin-top:.2rem; display:flex; gap:.5rem; flex-wrap:wrap }
 .kropka{ display:inline-flex; align-items:center; gap:.32rem; color:var(--atrament); font-weight:600 }
 .kropka::before{ content:''; width:8px; height:8px; border-radius:50%; background:var(--akcent); flex:none }
-.listahead{ padding:.55rem clamp(.8rem,1.5vw,1.1rem); border-bottom:1px solid var(--linia);
+.listahead{ position:sticky; top:0; z-index:4; background:var(--papier);
+            padding:.55rem clamp(.8rem,1.5vw,1.1rem); border-bottom:1px solid var(--linia);
             font-size:.78rem; color:var(--cichy); display:flex; justify-content:space-between; gap:.5rem; align-items:baseline }
 .listapusta{ padding:1.4rem clamp(.8rem,1.5vw,1.1rem); font-size:.92rem; color:var(--cichy) }
 
 /* ---------- karta punktu ---------- */
-.karta__pas{ position:sticky; top:0; z-index:5; background:var(--papier); border-bottom:1px solid var(--linia);
+.karta__pas{ position:sticky; top:2.1rem; z-index:5; background:var(--papier); border-bottom:1px solid var(--linia);
              padding:.5rem clamp(.8rem,1.5vw,1.1rem) }
 .wroc{ background:none; border:0; cursor:pointer; font-size:.85rem; color:var(--cichy); padding:.2rem 0 }
 .wroc:hover{ color:var(--atrament) }
@@ -393,7 +399,6 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
   .teraz__wiecej{ margin-top:.35rem; font-size:.8rem }
   .filtry__in{ padding:.45rem 0 .5rem; gap:.4rem 1.1rem }
   .grp{ gap:.3rem }
-  .robocze{ height:clamp(280px,calc(100vh - 300px),820px) }
   .legenda{ font-size:.74rem; padding:.4rem .6rem; line-height:1.55 }
 }
 
@@ -405,6 +410,9 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 }
 @media (max-width:860px){
   .robocze{ display:block; height:auto }
+  .mapa{ position:static; height:56vh }
+  .listahead{ position:static }
+  .karta__pas{ top:0 }
   .mapa{ height:56vh; min-height:320px; border-right:0; border-bottom:1px solid var(--linia) }
   .bok{ height:auto; overflow:visible }
   .bok__scroll{ overflow:visible }
@@ -2395,14 +2403,13 @@ function rysujPinezki(lista){
   warstwa.clearLayers(); warstwaTrasy.clearLayers(); markery = {};
   var t = trasaAktywna();
   if (t) {
-    var pk = trasaPunkty(t);
+    var g = TRASY_GEO[t.id];
+    var linia = g ? g.geometria : trasaPunkty(t).map(function(p){ return [p.lat, p.lng]; });
     var kolor = getComputedStyle(document.body).getPropertyValue('--akcent').trim() || '#2E7D52';
-    L.polyline(pk.map(function(p){ return [p.lat, p.lng]; }), {
-      color: '#1D2B21', weight: 5, opacity: .25, lineJoin: 'round'
-    }).addTo(warstwaTrasy);
-    L.polyline(pk.map(function(p){ return [p.lat, p.lng]; }), {
-      color: kolor, weight: 3, opacity: .95, dashArray: '7 6', lineJoin: 'round'
-    }).addTo(warstwaTrasy);
+    L.polyline(linia, { color:'#1D2B21', weight:6, opacity:.22, lineJoin:'round', lineCap:'round' })
+     .addTo(warstwaTrasy);
+    L.polyline(linia, { color:kolor, weight:3.5, opacity:.95, lineJoin:'round', lineCap:'round' })
+     .addTo(warstwaTrasy);
   }
   lista.forEach(function(p, i){
     var akt = trwajace(p, stan.doba).length > 0;
@@ -2468,24 +2475,39 @@ function rysujListe(lista){
 }
 
 /* ================= trasy =================
-   Dystanse liczone ze współrzędnych punktów w linii prostej ×1,3 (poprawka na to,
-   że jedzie się i chodzi ulicami). Tempo: 4,5 km/h pieszo, 15 km/h rowerem. */
+   Przebieg i długość policzone routerem po realnych drogach z OpenStreetMap
+   (profil rowerowy dla tras rowerowych, pieszy dla spaceru). Wynik jest zapieczony
+   w TRASY_GEO, więc mapa nie odpytuje żadnej usługi i działa bez sieci.
+   Tempo doliczone osobno: 4,5 km/h pieszo, 15 km/h rowerem — router zakłada
+   szybsze tempo, niż ma sens przy zwiedzaniu z postojami. */
+var TRASY_GEO = {
+  'kieszonkowe': { dystans:11421, legi:[2282,1653,2817,4643],
+    rowerowa:1662, dozwolone:5306, ulica:4187, piesze:266,
+    geometria:[[53.0177,18.5721],[53.01772,18.57331],[53.01743,18.57332],[53.01743,18.57462],[53.01732,18.57462],[53.01735,18.57681],[53.01749,18.57746],[53.01809,18.57907],[53.0182,18.57913],[53.01848,18.57894],[53.0188,18.58008],[53.01884,18.58114],[53.01925,18.58239],[53.01954,18.58283],[53.0195,18.58302],[53.01934,18.58309],[53.01955,18.58531],[53.01759,18.58659],[53.01651,18.58801],[53.01659,18.58822],[53.01629,18.58866],[53.01622,18.58905],[53.01596,18.58964],[53.01583,18.59181],[53.01425,18.59146],[53.01345,18.59049],[53.01275,18.59007],[53.01197,18.58982],[53.01198,18.58949],[53.01246,18.58947],[53.01246,18.58969],[53.01246,18.58947],[53.01206,18.58949],[53.01206,18.58984],[53.01345,18.59049],[53.01425,18.59146],[53.01572,18.5918],[53.01757,18.59143],[53.01821,18.59086],[53.0186,18.59165],[53.01885,18.59191],[53.02119,18.59588],[53.02207,18.59501],[53.02225,18.59465],[53.02212,18.59386],[53.02185,18.59334],[53.02179,18.59342],[53.02216,18.59438],[53.02189,18.59468],[53.02216,18.59438],[53.02179,18.59342],[53.02185,18.59334],[53.02212,18.59386],[53.02225,18.59465],[53.02207,18.59501],[53.02104,18.59609],[53.02222,18.59852],[53.02232,18.59901],[53.02239,18.60383],[53.02226,18.6073],[53.02253,18.60819],[53.02256,18.6117],[53.02163,18.61202],[53.02107,18.61245],[53.02082,18.61242],[53.02075,18.61267],[53.021,18.61316],[53.02147,18.61299],[53.0226,18.61412],[53.02282,18.61455],[53.02314,18.61576],[53.02456,18.6254],[53.02431,18.6254],[53.02414,18.6251],[53.02431,18.6254],[53.02456,18.6254],[53.02472,18.62636],[53.02502,18.62626],[53.02506,18.62681],[53.0252,18.62695],[53.02531,18.62676],[53.02635,18.6264],[53.0284,18.62475],[53.02874,18.62444],[53.02872,18.62424],[53.029,18.62369],[53.02941,18.62324],[53.03,18.62287],[53.03018,18.62287],[53.03026,18.62301],[53.03111,18.6275],[53.03141,18.63055],[53.03186,18.63346],[53.03246,18.63892],[53.03257,18.64077],[53.03236,18.65077],[53.03244,18.65148],[53.03266,18.65219],[53.03253,18.65233],[53.0311,18.65283],[53.03122,18.65362],[53.03107,18.6557],[53.03161,18.65818],[53.03165,18.65975],[53.03146,18.66122],[53.03199,18.6636],[53.03202,18.66421],[53.03234,18.66511],[53.03404,18.67333],[53.03401,18.67429],[53.03363,18.67424],[53.03363,18.675]] },
+  'bydgoskie': { dystans:3932, legi:[800,371,699,405,1163,481],
+    rowerowa:103, dozwolone:3172, ulica:579, piesze:78,
+    geometria:[[53.00976,18.59733],[53.00962,18.59735],[53.00939,18.59227],[53.01001,18.58872],[53.01011,18.58593],[53.01008,18.58005],[53.00984,18.57999],[53.00984,18.58014],[53.00912,18.58066],[53.00838,18.581],[53.00785,18.57939],[53.00798,18.57652],[53.00834,18.57581],[53.00827,18.5749],[53.00836,18.57482],[53.00836,18.57471],[53.00827,18.5749],[53.00818,18.57404],[53.00779,18.57227],[53.00725,18.57348],[53.00742,18.57203],[53.00725,18.57348],[53.00779,18.57227],[53.00819,18.56924],[53.00791,18.56852],[53.00757,18.56649],[53.00601,18.56452],[53.00534,18.56477],[53.00507,18.56521],[53.00474,18.56521],[53.00465,18.5679],[53.00469,18.56658],[53.0037,18.56646],[53.00366,18.5681],[53.0034,18.57047],[53.00345,18.5706]] },
+  'park-miejski': { dystans:1672, legi:[481,861,330],
+    rowerowa:0, dozwolone:1665, ulica:0, piesze:7,
+    geometria:[[53.00345,18.5706],[53.0034,18.57047],[53.00366,18.5681],[53.0037,18.56646],[53.00469,18.56658],[53.00461,18.56904],[53.00492,18.56972],[53.00501,18.57163],[53.00496,18.57491],[53.00509,18.57496],[53.00625,18.57436],[53.00725,18.57348],[53.00742,18.57203],[53.00727,18.57338],[53.00704,18.57417],[53.00742,18.57489],[53.00817,18.57496],[53.00836,18.57471]] }
+};
+
 var TRASY = [
   { id:'kieszonkowe', nazwa:'Parki kieszonkowe', tryb:'rower',
     tytul:'Parki kieszonkowe z jednego siodełka',
     opis:'Pięć inwestycji miasta na jednej pętli, od Bydgoskiego po Bielawy.',
-    uwaga:'Przebieg orientacyjny — linia łączy punkty najkrótszą drogą, nie ulicami.',
+    uwaga:'Przebieg policzony po realnych drogach z OpenStreetMap, profilem rowerowym.',
     punkty:['ustronie-ukrainskie','litewska-ojczyzna','skwer-polski','sensoryczna-szwecja','angielski-ogrod'] },
   { id:'bydgoskie', nazwa:'Zielone Bydgoskie', tryb:'rower',
     tytul:'Zielona pętla po Bydgoskim',
     opis:'Od ogrodu przy WFOŚiGW przez magnolie i Park Miejski aż nad samą Wisłę.',
-    uwaga:'Przebieg orientacyjny — linia łączy punkty najkrótszą drogą, nie ulicami.',
+    uwaga:'Przebieg policzony po realnych drogach z OpenStreetMap, profilem rowerowym.',
     punkty:['ogrod-wfosigw','magnolia-bydgoska','ogrodki-kwiatostany','wodospad-zakochanych',
             'tajemnicza-sciezka','niezwykle-zakatki','dziki-brzeg-wisly'] },
   { id:'park-miejski', nazwa:'Park Miejski', tryb:'pieszo',
     tytul:'Park Miejski od podszewki',
     opis:'Cztery miejsca, których nie widać z głównej alejki. Na jedno popołudnie.',
-    uwaga:'Przebieg orientacyjny — linia łączy punkty najkrótszą drogą, nie ścieżkami.',
+    uwaga:'Przebieg policzony po realnych ścieżkach z OpenStreetMap, profilem pieszym.',
     punkty:['dziki-brzeg-wisly','niezwykle-zakatki','tajemnicza-sciezka','wodospad-zakochanych'] }
 ];
 var TEMPO = { pieszo:75, rower:250 };   // metrów na minutę
@@ -2503,12 +2525,34 @@ function trasaPunkty(t){
   }).filter(Boolean);
 }
 function trasaOdcinki(t){
+  var g = TRASY_GEO[t.id];
+  if (g) return { legi:g.legi, suma:g.dystans, minuty:Math.round(g.dystans / TEMPO[t.tryb]) };
+  /* zapasowo, gdyby doszła trasa bez policzonego przebiegu */
   var pk = trasaPunkty(t), out = [], suma = 0;
   for (var i = 1; i < pk.length; i++) {
     var dd = metry([pk[i-1].lat, pk[i-1].lng], [pk[i].lat, pk[i].lng]) * 1.3;
     out.push(Math.round(dd)); suma += dd;
   }
   return { legi:out, suma:suma, minuty:Math.round(suma / TEMPO[t.tryb]) };
+}
+
+function km(m){
+  if (m < 950) return Math.round(m / 10) * 10 + ' m';
+  return (m / 1000).toFixed(1).replace('.', ',') + ' km';
+}
+
+/* Z czego składa się nawierzchnia trasy — liczone z tagów OpenStreetMap. */
+function trasaNawierzchnia(t){
+  var g = TRASY_GEO[t.id];
+  if (!g || t.tryb !== 'rower') return '';
+  var cz = [];
+  if (g.rowerowa  > 50) cz.push(km(g.rowerowa) + ' drogą rowerową');
+  if (g.dozwolone > 50) cz.push(km(g.dozwolone) + ' ścieżkami dozwolonymi dla rowerów');
+  if (g.ulica     > 50) cz.push(km(g.ulica) + ' zwykłymi ulicami');
+  var ogon = g.piesze > 50
+    ? ' Na ' + Math.round(g.piesze) + ' m trzeba zejść z siodełka i poprowadzić rower.'
+    : '';
+  return cz.length ? '<p class="trasa-info__n">' + cz.join(' · ') + '.' + ogon + '</p>' : '';
 }
 function trasaAktywna(){
   if (!stan.trasa) return null;
@@ -2631,8 +2675,11 @@ function dopasujRamke(img){
   if (img.complete) ustaw(); else img.addEventListener('load', ustaw);
 }
 
+var kartaOtwartaDla = null;
+
 function pokazKarte(p){
   var k = $('karta');
+  var nowa = (kartaOtwartaDla !== p.id);
   k.innerHTML = kartaHtml(p);
   dopasujRamke(k.querySelector('.foto'));
   k.hidden = false;
@@ -2640,12 +2687,14 @@ function pokazKarte(p){
   $('listapusta').hidden = true;
   $('listahead').innerHTML = '<span>Karta punktu</span><span>' +
     (p.type === 'park-kieszonkowy' ? 'park kieszonkowy' : 'Toruń Ukryty') + '</span>';
-  $('bokScroll').scrollTop = 0;
-  var w = $('wroc');
-  w.addEventListener('click', function(){ stan.wybrany = null; odswiez(); });
-  w.focus();
+  $('wroc').addEventListener('click', function(){ stan.wybrany = null; odswiez(); });
+  /* Fokus i przewijanie tylko przy otwarciu nowej karty. Przy każdym odświeżeniu
+     (np. przeciąganiu suwaka daty) fokus przerywał gest i zjeżdżał stroną w dół. */
+  if (nowa) { $('bokScroll').scrollTop = 0; $('wroc').focus(); }
+  kartaOtwartaDla = p.id;
 }
 function schowajKarte(){
+  kartaOtwartaDla = null;
   if (!$('lupa').hidden) zamknijLupe(); $('karta').hidden = true; $('karta').innerHTML = ''; $('lista').hidden = false; }
 
 /* ================= lupa ================= */
@@ -2798,6 +2847,7 @@ function rysujStan(lista){
       ' · ' + (o.suma / 1000).toFixed(1).replace('.', ',') + ' km · ' + t.punkty.length + ' ' +
       pl(t.punkty.length, 'przystanek', 'przystanki', 'przystanków') + '</p>' +
       '<p class="trasa-info__m">' + esc(t.opis) + '</p>' +
+      trasaNawierzchnia(t) +
       '<p class="trasa-info__u">' + esc(t.uwaga) + '</p>';
     box2.hidden = false;
     $('pustka').hidden = true;
