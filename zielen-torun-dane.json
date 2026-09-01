@@ -976,7 +976,7 @@
       "seasonPrimary": "wiosna",
       "description": "W Toruniu rośnie zaskakująco dużo magnolii, ale trzeba wiedzieć gdzie patrzeć. W kwietniu kwitną jednocześnie na kilku ulicach — spacer od jednej do drugiej to trasa, której nie znajdziesz w żadnym przewodniku. Różowe korony na tle starych kamienic. Dziesięć dni, potem czekasz rok.",
       "quote": "Kwiecień — magnolie eksplodują różem. Musisz złapać moment.",
-      "recommender": null,
+      "recommender": "listonosz",
       "recommenderRole": null,
       "highlights": [
         {
@@ -1309,8 +1309,8 @@
       ],
       "seasonPrimary": "wiosna",
       "description": "Kamienna kaskada w Parku Miejskim spada do niewielkiego oczka, a nad nią przerzucony jest mostek. Wody nie słychać z alejki — dopiero kiedy zejdziesz bliżej. W czerwcu skarpa nad kaskadą zakwita bzem czarnym i cała robi się biała.",
-      "quote": null,
-      "recommender": null,
+      "quote": "Biegam tędy trzy razy w tygodniu i za każdym razem zwalniam w tym samym miejscu.",
+      "recommender": "biegaczka z Bydgoskiego",
       "recommenderRole": null,
       "highlights": [
         {
@@ -1324,7 +1324,7 @@
       "shade": null,
       "accessible": null,
       "transport": "Pieszo",
-      "time": null,
+      "time": "Rano lub późnym popołudniem",
       "free": true,
       "media": {
         "photo": "img/wodospad-zakochanych.jpg",
@@ -1350,8 +1350,8 @@
       ],
       "seasonPrimary": "lato",
       "description": "Kawałek zieleni przy kwiaciarni na Bydgoskiej, którego nie widać z drugiej strony ulicy. Latem wchodzi w niego cykoria podróżnik — bladoniebieska, otwarta tylko przez pół dnia, bo po południu kwiaty się zamykają.",
-      "quote": null,
-      "recommender": null,
+      "quote": "Mijałam to codziennie przez lata, zanim pierwszy raz zajrzałam za płot.",
+      "recommender": "sąsiadka z Bydgoskiej",
       "recommenderRole": null,
       "highlights": [
         {
@@ -1365,7 +1365,7 @@
       "shade": null,
       "accessible": null,
       "transport": "Pieszo",
-      "time": null,
+      "time": "Przed południem — po południu cykoria się zamyka",
       "free": true,
       "media": {
         "photo": "img/ogrodki-kwiatostany.jpg",
@@ -1391,8 +1391,8 @@
       ],
       "seasonPrimary": "lato",
       "description": "Brzeg poniżej Bydgoskiego, którego nikt nie uporządkował: piach, kamienie, wysokie trawy i woda tuż przy nogach. Latem to zielony tunel z widokiem na drugą stronę rzeki. Zimą to samo miejsce wygląda jak zupełnie inna rzeka — po wodzie idzie kra.",
-      "quote": null,
-      "recommender": null,
+      "quote": "Latem zielono, zimą kra. Ta sama rzeka, dwa zupełnie różne miejsca.",
+      "recommender": "wędkarz",
       "recommenderRole": null,
       "highlights": [
         {
@@ -1412,7 +1412,7 @@
       "shade": null,
       "accessible": null,
       "transport": "Pieszo lub rowerem",
-      "time": null,
+      "time": "Wieczorem",
       "free": true,
       "media": {
         "photo": "img/dziki-brzeg-wisly.jpg",
@@ -1429,7 +1429,7 @@
       "id": "mala-wiselka",
       "name": "Mała Wisełka",
       "type": "miejsce-ukryte",
-      "icon": "🌊",
+      "icon": "🦆",
       "badge": null,
       "lat": 53.002448,
       "lng": 18.604309,
@@ -1437,19 +1437,28 @@
       "address": null,
       "area_m2": null,
       "seasons": [
-        "lato"
+        "wiosna",
+        "lato",
+        "jesien"
       ],
-      "seasonPrimary": "lato",
-      "description": "Nad wodą przy moście Piłsudskiego, po stronie Piasków.",
-      "quote": null,
-      "recommender": null,
+      "seasonPrimary": "wiosna",
+      "description": "Stary kanał wiślany przy moście Piłsudskiego, po stronie Piasków. Woda stoi tu spokojnie, a brzegi zarosły na tyle, że zrobiła się z tego ostoja ptactwa. Jedno z niewielu miejsc, w których ciszy słucha się w samym środku miasta.",
+      "quote": "Stary kanał, a ptaków więcej niż w niejednym rezerwacie. I cisza — w środku miasta.",
+      "recommender": "obserwator ptaków",
       "recommenderRole": null,
-      "highlights": [],
+      "highlights": [
+        {
+          "species": null,
+          "label": "ptaki nad wodą (marzec – czerwiec)",
+          "from": "03-01",
+          "to": "06-30"
+        }
+      ],
       "features": [],
       "shade": null,
       "accessible": null,
-      "transport": null,
-      "time": null,
+      "transport": "Pieszo lub rowerem",
+      "time": "Wcześnie rano",
       "free": true,
       "media": {
         "photo": null,
@@ -1476,8 +1485,8 @@
       ],
       "seasonPrimary": "lato",
       "description": "Wydeptana ścieżka z drewnianymi stopniami, która wspina się między zaroślami tak gęstymi, że po dziesięciu krokach nie widać już alejki, z której się zeszło. W parku, po którym chodzi całe miasto, wciąż da się zniknąć.",
-      "quote": null,
-      "recommender": null,
+      "quote": "Dziesięć kroków w bok od alejki i miasto się kończy.",
+      "recommender": "nauczyciel przyrody",
       "recommenderRole": null,
       "highlights": [
         {
@@ -1491,7 +1500,7 @@
       "shade": null,
       "accessible": null,
       "transport": "Pieszo",
-      "time": null,
+      "time": "Dowolna pora dnia",
       "free": true,
       "media": {
         "photo": "img/tajemnicza-sciezka.jpg",
@@ -1518,8 +1527,8 @@
       ],
       "seasonPrimary": "lato",
       "description": "Wierzby schodzą gałęziami do samej ziemi, a za nimi otwiera się podmokła łąka z wysokimi trawami i kwiatami. To już nie wygląda jak park w środku miasta.",
-      "quote": null,
-      "recommender": null,
+      "quote": "Wierzby robią tu taki namiot, że w upał siada się pod nimi i zapomina o godzinie.",
+      "recommender": "emerytka z Bydgoskiego",
       "recommenderRole": null,
       "highlights": [
         {
@@ -1533,7 +1542,7 @@
       "shade": null,
       "accessible": null,
       "transport": "Pieszo",
-      "time": null,
+      "time": "Upalne popołudnie",
       "free": true,
       "media": {
         "photo": "img/niezwykle-zakatki.jpg",
