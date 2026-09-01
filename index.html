@@ -62,12 +62,14 @@ a:hover{ color:var(--akcent) }
 
 /* ---------- naglowek ---------- */
 .top{ border-bottom:1px solid var(--linia); background:var(--papier) }
-.top__in{ display:flex; align-items:flex-end; gap:1.5rem; justify-content:space-between; padding-top:.85rem }
+.top__in{ display:flex; align-items:flex-end; gap:1.5rem; padding-top:.85rem }
 .top h1{ font-size:clamp(1.1rem,1.5vw,1.4rem); letter-spacing:-.01em;
          display:flex; align-items:baseline; gap:.6rem; flex-wrap:wrap }
 .tag--alpha{ font-family:'Raleway',system-ui,sans-serif; border-color:var(--akcent) }
 .top__sub{ font-size:.8rem; color:var(--cichy); margin-top:.1rem }
-.tabs{ display:flex; gap:.15rem; align-self:flex-end }
+.top__marka{ display:block; border:0; margin-left:auto; align-self:center; flex:none }
+.top__marka img{ display:block; width:auto; height:30px }
+.tabs{ display:flex; gap:.15rem; align-self:flex-end; margin-left:auto }
 .tab{ background:none; border:0; border-bottom:3px solid transparent; padding:.55rem .95rem .6rem;
       cursor:pointer; font-size:.95rem; font-weight:600; color:var(--cichy); display:flex; align-items:center; gap:.45rem }
 .tab:hover{ color:var(--atrament) }
@@ -90,13 +92,22 @@ a:hover{ color:var(--akcent) }
 .data{ display:flex; align-items:center; gap:.7rem; flex-wrap:wrap }
 .data__lab{ font-size:.82rem; color:var(--cichy); white-space:nowrap; display:flex; gap:.4rem; align-items:baseline }
 .data__out{ font-family:'Bitter',Georgia,serif; font-weight:600; font-size:1rem; color:var(--atrament) }
-input[type=range]{ -webkit-appearance:none; appearance:none; width:clamp(150px,17vw,260px); height:22px; background:none; cursor:pointer }
-input[type=range]::-webkit-slider-runnable-track{ height:3px; background:var(--linia) }
-input[type=range]::-moz-range-track{ height:3px; background:var(--linia) }
-input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:16px; height:16px; border-radius:50%;
-  background:var(--akcent); border:2px solid var(--papier); box-shadow:0 0 0 1px var(--atrament); margin-top:-7px }
-input[type=range]::-moz-range-thumb{ width:16px; height:16px; border-radius:50%; background:var(--akcent);
-  border:2px solid var(--papier); box-shadow:0 0 0 1px var(--atrament) }
+/* Suwak na 365 dni miał ~2 dni na piksel — dnia nie dało się trafić, a treść
+   skakała przy każdym drgnięciu. Miesiąc wybiera się klikiem, dzień strzałką. */
+.dzien{ display:flex; align-items:center; gap:.15rem }
+.dzien__krok{ background:var(--ark); border:1px solid var(--linia); border-radius:var(--r);
+       width:1.7rem; height:1.7rem; line-height:1; font-size:1.05rem; cursor:pointer; color:var(--cichy);
+       display:flex; align-items:center; justify-content:center; padding:0 }
+.dzien__krok:hover{ border-color:var(--atrament); color:var(--atrament) }
+.data__out{ min-width:7.2rem; text-align:center }
+.miesiace{ display:flex; gap:.15rem; flex-wrap:wrap }
+.mies{ background:none; border:1px solid transparent; border-radius:var(--r); padding:.2rem .38rem;
+       font-size:.76rem; cursor:pointer; color:var(--cichy); text-transform:lowercase;
+       transition:background-color .18s ease, color .18s ease, border-color .18s ease }
+.mies:hover{ border-color:var(--linia); color:var(--atrament) }
+.mies[aria-pressed="true"]{ background:var(--akcent);
+       background:color-mix(in srgb, var(--akcent) 88%, var(--atrament));
+       color:var(--na-akcencie); font-weight:600 }
 .lnk{ background:none; border:0; padding:.2rem .1rem; cursor:pointer; font-size:.82rem; color:var(--cichy);
       border-bottom:1px solid var(--linia) }
 .lnk:hover{ color:var(--atrament); border-bottom-color:var(--akcent) }
@@ -446,7 +457,12 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
   .grp--budowa{ padding:.3rem .5rem .35rem }
   .chip{ padding:.3rem .55rem }
   .teraz__in{ padding-top:.6rem; padding-bottom:.7rem }
-  .top__in{ flex-direction:column; align-items:flex-start; gap:.5rem }
+  /* w kolumnie logo lądowałoby samo w osobnym rzędzie — sadzamy je
+     w prawym górnym rogu, obok tytułu */
+  .top__in{ flex-direction:column; align-items:flex-start; gap:.5rem; position:relative;
+            padding-right:3.2rem }
+  .top__marka{ position:absolute; right:0; top:.85rem; margin:0 }
+  .top__marka img{ height:26px }
   .tabs{ align-self:flex-start }
   .fakty{ grid-template-columns:1fr; gap:.1rem .5rem }
   .fakty dd{ margin-bottom:.45rem }
@@ -466,6 +482,10 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
       <h1>Interaktywna mapa zieleni Torunia <span class="tag tag--alpha">wersja alpha</span></h1>
       <p class="top__sub" id="topSub"></p>
     </div>
+    <a class="top__marka" href="https://lucidacademy.pl" target="_blank" rel="noopener"
+       aria-label="Lucid Academy — strona główna">
+      <img src="img/lucid-monogram.png" alt="Lucid Academy" width="139" height="96">
+    </a>
     <nav class="tabs" role="tablist" aria-label="Sekcje demo">
       <button class="tab" role="tab" id="tab-mapa" aria-controls="panel-mapa" aria-selected="true">Mapa</button>
       <button class="tab" role="tab" id="tab-planer" aria-controls="panel-planer" aria-selected="false" tabindex="-1">Planer <span class="tag">podgląd</span></button>
@@ -483,10 +503,14 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
         <h2 id="teraz-h">Co teraz</h2>
         <p class="lead" id="lead"></p>
         <div class="data">
-          <label class="data__lab" for="suwak">Data w mapie <output class="data__out" id="dataOut" for="suwak"></output></label>
-          <input type="range" id="suwak" min="1" max="365" step="1" aria-describedby="suwakOpis">
+          <span class="data__lab" id="lab-data">Data w mapie</span>
+          <div class="dzien" role="group" aria-labelledby="lab-data">
+            <button class="dzien__krok" id="dzienMinus" type="button" aria-label="Dzień wcześniej">‹</button>
+            <output class="data__out" id="dataOut" aria-live="polite"></output>
+            <button class="dzien__krok" id="dzienPlus" type="button" aria-label="Dzień później">›</button>
+          </div>
+          <div class="miesiace" id="miesiace" role="group" aria-label="Miesiąc"></div>
           <button class="lnk" id="dzis" type="button">wróć do dziś</button>
-          <span class="pusto-lab" id="suwakOpis">przewiń rok, żeby zobaczyć, jak zmienia się mapa</span>
         </div>
       </div>
       <ul class="teraz__items" id="terazItems"></ul>
@@ -2348,7 +2372,7 @@ function rysujTeraz(){
         '<p class="zj__nazwa">' + esc(nb.h.species ? nb.h.label : nb.p.name) + '</p>' +
         '<p class="zj__gdzie">Najbliższe okno w kalendarzu · <b>' + esc(nb.p.name) + '</b></p>' +
         '<span class="zj__ile">' + esc(dniZa(nb.za)) + '</span></li>') : '';
-    wiecej.textContent = 'Pusty dzień nie znaczy pusta mapa — przewiń suwak, żeby zobaczyć, kiedy znów coś się zacznie.';
+    wiecej.textContent = 'Pusty dzień nie znaczy pusta mapa — przeskocz na inny miesiąc, żeby zobaczyć, kiedy znów coś się zacznie.';
     return;
   }
 
@@ -2879,11 +2903,26 @@ function zbudujFiltry(){
     stan.sezon = null; stan.tylkoTrwa = false; stan.dzielnica = '*'; stan.cien = '*'; stan.trasa = null; odswiez();
   });
 
-  $('suwak').value = stan.doba;
-  $('suwak').addEventListener('input', function(e){ stan.doba = +e.target.value; odswiez(); });
-  $('dzis').addEventListener('click', function(){
-    stan.doba = dobaZDaty(new Date()); $('suwak').value = stan.doba; odswiez();
+  var SKROTY = ['sty','lut','mar','kwi','maj','cze','lip','sie','wrz','paź','lis','gru'];
+  var DNI_MIES = [31,28,31,30,31,30,31,31,30,31,30,31];
+
+  $('miesiace').innerHTML = SKROTY.map(function(s, i){
+    return '<button class="mies" type="button" data-mies="' + (i + 1) + '" aria-pressed="false">' + s + '</button>';
+  }).join('');
+  $('miesiace').addEventListener('click', function(e){
+    var b = e.target.closest('[data-mies]'); if (!b) return;
+    var m = +b.dataset.mies, obecny = naDate(stan.doba);
+    var d = Math.min(obecny.d, DNI_MIES[m - 1]);
+    stan.doba = PRZED[m - 1] + d;
+    odswiez();
   });
+  function krok(o){
+    stan.doba = ((stan.doba - 1 + o) % 365 + 365) % 365 + 1;
+    odswiez();
+  }
+  $('dzienMinus').addEventListener('click', function(){ krok(-1); });
+  $('dzienPlus').addEventListener('click', function(){ krok(1); });
+  $('dzis').addEventListener('click', function(){ stan.doba = dobaZDaty(new Date()); odswiez(); });
 }
 
 function odswiezKontrolki(){
@@ -2898,7 +2937,10 @@ function odswiezKontrolki(){
   Array.prototype.forEach.call($('fTrasy').children, function(b){
     b.setAttribute('aria-pressed', String(b.dataset.trasa === stan.trasa));
   });
-  $('suwak').value = stan.doba;
+  var mDziś = naDate(stan.doba).m;
+  Array.prototype.forEach.call($('miesiace').children, function(b){
+    b.setAttribute('aria-pressed', String(+b.dataset.mies === mDziś));
+  });
   $('zeruj').disabled = aktywneFiltry().length === 0 && !stan.trasa;
   $('zeruj').style.opacity = ($('zeruj').disabled) ? '.45' : '1';
 }
