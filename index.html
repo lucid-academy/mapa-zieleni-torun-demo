@@ -62,7 +62,7 @@ a:hover{ color:var(--akcent) }
 
 /* ---------- naglowek ---------- */
 .top{ border-bottom:1px solid var(--linia); background:var(--papier) }
-.top__in{ display:flex; align-items:flex-end; gap:1.5rem; justify-content:space-between; padding:.85rem 0 0 }
+.top__in{ display:flex; align-items:flex-end; gap:1.5rem; justify-content:space-between; padding-top:.85rem }
 .top h1{ font-size:clamp(1.1rem,1.5vw,1.4rem); letter-spacing:-.01em;
          display:flex; align-items:baseline; gap:.6rem; flex-wrap:wrap }
 .tag--alpha{ font-family:'Raleway',system-ui,sans-serif; border-color:var(--akcent) }
@@ -79,7 +79,7 @@ a:hover{ color:var(--akcent) }
 /* ---------- pasek co teraz ---------- */
 .teraz{ background:var(--papier); background:color-mix(in srgb, var(--akcent) 11%, var(--papier));
         border-bottom:1px solid var(--linia); transition:background-color .28s ease }
-.teraz__in{ padding:.75rem 0 .85rem }
+.teraz__in{ padding-top:.75rem; padding-bottom:.85rem }
 .teraz__top{ display:flex; align-items:baseline; gap:.6rem 1.6rem; flex-wrap:wrap; margin-bottom:.6rem }
 .teraz h2{ font-size:1.05rem; font-weight:600; white-space:nowrap }
 .teraz h2::after{ content:''; display:inline-block; width:26px; height:3px; background:var(--akcent);
@@ -348,7 +348,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 }
 
 /* ---------- planer ---------- */
-.planer{ padding:1.6rem 0 3rem }
+.planer{ padding-top:1.6rem; padding-bottom:3rem }
 .planer__grid{ display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); gap:clamp(1.5rem,4vw,3.5rem);
                align-items:start }
 .planer h2{ font-size:clamp(1.5rem,2.4vw,2rem); letter-spacing:-.015em; display:flex; align-items:center;
@@ -410,7 +410,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 /* Niskie ekrany laptopow: pasek „co teraz” i filtry oddaja mapie tyle pionu,
    ile sie da, zeby mapa byla widoczna od razu po wejsciu. */
 @media (max-height:820px){
-  .teraz__in{ padding:.55rem 0 .6rem }
+  .teraz__in{ padding-top:.55rem; padding-bottom:.6rem }
   .teraz__top{ margin-bottom:.45rem }
   .zj__nazwa{ font-size:clamp(1.1rem,1.45vw,1.35rem); margin-bottom:.15rem }
   .zj__gdzie{ margin-bottom:.25rem; font-size:.86rem }
@@ -445,7 +445,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
   .grp{ gap:.25rem }
   .grp--budowa{ padding:.3rem .5rem .35rem }
   .chip{ padding:.3rem .55rem }
-  .teraz__in{ padding:.6rem 0 .7rem }
+  .teraz__in{ padding-top:.6rem; padding-bottom:.7rem }
   .top__in{ flex-direction:column; align-items:flex-start; gap:.5rem }
   .tabs{ align-self:flex-start }
   .fakty{ grid-template-columns:1fr; gap:.1rem .5rem }
