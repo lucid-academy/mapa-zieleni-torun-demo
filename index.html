@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mapa zieleni Torunia — demo</title>
+<title>Interaktywna mapa zieleni Torunia (wersja alpha)</title>
 <meta name="description" content="Mapa zieleni Torunia: co kwitnie dziś, gdzie i jak długo jeszcze. Dwadzieścia miejsc, filtry i planer tras.">
 <link rel="stylesheet" href="vendor/leaflet.css">
 <style>
@@ -58,12 +58,14 @@ a:hover{ color:var(--akcent) }
 :focus-visible{ outline:2px solid var(--atrament); outline-offset:2px; border-radius:2px }
 .skip{ position:absolute; left:-9999px; top:0; background:var(--ark); padding:.6rem 1rem; z-index:2000 }
 .skip:focus{ left:.5rem; top:.5rem }
-.wrap{ max-width:1500px; margin:0 auto; padding:0 clamp(1.1rem,3vw,3rem) }
+.wrap{ max-width:1500px; margin:0 auto; padding:0 clamp(1.25rem,4.5vw,5rem) }
 
 /* ---------- naglowek ---------- */
 .top{ border-bottom:1px solid var(--linia); background:var(--papier) }
 .top__in{ display:flex; align-items:flex-end; gap:1.5rem; justify-content:space-between; padding:.85rem 0 0 }
-.top h1{ font-size:clamp(1.15rem,1.6vw,1.45rem); letter-spacing:-.01em }
+.top h1{ font-size:clamp(1.1rem,1.5vw,1.4rem); letter-spacing:-.01em;
+         display:flex; align-items:baseline; gap:.6rem; flex-wrap:wrap }
+.tag--alpha{ font-family:'Raleway',system-ui,sans-serif; border-color:var(--akcent) }
 .top__sub{ font-size:.8rem; color:var(--cichy); margin-top:.1rem }
 .tabs{ display:flex; gap:.15rem; align-self:flex-end }
 .tab{ background:none; border:0; border-bottom:3px solid transparent; padding:.55rem .95rem .6rem;
@@ -162,7 +164,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
    Wcześniej panel boczny miał własny, łatwy do przeoczenia pasek przewijania,
    przez co zdjęcia w karcie oglądało się przez wąską szczelinę. */
 .robocze{ display:grid; grid-template-columns:minmax(0,1fr) clamp(360px,32vw,520px);
-          align-items:start; border:1px solid var(--linia); border-radius:var(--r); overflow:hidden }
+          align-items:start; border:1px solid var(--linia); border-radius:var(--r); overflow:clip }
 .mapa{ position:sticky; top:0; min-width:0; border-right:1px solid var(--linia);
        height:clamp(340px,calc(100vh - 8px),900px) }
 #map{ position:absolute; inset:0; background:var(--papier); z-index:1 }
@@ -234,7 +236,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 .bok__scroll{ min-height:0 }
 .lista{ list-style:none; margin:0; padding:0 }
 .wiersz{ width:100%; text-align:left; background:none; border:0; border-bottom:1px solid var(--linia);
-         border-left:3px solid transparent; padding:.7rem clamp(.8rem,1.5vw,1.1rem); cursor:pointer; display:block }
+         border-left:3px solid transparent; padding:.55rem clamp(.8rem,1.5vw,1.1rem); cursor:pointer; display:block }
 .wiersz:hover{ background:var(--ark) }
 .wiersz[aria-current="true"]{ border-left-color:var(--akcent); background:var(--ark) }
 .wiersz__g{ display:flex; align-items:baseline; gap:.5rem }
@@ -243,6 +245,12 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 .wiersz__m{ font-size:.82rem; color:var(--cichy); margin-top:.2rem; display:flex; gap:.5rem; flex-wrap:wrap }
 .kropka{ display:inline-flex; align-items:center; gap:.32rem; color:var(--atrament); font-weight:600 }
 .kropka::before{ content:''; width:8px; height:8px; border-radius:50%; background:var(--akcent); flex:none }
+.grupa{ position:sticky; top:2.1rem; z-index:3; background:color-mix(in srgb, var(--akcent) 9%, var(--papier));
+        border-bottom:1px solid var(--linia); padding:.35rem clamp(.8rem,1.5vw,1.1rem);
+        font-size:.78rem; font-weight:600; color:var(--atrament); display:flex;
+        justify-content:space-between; align-items:baseline; gap:.5rem;
+        transition:background-color .28s ease }
+.grupa span{ font-weight:400; color:var(--cichy) }
 .listahead{ position:sticky; top:0; z-index:4; background:var(--papier);
             padding:.55rem clamp(.8rem,1.5vw,1.1rem); border-bottom:1px solid var(--linia);
             font-size:.78rem; color:var(--cichy); display:flex; justify-content:space-between; gap:.5rem; align-items:baseline }
@@ -420,7 +428,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 }
 @media (max-width:860px){
   .robocze{ display:block; height:auto }
-  .mapa{ position:static; height:45vh; min-height:260px }
+  .mapa{ position:relative; height:45vh; min-height:260px }
   .listahead{ position:static }
   .karta__pas{ top:0 }
   .mapa{ height:56vh; min-height:320px; border-right:0; border-bottom:1px solid var(--linia) }
@@ -454,7 +462,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 <header class="top">
   <div class="wrap top__in">
     <div>
-      <h1>Mapa zieleni Torunia</h1>
+      <h1>Interaktywna mapa zieleni Torunia <span class="tag tag--alpha">wersja alpha</span></h1>
       <p class="top__sub" id="topSub"></p>
     </div>
     <nav class="tabs" role="tablist" aria-label="Sekcje demo">
@@ -2484,6 +2492,7 @@ function rysujListe(lista){
   var t = trasaAktywna();
   var legi = t ? trasaOdcinki(t).legi : null;
   var kolejnosc = t ? lista : lista.slice().sort(sortuj);
+  var grupaWypisana = {};
   ol.innerHTML = kolejnosc.map(function(p, i){
     var akt = trwajace(p, stan.doba);
     var meta = [];
@@ -2496,7 +2505,20 @@ function rysujListe(lista){
       ? '<span class="wiersz__nr">' + (i + 1) + '</span>'
       : '<span class="wiersz__ik" aria-hidden="true">' + esc(p.icon || '') + '</span>';
     var leg = (t && i > 0) ? '<span class="wiersz__leg">+' + legi[i - 1] + ' m</span>' : '';
-    return '<li><button class="wiersz" type="button" data-id="' + esc(p.id) + '"' +
+    /* przy trasie kolejność jest z góry zadana, więc nie dzielimy na grupy */
+    var naglowek = '';
+    if (!t) {
+      var grupa = akt.length ? 'trwa' : 'reszta';
+      if (!grupaWypisana[grupa]) {
+        grupaWypisana[grupa] = true;
+        var ile = kolejnosc.filter(function(q){
+          return (trwajace(q, stan.doba).length > 0) === (grupa === 'trwa'); }).length;
+        naglowek = '<li class="grupa" aria-hidden="true">' +
+          (grupa === 'trwa' ? 'Coś tu trwa ' + esc(dataTekst(stan.doba)) : 'Poza sezonem') +
+          '<span>' + ile + '</span></li>';
+      }
+    }
+    return naglowek + '<li><button class="wiersz" type="button" data-id="' + esc(p.id) + '"' +
       (p.id === stan.wybrany ? ' aria-current="true"' : '') + '>' +
       '<span class="wiersz__g">' + czolo +
       '<span class="wiersz__n">' + esc(p.name) + '</span></span>' +
@@ -3076,7 +3098,7 @@ function pokazOdpowiedz(i){
 
 /* ================= start ================= */
 function start(){
-  $('topSub').textContent = 'Wersja pokazowa · ' + PUNKTY.length + ' z ' +
+  $('topSub').textContent = PUNKTY.length + ' z ' +
     (DANE.meta && DANE.meta.cel ? DANE.meta.cel : 40) + ' punktów · dane: UM Toruń i mieszkańcy';
   zbudujMape();
   zbudujFiltry();
