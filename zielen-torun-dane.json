@@ -910,11 +910,7 @@
       "free": true,
       "media": {
         "photo": "img/park-linearny-wrzosy-ii.jpg",
-        "video": {
-          "src": "video/laka-kwietna.mp4",
-          "poster": "img/laka-kwietna-poster.jpg",
-          "etykieta": "wizualizacja"
-        }
+        "video": null
       },
       "source": "UM Toruń (parki kieszonkowe)",
       "quest": null
@@ -1369,7 +1365,11 @@
       "free": true,
       "media": {
         "photo": "img/ogrodki-kwiatostany.jpg",
-        "video": null
+        "video": {
+          "src": "video/wizualizacja-kwiaty.mp4",
+          "poster": "img/wizualizacja-kwiaty-poster.jpg",
+          "etykieta": "wizualizacja"
+        }
       },
       "source": "Toruń Ukryty (rekomendacje mieszkańców)",
       "quest": null
@@ -1461,7 +1461,7 @@
       "time": "Wcześnie rano",
       "free": true,
       "media": {
-        "photo": null,
+        "photo": "img/mala-wiselka.jpg",
         "video": null
       },
       "source": "Toruń Ukryty (rekomendacje mieszkańców)",

@@ -185,17 +185,23 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 .pinwrap.sel{ z-index:900 !important }
 
 /* ---------- trasy ---------- */
-.trasy{ border-bottom:1px solid var(--linia); padding:.5rem clamp(.8rem,1.5vw,1.1rem) .55rem }
-.trasy__lab{ font-size:.74rem; color:var(--cichy); display:block; margin-bottom:.35rem }
-.trasy__row{ display:flex; gap:.3rem; flex-wrap:wrap }
+.trasy{ border-bottom:1px solid var(--linia); padding:.6rem clamp(.8rem,1.5vw,1.1rem) .7rem;
+        background:var(--papier); background:color-mix(in srgb, var(--akcent) 10%, var(--papier));
+        transition:background-color .28s ease }
+.trasy__lab{ font-family:'Bitter',Georgia,serif; font-size:.95rem; font-weight:600; color:var(--atrament);
+             display:flex; align-items:center; gap:.55rem; margin-bottom:.5rem }
+.trasy__lab::after{ content:''; flex:1; height:2px; background:var(--akcent); opacity:.55 }
+.trasy__row{ display:flex; gap:.35rem; flex-wrap:wrap }
 .trasa-chip{ background:var(--ark); border:1px solid var(--linia); border-radius:var(--r);
-             padding:.28rem .55rem; font-size:.82rem; cursor:pointer; white-space:nowrap;
+             padding:.38rem .65rem; font-size:.86rem; cursor:pointer; white-space:nowrap;
+             display:flex; align-items:baseline; gap:.4rem;
              transition:background-color .18s ease, border-color .18s ease, color .18s ease }
+.trasa-chip__tryb{ font-family:'Segoe UI Emoji',system-ui,sans-serif; font-size:.9em; line-height:1 }
 .trasa-chip:hover{ border-color:var(--atrament) }
 .trasa-chip[aria-pressed="true"]{ background:var(--akcent);
              background:color-mix(in srgb, var(--akcent) 88%, var(--atrament));
              border-color:var(--akcent); color:var(--na-akcencie); font-weight:600 }
-.trasa-chip em{ font-style:normal; opacity:.75; font-weight:400 }
+.trasa-chip em{ font-style:normal; opacity:.7; font-weight:400; font-size:.92em }
 .trasa-info{ padding:.5rem clamp(.8rem,1.5vw,1.1rem) .6rem; border-bottom:1px solid var(--linia);
              font-size:.85rem; line-height:1.5 }
 .trasa-info b{ font-family:'Bitter',Georgia,serif; font-size:1.05rem; font-weight:600 }
@@ -366,8 +372,15 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 .dalej li{ font-size:.92rem; line-height:1.55 }
 
 /* ---------- stopka ---------- */
-.stopka{ border-top:1px solid var(--linia); padding:.7rem 0 .9rem; font-size:.78rem; color:var(--cichy) }
-.stopka p{ max-width:none; line-height:1.5 }
+.stopka{ border-top:1px solid var(--linia); padding:1.5rem 0 2rem; font-size:.8rem; color:var(--cichy) }
+.stopka__in{ display:flex; gap:1.4rem 2rem; align-items:flex-start; flex-wrap:wrap }
+.stopka__marka{ flex:none; display:block; text-decoration:none; border:0 }
+.stopka__marka img{ display:block; width:88px; height:88px }
+.stopka__tresc{ flex:1 1 22rem; min-width:0; display:flex; flex-direction:column; gap:.5rem }
+.stopka__kto{ font-family:'Bitter',Georgia,serif; font-size:1rem; color:var(--atrament); font-weight:600 }
+.stopka__kto a{ text-decoration-color:var(--akcent) }
+.stopka p{ max-width:70ch; line-height:1.6 }
+.stopka__drobne{ font-size:.74rem }
 
 /* ---------- waskie ekrany ---------- */
 /* Niskie ekrany laptopow: pasek „co teraz” i filtry oddaja mapie tyle pionu,
@@ -381,7 +394,6 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
   .filtry__in{ padding:.45rem 0 .5rem; gap:.4rem 1.1rem }
   .grp{ gap:.3rem }
   .robocze{ height:clamp(280px,calc(100vh - 300px),820px) }
-  .stopka{ padding:.55rem 0 .7rem }
   .legenda{ font-size:.74rem; padding:.4rem .6rem; line-height:1.55 }
 }
 
@@ -496,7 +508,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
     </div>
     <div class="bok">
       <div class="trasy">
-        <span class="trasy__lab" id="lab-trasy">Gotowe trasy</span>
+        <span class="trasy__lab" id="lab-trasy">Przykładowe trasy</span>
         <div class="trasy__row" id="fTrasy" role="group" aria-labelledby="lab-trasy"></div>
       </div>
       <div class="trasa-info" id="trasaInfo" hidden></div>
@@ -558,11 +570,20 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 </div>
 
 <footer class="stopka">
-  <div class="wrap">
-    <p>Dane: Urząd Miasta Torunia (parki kieszonkowe) i Toruń Ukryty (rekomendacje mieszkańców).
-       Okna kwitnienia są oszacowane dla szerokości Torunia i mają charakter orientacyjny.
-       W kolejnych wersjach między innymi: warstwa cienia i dostępności, zdjęcia miejsc
-       z Torunia Ukrytego oraz rozbudowa mapy do czterdziestu punktów.</p>
+  <div class="wrap stopka__in">
+    <a class="stopka__marka" href="https://lucidacademy.pl" target="_blank" rel="noopener"
+       aria-label="Lucid Academy — strona główna">
+      <img src="img/lucid-academy.png" alt="Lucid Academy" width="88" height="88" loading="lazy">
+    </a>
+    <div class="stopka__tresc">
+      <p class="stopka__kto">Mapę przygotowało
+        <a href="https://lucidacademy.pl" target="_blank" rel="noopener">Lucid Academy</a></p>
+      <p>Dane: Urząd Miasta Torunia (parki kieszonkowe) i Toruń Ukryty (rekomendacje mieszkańców).
+         Okna kwitnienia są oszacowane dla szerokości Torunia i mają charakter orientacyjny.</p>
+      <p>W kolejnych wersjach między innymi: warstwa cienia i dostępności, zdjęcia miejsc
+         z Torunia Ukrytego oraz rozbudowa mapy do czterdziestu punktów.</p>
+      <p class="stopka__drobne">Podkład mapy: © OpenStreetMap · Wersja pokazowa, nie do publikacji.</p>
+    </div>
   </div>
 </footer>
 
@@ -1480,11 +1501,7 @@ window.DANE = {
    "free": true,
    "media": {
     "photo": "img/park-linearny-wrzosy-ii.jpg",
-    "video": {
-     "src": "video/laka-kwietna.mp4",
-     "poster": "img/laka-kwietna-poster.jpg",
-     "etykieta": "wizualizacja"
-    }
+    "video": null
    },
    "source": "UM Toruń (parki kieszonkowe)",
    "quest": null
@@ -1939,7 +1956,11 @@ window.DANE = {
    "free": true,
    "media": {
     "photo": "img/ogrodki-kwiatostany.jpg",
-    "video": null
+    "video": {
+     "src": "video/wizualizacja-kwiaty.mp4",
+     "poster": "img/wizualizacja-kwiaty-poster.jpg",
+     "etykieta": "wizualizacja"
+    }
    },
    "source": "Toruń Ukryty (rekomendacje mieszkańców)",
    "quest": null
@@ -2031,7 +2052,7 @@ window.DANE = {
    "time": "Wcześnie rano",
    "free": true,
    "media": {
-    "photo": null,
+    "photo": "img/mala-wiselka.jpg",
     "video": null
    },
    "source": "Toruń Ukryty (rekomendacje mieszkańców)",
@@ -2718,6 +2739,7 @@ function zbudujFiltry(){
   $('fTrasy').innerHTML = TRASY.map(function(t){
     var o = trasaOdcinki(t);
     return '<button class="trasa-chip" type="button" data-trasa="' + t.id + '" aria-pressed="false">' +
+           '<span class="trasa-chip__tryb" aria-hidden="true">' + (t.tryb === 'rower' ? '🚲' : '🚶') + '</span>' +
            esc(t.nazwa) + ' <em>' + (o.suma / 1000).toFixed(1).replace('.', ',') + ' km</em></button>';
   }).join('');
   $('fTrasy').addEventListener('click', function(e){
