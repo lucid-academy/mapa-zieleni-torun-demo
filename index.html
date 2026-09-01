@@ -176,8 +176,37 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 .pin.jest{ background:var(--akcent) }
 .pin.sel{ transform:scale(1.45); box-shadow:0 0 0 4px var(--akcent2), 0 1px 3px rgba(29,43,33,.4) }
 .pin--ukryte.sel{ transform:rotate(45deg) scale(1.45) }
+.pin-nr{ display:flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%;
+         background:var(--akcent); background:color-mix(in srgb, var(--akcent) 88%, var(--atrament));
+         color:var(--na-akcencie); border:2px solid var(--papier); font-family:'Bitter',Georgia,serif;
+         font-weight:600; font-size:.72rem; box-shadow:0 1px 3px rgba(29,43,33,.45) }
+.pin-nr.sel{ transform:scale(1.3); box-shadow:0 0 0 4px var(--akcent2), 0 1px 3px rgba(29,43,33,.4) }
 .pinwrap{ transition:transform .16s ease }
 .pinwrap.sel{ z-index:900 !important }
+
+/* ---------- trasy ---------- */
+.trasy{ border-bottom:1px solid var(--linia); padding:.5rem clamp(.8rem,1.5vw,1.1rem) .55rem }
+.trasy__lab{ font-size:.74rem; color:var(--cichy); display:block; margin-bottom:.35rem }
+.trasy__row{ display:flex; gap:.3rem; flex-wrap:wrap }
+.trasa-chip{ background:var(--ark); border:1px solid var(--linia); border-radius:var(--r);
+             padding:.28rem .55rem; font-size:.82rem; cursor:pointer; white-space:nowrap;
+             transition:background-color .18s ease, border-color .18s ease, color .18s ease }
+.trasa-chip:hover{ border-color:var(--atrament) }
+.trasa-chip[aria-pressed="true"]{ background:var(--akcent);
+             background:color-mix(in srgb, var(--akcent) 88%, var(--atrament));
+             border-color:var(--akcent); color:var(--na-akcencie); font-weight:600 }
+.trasa-chip em{ font-style:normal; opacity:.75; font-weight:400 }
+.trasa-info{ padding:.5rem clamp(.8rem,1.5vw,1.1rem) .6rem; border-bottom:1px solid var(--linia);
+             font-size:.85rem; line-height:1.5 }
+.trasa-info b{ font-family:'Bitter',Georgia,serif; font-size:1.05rem; font-weight:600 }
+.trasa-info__m{ color:var(--cichy); margin-top:.15rem }
+.trasa-info__u{ color:var(--cichy); font-size:.78rem; font-style:italic; margin-top:.35rem }
+.wiersz__nr{ display:inline-flex; align-items:center; justify-content:center; width:1.35rem; height:1.35rem;
+             border-radius:50%; background:var(--akcent);
+             background:color-mix(in srgb, var(--akcent) 88%, var(--atrament));
+             color:var(--na-akcencie); font-family:'Bitter',Georgia,serif; font-weight:600;
+             font-size:.78rem; flex:none }
+.wiersz__leg{ font-size:.78rem; color:var(--cichy) }
 
 /* ---------- panel boczny ---------- */
 .bok{ min-width:0; display:flex; flex-direction:column; overflow:hidden; background:var(--papier) }
@@ -203,7 +232,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 .wroc{ background:none; border:0; cursor:pointer; font-size:.85rem; color:var(--cichy); padding:.2rem 0 }
 .wroc:hover{ color:var(--atrament) }
 .karta__body{ padding:.9rem clamp(.8rem,1.5vw,1.1rem) 2.5rem }
-.foto{ display:block; width:100%; aspect-ratio:16/10; object-fit:cover; background:var(--linia); margin:0 0 1rem }
+.foto{ display:block; width:100%; aspect-ratio:4/3; object-fit:cover; background:var(--linia); margin:0 0 1rem }
 .brakfoto{ border:1px dashed var(--linia); display:flex; align-items:center; justify-content:center;
            text-align:center; padding:.8rem 1.1rem; margin:0 0 1rem; color:var(--cichy); font-size:.85rem; line-height:1.55 }
 .karta__typ{ font-size:.78rem; color:var(--cichy); display:flex; align-items:center; gap:.45rem; margin-bottom:.3rem }
@@ -244,6 +273,13 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 .quest__m{ font-size:.85rem; color:var(--cichy); margin-bottom:.55rem }
 .quest__d{ font-size:.8rem; color:var(--cichy); margin-top:.55rem; line-height:1.5 }
 .zrodlo{ font-size:.78rem; color:var(--cichy); margin-top:1.3rem; padding-top:.7rem; border-top:1px solid var(--linia) }
+
+/* ---------- wizualizacja wideo ---------- */
+.wideo{ margin:0 0 1rem; position:relative }
+.wideo video{ display:block; width:100%; aspect-ratio:16/9; object-fit:cover; background:var(--atrament) }
+.wideo__znak{ position:absolute; top:.5rem; left:.5rem; background:var(--atrament); color:var(--papier);
+              font-size:.72rem; font-weight:700; letter-spacing:.03em; padding:.2rem .5rem; border-radius:var(--r) }
+.wideo__pod{ font-size:.78rem; color:var(--cichy); margin-top:.4rem; line-height:1.5 }
 
 /* ---------- powiększenie zdjęcia ---------- */
 .fotoBtn{ display:block; width:100%; padding:0; border:0; background:none; cursor:zoom-in;
@@ -381,7 +417,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
   <div class="wrap top__in">
     <div>
       <h1>Mapa zieleni Torunia</h1>
-      <p class="top__sub">Wersja pokazowa · 20 z 40 punktów · dane: UM Toruń i mieszkańcy</p>
+      <p class="top__sub" id="topSub"></p>
     </div>
     <nav class="tabs" role="tablist" aria-label="Sekcje demo">
       <button class="tab" role="tab" id="tab-mapa" aria-controls="panel-mapa" aria-selected="true">Mapa</button>
@@ -459,6 +495,11 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
       </div>
     </div>
     <div class="bok">
+      <div class="trasy">
+        <span class="trasy__lab" id="lab-trasy">Gotowe trasy</span>
+        <div class="trasy__row" id="fTrasy" role="group" aria-labelledby="lab-trasy"></div>
+      </div>
+      <div class="trasa-info" id="trasaInfo" hidden></div>
       <div class="listahead" id="listahead"></div>
       <div class="bok__scroll" id="bokScroll">
         <ol class="lista" id="lista"></ol>
@@ -531,9 +572,9 @@ window.DANE = {
  "meta": {
   "projekt": "Mapa zieleni Torunia — demo",
   "wersja": "0.1",
-  "punktow": 20,
+  "punktow": 26,
   "cel": 40,
-  "brakuje": 20,
+  "brakuje": 14,
   "sezony": [
    "wiosna",
    "lato",
@@ -544,15 +585,17 @@ window.DANE = {
    "Okna kwitnienia w `species` są PRZYBLIŻONE (szacunek dla Torunia, ~53°N). Do weryfikacji przez Ogród Zoobotaniczny lub Wydział Środowiska UM.",
    "`seasons` jest tablicą wyliczoną z okien w `highlights` — punkt może należeć do kilku pór roku.",
    "`seasonPrimary` to redakcyjny wybór głównej pory roku (z Torunia Ukrytego), używany do sortowania i etykiet, nie do filtrowania.",
-   "Usunięto: `lezaczki` (decyzja) i `wystawy-sztuki` (nie jest punktem przyrodniczym)."
+   "Usunięto: `lezaczki` (decyzja) i `wystawy-sztuki` (nie jest punktem przyrodniczym).",
+   "Sześć punktów dopisanych 01.09.2026 na podstawie współrzędnych i zdjęć od klienta. Opisy i okna są redakcyjnym szkicem opartym na tym, co widać na zdjęciach — do potwierdzenia."
   ],
   "do_uzupelnienia": [
    "shade (0–3) — dla wszystkich punktów, ręcznie",
    "accessible (bool) — dostępność wózkiem / osobom z ograniczoną mobilnością",
    "district — dla 9 punktów z Torunia Ukrytego",
-   "media.photo — dla 9 punktów z Torunia Ukrytego",
    "quote + recommender — dla 11 parków kieszonkowych",
-   "20 nowych punktów do czterdziestki"
+   "media.photo — dla 4 z 15 miejsc z Torunia Ukrytego",
+   "quote + recommender — dla 11 parków kieszonkowych i 6 nowych punktów",
+   "14 nowych punktów do czterdziestki"
   ]
  },
  "species": {
@@ -695,6 +738,11 @@ window.DANE = {
    "label": "Dereń biały (czerwone pędy zimą)",
    "from": "11-15",
    "to": "03-15"
+  },
+  "cykoria": {
+   "label": "Cykoria podróżnik",
+   "from": "07-01",
+   "to": "09-30"
   }
  },
  "points": [
@@ -1432,7 +1480,11 @@ window.DANE = {
    "free": true,
    "media": {
     "photo": "img/park-linearny-wrzosy-ii.jpg",
-    "video": null
+    "video": {
+     "src": "video/laka-kwietna.mp4",
+     "poster": "img/laka-kwietna-poster.jpg",
+     "etykieta": "wizualizacja"
+    }
    },
    "source": "UM Toruń (parki kieszonkowe)",
    "quest": null
@@ -1511,7 +1563,7 @@ window.DANE = {
    "time": "Dowolna pora dnia",
    "free": true,
    "media": {
-    "photo": null,
+    "photo": "img/magnolie-spacer.jpg",
     "video": null
    },
    "source": "Toruń Ukryty (rekomendacje mieszkańców)",
@@ -1551,8 +1603,12 @@ window.DANE = {
    "time": "Rano (najlepsze światło)",
    "free": true,
    "media": {
-    "photo": null,
-    "video": null
+    "photo": "img/magnolia-bydgoska.jpg",
+    "video": null,
+    "photos": [
+     "img/magnolia-bydgoska.jpg",
+     "img/magnolia-bydgoska-2.jpg"
+    ]
    },
    "source": "Toruń Ukryty (rekomendacje mieszkańców)",
    "quest": null
@@ -1591,7 +1647,7 @@ window.DANE = {
    "time": "Popołudnie",
    "free": true,
    "media": {
-    "photo": null,
+    "photo": "img/bydgoskie-bzy.jpg",
     "video": null
    },
    "source": "Toruń Ukryty (rekomendacje mieszkańców)",
@@ -1795,7 +1851,262 @@ window.DANE = {
    "time": "Wieczór (po zmroku)",
    "free": true,
    "media": {
+    "photo": "img/bydgoskie-zima.jpg",
+    "video": null,
+    "photos": [
+     "img/bydgoskie-zima.jpg",
+     "img/bydgoskie-zima-2.jpg",
+     "img/bydgoskie-zima-3.jpg"
+    ]
+   },
+   "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+   "quest": null
+  },
+  {
+   "id": "wodospad-zakochanych",
+   "name": "Mostek i wodospad zakochanych",
+   "type": "miejsce-ukryte",
+   "icon": "💧",
+   "badge": null,
+   "lat": 53.008398,
+   "lng": 18.574708,
+   "district": null,
+   "address": null,
+   "area_m2": null,
+   "seasons": [
+    "wiosna",
+    "lato"
+   ],
+   "seasonPrimary": "wiosna",
+   "description": "Kamienna kaskada w Parku Miejskim spada do niewielkiego oczka, a nad nią przerzucony jest mostek. Wody nie słychać z alejki — dopiero kiedy zejdziesz bliżej. W czerwcu skarpa nad kaskadą zakwita bzem czarnym i cała robi się biała.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": "bez-czarny-kwiat",
+     "label": "Bez czarny (kwitnienie)",
+     "from": "06-01",
+     "to": "06-30"
+    }
+   ],
+   "features": [],
+   "shade": null,
+   "accessible": null,
+   "transport": "Pieszo",
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/wodospad-zakochanych.jpg",
+    "video": null
+   },
+   "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+   "quest": null
+  },
+  {
+   "id": "ogrodki-kwiatostany",
+   "name": "Ogródki przy Kwiatostanach",
+   "type": "miejsce-ukryte",
+   "icon": "🌼",
+   "badge": null,
+   "lat": 53.010041,
+   "lng": 18.580469,
+   "district": null,
+   "address": null,
+   "area_m2": null,
+   "seasons": [
+    "lato",
+    "jesien"
+   ],
+   "seasonPrimary": "lato",
+   "description": "Kawałek zieleni przy kwiaciarni na Bydgoskiej, którego nie widać z drugiej strony ulicy. Latem wchodzi w niego cykoria podróżnik — bladoniebieska, otwarta tylko przez pół dnia, bo po południu kwiaty się zamykają.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": "cykoria",
+     "label": "Cykoria podróżnik",
+     "from": "07-01",
+     "to": "09-30"
+    }
+   ],
+   "features": [],
+   "shade": null,
+   "accessible": null,
+   "transport": "Pieszo",
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/ogrodki-kwiatostany.jpg",
+    "video": null
+   },
+   "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+   "quest": null
+  },
+  {
+   "id": "dziki-brzeg-wisly",
+   "name": "Dziki brzeg Wisły",
+   "type": "miejsce-ukryte",
+   "icon": "🏞️",
+   "badge": null,
+   "lat": 53.003453,
+   "lng": 18.570605,
+   "district": null,
+   "address": null,
+   "area_m2": null,
+   "seasons": [
+    "lato",
+    "zima"
+   ],
+   "seasonPrimary": "lato",
+   "description": "Brzeg poniżej Bydgoskiego, którego nikt nie uporządkował: piach, kamienie, wysokie trawy i woda tuż przy nogach. Latem to zielony tunel z widokiem na drugą stronę rzeki. Zimą to samo miejsce wygląda jak zupełnie inna rzeka — po wodzie idzie kra.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": null,
+     "label": "zielony brzeg (czerwiec – wrzesień)",
+     "from": "06-01",
+     "to": "09-30"
+    },
+    {
+     "species": null,
+     "label": "kra na Wiśle (grudzień – luty)",
+     "from": "12-01",
+     "to": "02-28"
+    }
+   ],
+   "features": [],
+   "shade": null,
+   "accessible": null,
+   "transport": "Pieszo lub rowerem",
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/dziki-brzeg-wisly.jpg",
+    "photos": [
+     "img/dziki-brzeg-wisly.jpg",
+     "img/dziki-brzeg-wisly-2.jpg"
+    ],
+    "video": null
+   },
+   "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+   "quest": null
+  },
+  {
+   "id": "mala-wiselka",
+   "name": "Mała Wisełka",
+   "type": "miejsce-ukryte",
+   "icon": "🌊",
+   "badge": null,
+   "lat": 53.002448,
+   "lng": 18.604309,
+   "district": null,
+   "address": null,
+   "area_m2": null,
+   "seasons": [
+    "lato"
+   ],
+   "seasonPrimary": "lato",
+   "description": "Nad wodą przy moście Piłsudskiego, po stronie Piasków.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [],
+   "features": [],
+   "shade": null,
+   "accessible": null,
+   "transport": null,
+   "time": null,
+   "free": true,
+   "media": {
     "photo": null,
+    "video": null
+   },
+   "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+   "quest": null
+  },
+  {
+   "id": "tajemnicza-sciezka",
+   "name": "Tajemnicza ścieżka w parku miejskim",
+   "type": "miejsce-ukryte",
+   "icon": "🌿",
+   "badge": null,
+   "lat": 53.007402,
+   "lng": 18.572028,
+   "district": null,
+   "address": null,
+   "area_m2": null,
+   "seasons": [
+    "wiosna",
+    "lato",
+    "jesien"
+   ],
+   "seasonPrimary": "lato",
+   "description": "Wydeptana ścieżka z drewnianymi stopniami, która wspina się między zaroślami tak gęstymi, że po dziesięciu krokach nie widać już alejki, z której się zeszło. W parku, po którym chodzi całe miasto, wciąż da się zniknąć.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": null,
+     "label": "maj – wrzesień",
+     "from": "05-01",
+     "to": "09-30"
+    }
+   ],
+   "features": [],
+   "shade": null,
+   "accessible": null,
+   "transport": "Pieszo",
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/tajemnicza-sciezka.jpg",
+    "video": null
+   },
+   "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+   "quest": null
+  },
+  {
+   "id": "niezwykle-zakatki",
+   "name": "Niezwykłe zakątki parku miejskiego",
+   "type": "miejsce-ukryte",
+   "icon": "🌾",
+   "badge": null,
+   "lat": 53.004657,
+   "lng": 18.567903,
+   "district": null,
+   "address": null,
+   "area_m2": null,
+   "seasons": [
+    "wiosna",
+    "lato",
+    "jesien"
+   ],
+   "seasonPrimary": "lato",
+   "description": "Wierzby schodzą gałęziami do samej ziemi, a za nimi otwiera się podmokła łąka z wysokimi trawami i kwiatami. To już nie wygląda jak park w środku miasta.",
+   "quote": null,
+   "recommender": null,
+   "recommenderRole": null,
+   "highlights": [
+    {
+     "species": null,
+     "label": "maj – wrzesień",
+     "from": "05-01",
+     "to": "09-30"
+    }
+   ],
+   "features": [],
+   "shade": null,
+   "accessible": null,
+   "transport": "Pieszo",
+   "time": null,
+   "free": true,
+   "media": {
+    "photo": "img/niezwykle-zakatki.jpg",
     "video": null
    },
    "source": "Toruń Ukryty (rekomendacje mieszkańców)",
@@ -1886,7 +2197,8 @@ var stan = {
   tylkoTrwa: false,
   dzielnica: '*',
   cien: '*',
-  wybrany: null
+  wybrany: null,
+  trasa: null
 };
 
 /* ================= filtrowanie ================= */
@@ -1908,7 +2220,11 @@ function przechodzi(p, pomin){
   for (var k in t) { if (k !== pomin && !t[k]) return false; }
   return true;
 }
-function widoczne(){ return PUNKTY.filter(function(p){ return przechodzi(p); }); }
+function widoczne(){
+  var t = trasaAktywna();
+  if (t) return trasaPunkty(t);
+  return PUNKTY.filter(function(p){ return przechodzi(p); });
+}
 
 function aktywneFiltry(){
   var out = [];
@@ -1999,9 +2315,16 @@ function rysujTeraz(){
 }
 
 /* ================= mapa ================= */
-var map, warstwa, kafle, markery = {}, mapaPadla = false;
+var map, warstwa, warstwaTrasy, kafle, markery = {}, mapaPadla = false;
 
-function ikona(p, aktywny, wybrany){
+function ikona(p, aktywny, wybrany, nr){
+  if (nr) {
+    return L.divIcon({
+      className: 'pinwrap' + (wybrany ? ' sel' : ''),
+      html: '<span class="pin-nr' + (wybrany ? ' sel' : '') + '">' + nr + '</span>',
+      iconSize: [24, 24], iconAnchor: [12, 12]
+    });
+  }
   var kl = 'pin' + (p.type === 'miejsce-ukryte' ? ' pin--ukryte' : '') +
            (aktywny ? ' jest' : '') + (wybrany ? ' sel' : '');
   return L.divIcon({
@@ -2016,6 +2339,7 @@ function zbudujMape(){
                        zoomSnap:0.25, zoomDelta:0.5 })
          .setView([53.019, 18.606], 12);
   map.attributionControl.setPrefix('');
+  warstwaTrasy = L.layerGroup().addTo(map);
   warstwa = L.layerGroup().addTo(map);
 
   kafle = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -2038,11 +2362,22 @@ function bezPodkladu(){
 }
 
 function rysujPinezki(lista){
-  warstwa.clearLayers(); markery = {};
-  lista.forEach(function(p){
+  warstwa.clearLayers(); warstwaTrasy.clearLayers(); markery = {};
+  var t = trasaAktywna();
+  if (t) {
+    var pk = trasaPunkty(t);
+    var kolor = getComputedStyle(document.body).getPropertyValue('--akcent').trim() || '#2E7D52';
+    L.polyline(pk.map(function(p){ return [p.lat, p.lng]; }), {
+      color: '#1D2B21', weight: 5, opacity: .25, lineJoin: 'round'
+    }).addTo(warstwaTrasy);
+    L.polyline(pk.map(function(p){ return [p.lat, p.lng]; }), {
+      color: kolor, weight: 3, opacity: .95, dashArray: '7 6', lineJoin: 'round'
+    }).addTo(warstwaTrasy);
+  }
+  lista.forEach(function(p, i){
     var akt = trwajace(p, stan.doba).length > 0;
     var m = L.marker([p.lat, p.lng], {
-      icon: ikona(p, akt, p.id === stan.wybrany),
+      icon: ikona(p, akt, p.id === stan.wybrany, t ? i + 1 : 0),
       keyboard: true,
       title: p.name,
       alt: p.name + (akt ? ' — coś się tam dzieje w wybranym dniu' : '')
@@ -2065,7 +2400,10 @@ function sortuj(a, b){
 
 function rysujListe(lista){
   var ol = $('lista');
-  ol.innerHTML = lista.slice().sort(sortuj).map(function(p){
+  var t = trasaAktywna();
+  var legi = t ? trasaOdcinki(t).legi : null;
+  var kolejnosc = t ? lista : lista.slice().sort(sortuj);
+  ol.innerHTML = kolejnosc.map(function(p, i){
     var akt = trwajace(p, stan.doba);
     var meta = [];
     meta.push(p.type === 'park-kieszonkowy' ? 'park kieszonkowy' : 'miejsce polecane');
@@ -2073,11 +2411,15 @@ function rysujListe(lista){
     var teraz = akt.length
       ? '<span class="kropka">' + esc(akt[0].species ? akt[0].label : 'sezon otwarty') + '</span>'
       : '';
+    var czolo = t
+      ? '<span class="wiersz__nr">' + (i + 1) + '</span>'
+      : '<span class="wiersz__ik" aria-hidden="true">' + esc(p.icon || '') + '</span>';
+    var leg = (t && i > 0) ? '<span class="wiersz__leg">+' + legi[i - 1] + ' m</span>' : '';
     return '<li><button class="wiersz" type="button" data-id="' + esc(p.id) + '"' +
       (p.id === stan.wybrany ? ' aria-current="true"' : '') + '>' +
-      '<span class="wiersz__g"><span class="wiersz__ik" aria-hidden="true">' + esc(p.icon || '') + '</span>' +
+      '<span class="wiersz__g">' + czolo +
       '<span class="wiersz__n">' + esc(p.name) + '</span></span>' +
-      '<span class="wiersz__m">' + teraz + '<span>' + esc(meta.join(' · ')) + '</span></span>' +
+      '<span class="wiersz__m">' + leg + teraz + '<span>' + esc(meta.join(' · ')) + '</span></span>' +
       '</button></li>';
   }).join('');
 
@@ -2086,9 +2428,61 @@ function rysujListe(lista){
     'Lista jest pusta, bo żaden punkt nie przechodzi przez ustawione filtry. Powód i sposób cofnięcia są nad mapą.';
 
   var trwaIle = lista.filter(function(p){ return trwajace(p, stan.doba).length > 0; }).length;
+  if (t) {
+    $('listahead').innerHTML = '<span>Przystanki po kolei</span><span>' + lista.length + '</span>';
+    return;
+  }
   $('listahead').innerHTML = '<span>Punkty w widoku</span><span>' +
     (trwaIle ? trwaIle + ' z nich ma coś w trakcie ' + esc(dataTekst(stan.doba)) : 'nic nie trwa ' + esc(dataTekst(stan.doba))) +
     '</span>';
+}
+
+/* ================= trasy =================
+   Dystanse liczone ze współrzędnych punktów w linii prostej ×1,3 (poprawka na to,
+   że jedzie się i chodzi ulicami). Tempo: 4,5 km/h pieszo, 15 km/h rowerem. */
+var TRASY = [
+  { id:'kieszonkowe', nazwa:'Parki kieszonkowe', tryb:'rower',
+    tytul:'Parki kieszonkowe z jednego siodełka',
+    opis:'Pięć inwestycji miasta na jednej pętli, od Bydgoskiego po Bielawy.',
+    uwaga:'Przebieg orientacyjny — linia łączy punkty najkrótszą drogą, nie ulicami.',
+    punkty:['ustronie-ukrainskie','litewska-ojczyzna','skwer-polski','sensoryczna-szwecja','angielski-ogrod'] },
+  { id:'bydgoskie', nazwa:'Zielone Bydgoskie', tryb:'rower',
+    tytul:'Zielona pętla po Bydgoskim',
+    opis:'Od ogrodu przy WFOŚiGW przez magnolie i Park Miejski aż nad samą Wisłę.',
+    uwaga:'Przebieg orientacyjny — linia łączy punkty najkrótszą drogą, nie ulicami.',
+    punkty:['ogrod-wfosigw','magnolia-bydgoska','ogrodki-kwiatostany','wodospad-zakochanych',
+            'tajemnicza-sciezka','niezwykle-zakatki','dziki-brzeg-wisly'] },
+  { id:'park-miejski', nazwa:'Park Miejski', tryb:'pieszo',
+    tytul:'Park Miejski od podszewki',
+    opis:'Cztery miejsca, których nie widać z głównej alejki. Na jedno popołudnie.',
+    uwaga:'Przebieg orientacyjny — linia łączy punkty najkrótszą drogą, nie ścieżkami.',
+    punkty:['dziki-brzeg-wisly','niezwykle-zakatki','tajemnicza-sciezka','wodospad-zakochanych'] }
+];
+var TEMPO = { pieszo:75, rower:250 };   // metrów na minutę
+
+function metry(a, b){
+  var R = 6371000, r = function(x){ return x * Math.PI / 180; };
+  var dLat = r(b[0] - a[0]), dLng = r(b[1] - a[1]);
+  var q = Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(r(a[0])) * Math.cos(r(b[0])) * Math.sin(dLng/2) * Math.sin(dLng/2);
+  return 2 * R * Math.asin(Math.sqrt(q));
+}
+function trasaPunkty(t){
+  return t.punkty.map(function(id){
+    return PUNKTY.filter(function(p){ return p.id === id; })[0];
+  }).filter(Boolean);
+}
+function trasaOdcinki(t){
+  var pk = trasaPunkty(t), out = [], suma = 0;
+  for (var i = 1; i < pk.length; i++) {
+    var dd = metry([pk[i-1].lat, pk[i-1].lng], [pk[i].lat, pk[i].lng]) * 1.3;
+    out.push(Math.round(dd)); suma += dd;
+  }
+  return { legi:out, suma:suma, minuty:Math.round(suma / TEMPO[t.tryb]) };
+}
+function trasaAktywna(){
+  if (!stan.trasa) return null;
+  return TRASY.filter(function(t){ return t.id === stan.trasa; })[0] || null;
 }
 
 /* ================= zdjęcia punktu =================
@@ -2126,6 +2520,16 @@ function kartaHtml(p){
   } else {
     h.push('<div class="brakfoto">Zdjęcie w przygotowaniu.<br>Kadry do miejsc z Torunia Ukrytego dołożą ' +
            'mieszkańcy, którzy je polecili.</div>');
+  }
+
+  if (p.media && p.media.video) {
+    var wid = p.media.video;
+    h.push('<figure class="wideo">' +
+      '<video src="' + esc(wid.src) + '" poster="' + esc(wid.poster || '') + '" ' +
+      'controls muted loop playsinline preload="none"></video>' +
+      '<span class="wideo__znak">' + esc(wid.etykieta || 'wizualizacja') + '</span>' +
+      '<figcaption class="wideo__pod">Ujęcie poglądowe, nie nagranie z tego miejsca — ' +
+      'pokazuje, jak przy punktach będą działać krótkie pętle wideo.</figcaption></figure>');
   }
 
   var park = p.type === 'park-kieszonkowy';
@@ -2187,9 +2591,20 @@ function kartaHtml(p){
   return h.join('');
 }
 
+function dopasujRamke(img){
+  if (!img) return;
+  var ustaw = function(){
+    if (!img.naturalWidth || !img.naturalHeight) return;
+    var r = img.naturalWidth / img.naturalHeight;
+    img.style.aspectRatio = Math.min(1.6, Math.max(0.75, r));
+  };
+  if (img.complete) ustaw(); else img.addEventListener('load', ustaw);
+}
+
 function pokazKarte(p){
   var k = $('karta');
   k.innerHTML = kartaHtml(p);
+  dopasujRamke(k.querySelector('.foto'));
   k.hidden = false;
   $('lista').hidden = true;
   $('listapusta').hidden = true;
@@ -2262,10 +2677,11 @@ function zbudujFiltry(){
     var b = e.target.closest('[data-sezon]'); if (!b) return;
     var v = b.dataset.sezon;
     stan.sezon = (stan.sezon === v) ? null : v;
+    stan.trasa = null;
     odswiez();
   });
 
-  $('fTeraz').addEventListener('click', function(){ stan.tylkoTrwa = !stan.tylkoTrwa; odswiez(); });
+  $('fTeraz').addEventListener('click', function(){ stan.tylkoTrwa = !stan.tylkoTrwa; stan.trasa = null; odswiez(); });
 
   var dz = {}, bezDz = 0;
   PUNKTY.forEach(function(p){ if (p.district) dz[p.district] = (dz[p.district] || 0) + 1; else bezDz++; });
@@ -2274,7 +2690,7 @@ function zbudujFiltry(){
     '<option value="*">Wszystkie dzielnice (' + PUNKTY.length + ')</option>' +
     nazwy.map(function(k){ return '<option value="' + esc(k) + '">' + esc(k) + ' (' + dz[k] + ')</option>'; }).join('') +
     '<option value="' + BEZ_DZIELNICY + '">poza podziałem (' + bezDz + ')</option>';
-  $('fDzielnica').addEventListener('change', function(e){ stan.dzielnica = e.target.value; odswiez(); });
+  $('fDzielnica').addEventListener('change', function(e){ stan.dzielnica = e.target.value; stan.trasa = null; odswiez(); });
 
   var bezCienia = PUNKTY.filter(function(p){ return p.shade == null; }).length;
   $('fCien').innerHTML =
@@ -2286,11 +2702,34 @@ function zbudujFiltry(){
     var b = e.target.closest('[data-cien]'); if (!b) return;
     var v = b.dataset.cien;
     stan.cien = (stan.cien === v) ? '*' : v;
+    stan.trasa = null;
     odswiez();
   });
 
+  $('fTrasy').innerHTML = TRASY.map(function(t){
+    var o = trasaOdcinki(t);
+    return '<button class="trasa-chip" type="button" data-trasa="' + t.id + '" aria-pressed="false">' +
+           esc(t.nazwa) + ' <em>' + (o.suma / 1000).toFixed(1).replace('.', ',') + ' km</em></button>';
+  }).join('');
+  $('fTrasy').addEventListener('click', function(e){
+    var b = e.target.closest('[data-trasa]'); if (!b) return;
+    var v = b.dataset.trasa;
+    if (stan.trasa === v) { stan.trasa = null; }
+    else {
+      stan.trasa = v;
+      stan.sezon = null; stan.tylkoTrwa = false; stan.dzielnica = '*'; stan.cien = '*';
+      stan.wybrany = null;
+    }
+    odswiez();
+    if (stan.trasa) {
+      var pk = trasaPunkty(trasaAktywna());
+      map.fitBounds(L.latLngBounds(pk.map(function(p){ return [p.lat, p.lng]; })),
+                    { padding:[55, 55], maxZoom:14, animate:false });
+    }
+  });
+
   $('zeruj').addEventListener('click', function(){
-    stan.sezon = null; stan.tylkoTrwa = false; stan.dzielnica = '*'; stan.cien = '*'; odswiez();
+    stan.sezon = null; stan.tylkoTrwa = false; stan.dzielnica = '*'; stan.cien = '*'; stan.trasa = null; odswiez();
   });
 
   $('suwak').value = stan.doba;
@@ -2309,12 +2748,31 @@ function odswiezKontrolki(){
   Array.prototype.forEach.call($('fCien').children, function(b){
     b.setAttribute('aria-pressed', String(b.dataset.cien === stan.cien));
   });
+  Array.prototype.forEach.call($('fTrasy').children, function(b){
+    b.setAttribute('aria-pressed', String(b.dataset.trasa === stan.trasa));
+  });
   $('suwak').value = stan.doba;
-  $('zeruj').disabled = aktywneFiltry().length === 0;
-  $('zeruj').style.opacity = aktywneFiltry().length === 0 ? '.45' : '1';
+  $('zeruj').disabled = aktywneFiltry().length === 0 && !stan.trasa;
+  $('zeruj').style.opacity = ($('zeruj').disabled) ? '.45' : '1';
 }
 
 function rysujStan(lista){
+  var t = trasaAktywna();
+  var box2 = $('trasaInfo');
+  if (t) {
+    var o = trasaOdcinki(t);
+    $('licznik').innerHTML = 'Trasa: <b>' + (o.suma / 1000).toFixed(1).replace('.', ',') + ' km</b>';
+    box2.innerHTML = '<b>' + esc(t.tytul) + '</b>' +
+      '<p class="trasa-info__m">' + esc(o.minuty) + ' min ' + (t.tryb === 'rower' ? 'rowerem' : 'pieszo') +
+      ' · ' + (o.suma / 1000).toFixed(1).replace('.', ',') + ' km · ' + t.punkty.length + ' ' +
+      pl(t.punkty.length, 'przystanek', 'przystanki', 'przystanków') + '</p>' +
+      '<p class="trasa-info__m">' + esc(t.opis) + '</p>' +
+      '<p class="trasa-info__u">' + esc(t.uwaga) + '</p>';
+    box2.hidden = false;
+    $('pustka').hidden = true;
+    return;
+  }
+  box2.hidden = true; box2.innerHTML = '';
   $('licznik').innerHTML = 'Na mapie: <b>' + lista.length + '</b> z ' + PUNKTY.length + ' punktów';
 
   var box = $('pustka');
@@ -2493,6 +2951,8 @@ function pokazOdpowiedz(i){
 
 /* ================= start ================= */
 function start(){
+  $('topSub').textContent = 'Wersja pokazowa · ' + PUNKTY.length + ' z ' +
+    (DANE.meta && DANE.meta.cel ? DANE.meta.cel : 40) + ' punktów · dane: UM Toruń i mieszkańcy';
   zbudujMape();
   zbudujFiltry();
   zbudujPlaner();

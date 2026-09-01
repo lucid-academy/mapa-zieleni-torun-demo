@@ -2,9 +2,9 @@
   "meta": {
     "projekt": "Mapa zieleni Torunia — demo",
     "wersja": "0.1",
-    "punktow": 20,
+    "punktow": 26,
     "cel": 40,
-    "brakuje": 20,
+    "brakuje": 14,
     "sezony": [
       "wiosna",
       "lato",
@@ -15,15 +15,17 @@
       "Okna kwitnienia w `species` są PRZYBLIŻONE (szacunek dla Torunia, ~53°N). Do weryfikacji przez Ogród Zoobotaniczny lub Wydział Środowiska UM.",
       "`seasons` jest tablicą wyliczoną z okien w `highlights` — punkt może należeć do kilku pór roku.",
       "`seasonPrimary` to redakcyjny wybór głównej pory roku (z Torunia Ukrytego), używany do sortowania i etykiet, nie do filtrowania.",
-      "Usunięto: `lezaczki` (decyzja) i `wystawy-sztuki` (nie jest punktem przyrodniczym)."
+      "Usunięto: `lezaczki` (decyzja) i `wystawy-sztuki` (nie jest punktem przyrodniczym).",
+      "Sześć punktów dopisanych 01.09.2026 na podstawie współrzędnych i zdjęć od klienta. Opisy i okna są redakcyjnym szkicem opartym na tym, co widać na zdjęciach — do potwierdzenia."
     ],
     "do_uzupelnienia": [
       "shade (0–3) — dla wszystkich punktów, ręcznie",
       "accessible (bool) — dostępność wózkiem / osobom z ograniczoną mobilnością",
       "district — dla 9 punktów z Torunia Ukrytego",
-      "media.photo — dla 9 punktów z Torunia Ukrytego",
       "quote + recommender — dla 11 parków kieszonkowych",
-      "20 nowych punktów do czterdziestki"
+      "media.photo — dla 4 z 15 miejsc z Torunia Ukrytego",
+      "quote + recommender — dla 11 parków kieszonkowych i 6 nowych punktów",
+      "14 nowych punktów do czterdziestki"
     ]
   },
   "species": {
@@ -166,6 +168,11 @@
       "label": "Dereń biały (czerwone pędy zimą)",
       "from": "11-15",
       "to": "03-15"
+    },
+    "cykoria": {
+      "label": "Cykoria podróżnik",
+      "from": "07-01",
+      "to": "09-30"
     }
   },
   "points": [
@@ -903,7 +910,11 @@
       "free": true,
       "media": {
         "photo": "img/park-linearny-wrzosy-ii.jpg",
-        "video": null
+        "video": {
+          "src": "video/laka-kwietna.mp4",
+          "poster": "img/laka-kwietna-poster.jpg",
+          "etykieta": "wizualizacja"
+        }
       },
       "source": "UM Toruń (parki kieszonkowe)",
       "quest": null
@@ -982,7 +993,7 @@
       "time": "Dowolna pora dnia",
       "free": true,
       "media": {
-        "photo": null,
+        "photo": "img/magnolie-spacer.jpg",
         "video": null
       },
       "source": "Toruń Ukryty (rekomendacje mieszkańców)",
@@ -1022,8 +1033,12 @@
       "time": "Rano (najlepsze światło)",
       "free": true,
       "media": {
-        "photo": null,
-        "video": null
+        "photo": "img/magnolia-bydgoska.jpg",
+        "video": null,
+        "photos": [
+          "img/magnolia-bydgoska.jpg",
+          "img/magnolia-bydgoska-2.jpg"
+        ]
       },
       "source": "Toruń Ukryty (rekomendacje mieszkańców)",
       "quest": null
@@ -1062,7 +1077,7 @@
       "time": "Popołudnie",
       "free": true,
       "media": {
-        "photo": null,
+        "photo": "img/bydgoskie-bzy.jpg",
         "video": null
       },
       "source": "Toruń Ukryty (rekomendacje mieszkańców)",
@@ -1266,7 +1281,262 @@
       "time": "Wieczór (po zmroku)",
       "free": true,
       "media": {
+        "photo": "img/bydgoskie-zima.jpg",
+        "video": null,
+        "photos": [
+          "img/bydgoskie-zima.jpg",
+          "img/bydgoskie-zima-2.jpg",
+          "img/bydgoskie-zima-3.jpg"
+        ]
+      },
+      "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+      "quest": null
+    },
+    {
+      "id": "wodospad-zakochanych",
+      "name": "Mostek i wodospad zakochanych",
+      "type": "miejsce-ukryte",
+      "icon": "💧",
+      "badge": null,
+      "lat": 53.008398,
+      "lng": 18.574708,
+      "district": null,
+      "address": null,
+      "area_m2": null,
+      "seasons": [
+        "wiosna",
+        "lato"
+      ],
+      "seasonPrimary": "wiosna",
+      "description": "Kamienna kaskada w Parku Miejskim spada do niewielkiego oczka, a nad nią przerzucony jest mostek. Wody nie słychać z alejki — dopiero kiedy zejdziesz bliżej. W czerwcu skarpa nad kaskadą zakwita bzem czarnym i cała robi się biała.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": "bez-czarny-kwiat",
+          "label": "Bez czarny (kwitnienie)",
+          "from": "06-01",
+          "to": "06-30"
+        }
+      ],
+      "features": [],
+      "shade": null,
+      "accessible": null,
+      "transport": "Pieszo",
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/wodospad-zakochanych.jpg",
+        "video": null
+      },
+      "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+      "quest": null
+    },
+    {
+      "id": "ogrodki-kwiatostany",
+      "name": "Ogródki przy Kwiatostanach",
+      "type": "miejsce-ukryte",
+      "icon": "🌼",
+      "badge": null,
+      "lat": 53.010041,
+      "lng": 18.580469,
+      "district": null,
+      "address": null,
+      "area_m2": null,
+      "seasons": [
+        "lato",
+        "jesien"
+      ],
+      "seasonPrimary": "lato",
+      "description": "Kawałek zieleni przy kwiaciarni na Bydgoskiej, którego nie widać z drugiej strony ulicy. Latem wchodzi w niego cykoria podróżnik — bladoniebieska, otwarta tylko przez pół dnia, bo po południu kwiaty się zamykają.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": "cykoria",
+          "label": "Cykoria podróżnik",
+          "from": "07-01",
+          "to": "09-30"
+        }
+      ],
+      "features": [],
+      "shade": null,
+      "accessible": null,
+      "transport": "Pieszo",
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/ogrodki-kwiatostany.jpg",
+        "video": null
+      },
+      "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+      "quest": null
+    },
+    {
+      "id": "dziki-brzeg-wisly",
+      "name": "Dziki brzeg Wisły",
+      "type": "miejsce-ukryte",
+      "icon": "🏞️",
+      "badge": null,
+      "lat": 53.003453,
+      "lng": 18.570605,
+      "district": null,
+      "address": null,
+      "area_m2": null,
+      "seasons": [
+        "lato",
+        "zima"
+      ],
+      "seasonPrimary": "lato",
+      "description": "Brzeg poniżej Bydgoskiego, którego nikt nie uporządkował: piach, kamienie, wysokie trawy i woda tuż przy nogach. Latem to zielony tunel z widokiem na drugą stronę rzeki. Zimą to samo miejsce wygląda jak zupełnie inna rzeka — po wodzie idzie kra.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": null,
+          "label": "zielony brzeg (czerwiec – wrzesień)",
+          "from": "06-01",
+          "to": "09-30"
+        },
+        {
+          "species": null,
+          "label": "kra na Wiśle (grudzień – luty)",
+          "from": "12-01",
+          "to": "02-28"
+        }
+      ],
+      "features": [],
+      "shade": null,
+      "accessible": null,
+      "transport": "Pieszo lub rowerem",
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/dziki-brzeg-wisly.jpg",
+        "photos": [
+          "img/dziki-brzeg-wisly.jpg",
+          "img/dziki-brzeg-wisly-2.jpg"
+        ],
+        "video": null
+      },
+      "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+      "quest": null
+    },
+    {
+      "id": "mala-wiselka",
+      "name": "Mała Wisełka",
+      "type": "miejsce-ukryte",
+      "icon": "🌊",
+      "badge": null,
+      "lat": 53.002448,
+      "lng": 18.604309,
+      "district": null,
+      "address": null,
+      "area_m2": null,
+      "seasons": [
+        "lato"
+      ],
+      "seasonPrimary": "lato",
+      "description": "Nad wodą przy moście Piłsudskiego, po stronie Piasków.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [],
+      "features": [],
+      "shade": null,
+      "accessible": null,
+      "transport": null,
+      "time": null,
+      "free": true,
+      "media": {
         "photo": null,
+        "video": null
+      },
+      "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+      "quest": null
+    },
+    {
+      "id": "tajemnicza-sciezka",
+      "name": "Tajemnicza ścieżka w parku miejskim",
+      "type": "miejsce-ukryte",
+      "icon": "🌿",
+      "badge": null,
+      "lat": 53.007402,
+      "lng": 18.572028,
+      "district": null,
+      "address": null,
+      "area_m2": null,
+      "seasons": [
+        "wiosna",
+        "lato",
+        "jesien"
+      ],
+      "seasonPrimary": "lato",
+      "description": "Wydeptana ścieżka z drewnianymi stopniami, która wspina się między zaroślami tak gęstymi, że po dziesięciu krokach nie widać już alejki, z której się zeszło. W parku, po którym chodzi całe miasto, wciąż da się zniknąć.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": null,
+          "label": "maj – wrzesień",
+          "from": "05-01",
+          "to": "09-30"
+        }
+      ],
+      "features": [],
+      "shade": null,
+      "accessible": null,
+      "transport": "Pieszo",
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/tajemnicza-sciezka.jpg",
+        "video": null
+      },
+      "source": "Toruń Ukryty (rekomendacje mieszkańców)",
+      "quest": null
+    },
+    {
+      "id": "niezwykle-zakatki",
+      "name": "Niezwykłe zakątki parku miejskiego",
+      "type": "miejsce-ukryte",
+      "icon": "🌾",
+      "badge": null,
+      "lat": 53.004657,
+      "lng": 18.567903,
+      "district": null,
+      "address": null,
+      "area_m2": null,
+      "seasons": [
+        "wiosna",
+        "lato",
+        "jesien"
+      ],
+      "seasonPrimary": "lato",
+      "description": "Wierzby schodzą gałęziami do samej ziemi, a za nimi otwiera się podmokła łąka z wysokimi trawami i kwiatami. To już nie wygląda jak park w środku miasta.",
+      "quote": null,
+      "recommender": null,
+      "recommenderRole": null,
+      "highlights": [
+        {
+          "species": null,
+          "label": "maj – wrzesień",
+          "from": "05-01",
+          "to": "09-30"
+        }
+      ],
+      "features": [],
+      "shade": null,
+      "accessible": null,
+      "transport": "Pieszo",
+      "time": null,
+      "free": true,
+      "media": {
+        "photo": "img/niezwykle-zakatki.jpg",
         "video": null
       },
       "source": "Toruń Ukryty (rekomendacje mieszkańców)",
