@@ -501,6 +501,11 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 .checklist input{ margin:.2rem 0 0; accent-color:var(--akcent); width:1rem; height:1rem; flex:none }
 .checklist input:checked + span{ color:var(--cichy); text-decoration:line-through }
 .atlasactions{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; margin-top:1.15rem }
+.atlasakcja[aria-pressed="true"]{ background:color-mix(in srgb, var(--kat-park) 14%, var(--ark));
+      border-color:var(--kat-park); color:var(--kat-park) }
+.atlaskarta--ukryte .atlasakcja[aria-pressed="true"]{
+      background:color-mix(in srgb, var(--kat-ukryte) 13%, var(--ark));
+      border-color:var(--kat-ukryte); color:var(--kat-ukryte) }
 .atlasakcja{ border:1px solid var(--linia); border-radius:var(--r); background:var(--ark); cursor:pointer;
       padding:.6rem .7rem; font-size:.85rem; font-weight:600; color:var(--atrament); text-align:left;
       display:flex; align-items:center; gap:.45rem }
@@ -600,6 +605,55 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 .dalej li{ font-size:.92rem; line-height:1.55 }
 .dalej em{ font-style:normal; color:var(--cichy); font-size:.88em }
 
+/* ---------- Zielony Paszport ---------- */
+.paszport{ padding-top:1.6rem; padding-bottom:3rem }
+.pp__gora{ display:flex; justify-content:space-between; align-items:flex-start; gap:1.5rem;
+      flex-wrap:wrap; margin-bottom:1.2rem }
+.pp__eyebrow{ font-size:.72rem; letter-spacing:.1em; font-weight:700; color:var(--cichy) }
+.pp__gora h2{ font-size:clamp(1.5rem,2.4vw,2rem); letter-spacing:-.015em; margin-top:.25rem }
+.pp__lead{ font-size:.86rem; color:var(--cichy); line-height:1.55; max-width:46ch }
+.book{ display:grid; grid-template-columns:minmax(280px,.82fr) 1.18fr;
+      background:#F7F1E3; border:1px solid #D8CBAE; border-radius:var(--r);
+      box-shadow:var(--cien-2); overflow:hidden }
+.page{ padding:1.5rem 1.6rem; position:relative }
+.page::before{ content:''; position:absolute; inset:0; pointer-events:none;
+      background:repeating-linear-gradient(0deg,transparent 0 27px,rgba(92,78,55,.04) 28px) }
+.page--l{ border-right:1px solid #D8CBAE }
+.page > *{ position:relative; z-index:1 }
+.serial{ font:12px/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.14em; color:#8a7855 }
+.pp__pasek{ margin:1.1rem 0 1.2rem }
+.progress{ height:8px; background:#E3D8BE; border-radius:999px; overflow:hidden }
+.progress i{ display:block; height:100%; width:0; background:#7C6A45; border-radius:999px;
+      transition:width .5s ease }
+.pp__pasek small{ display:block; margin-top:.4rem; font-size:.8rem; color:#6f6244; font-weight:600 }
+.stamps{ display:grid; grid-template-columns:repeat(auto-fill,minmax(92px,1fr)); gap:.7rem }
+.stamp{ aspect-ratio:1; border:2px dashed #9A8862; border-radius:50%; display:flex;
+      flex-direction:column; align-items:center; justify-content:center; text-align:center;
+      gap:.15rem; padding:.4rem; font-family:'Bitter',Georgia,serif; font-weight:600;
+      font-size:.68rem; color:#6b5b3c; background:rgba(255,255,255,.28); cursor:pointer;
+      line-height:1.15 }
+.stamp:nth-child(3n+1){ transform:rotate(-4deg) }
+.stamp:nth-child(3n){ transform:rotate(4deg) }
+.stamp:nth-child(5n){ transform:rotate(2deg) }
+.stamp .kropla{ width:12px; height:12px; border:2px solid currentColor; margin-bottom:.1rem }
+.stamp--park .kropla{ border-radius:50%; color:var(--kat-park) }
+.stamp--ukryte .kropla{ border-radius:1px; transform:rotate(45deg); color:var(--kat-ukryte) }
+.stamp.jest{ border-style:solid; border-color:#7C6A45; background:rgba(124,106,69,.14); color:#4a3f28 }
+.stamp.lock{ opacity:.55 }
+.stamp small{ font-family:'Raleway',sans-serif; font-weight:600; font-size:.62rem;
+      letter-spacing:.06em; color:#8a7855 }
+.questcard{ border:1px solid #D8CBAE; border-radius:var(--r); background:rgba(255,255,255,.42);
+      padding:1rem 1.05rem; margin-top:.7rem }
+.questcard h3{ font-family:'Bitter',Georgia,serif; font-size:1.1rem; font-weight:600;
+      margin:0 0 .3rem; color:#3a3220 }
+.questcard p{ font-size:.85rem; color:#6f6244; line-height:1.55 }
+.questcard__cel{ margin-top:.6rem; display:flex; flex-wrap:wrap; gap:.35rem }
+.qchip{ font-size:.76rem; border:1px solid #C8B98F; border-radius:999px; padding:.2rem .55rem;
+      background:#F7F1E3; color:#5f5236; cursor:pointer }
+.qchip:hover{ border-color:#7C6A45; color:#3a3220 }
+.pp__reset{ margin-top:1.2rem }
+.pp__reset .lnk{ color:#8a7855; border-bottom-color:#C8B98F }
+
 /* ---------- stopka ---------- */
 .stopka{ position:relative; border-top:1px solid var(--linia); padding:1.5rem 0 1.1rem;
       font-size:.72rem; color:var(--cichy) }
@@ -633,12 +687,16 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 
 @media (max-width:1080px){
   .planer__grid{ grid-template-columns:1fr }
+  .book{ grid-template-columns:1fr }
+  .page--l{ border-right:0; border-bottom:1px solid #D8CBAE }
   .kreator{ grid-template-columns:1fr }
   .atlaskarta{ grid-template-columns:1fr }
   .hero{ min-height:280px }
 }
 @media (max-width:560px){
   .legenda{ font-size:.72rem; padding:.4rem .55rem; line-height:1.6 }
+  .stamps{ grid-template-columns:repeat(2,1fr) }
+  .atlasactions{ grid-template-columns:1fr }
 }
 @media (max-width:860px){
   .robocze{ display:block; height:auto }
@@ -697,6 +755,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
       <button class="tab" role="tab" id="tab-mapa" aria-controls="panel-mapa" aria-selected="true">Mapa</button>
       <button class="tab" role="tab" id="tab-atlas" aria-controls="panel-atlas" aria-selected="false" tabindex="-1">Atlas</button>
       <button class="tab" role="tab" id="tab-planer" aria-controls="panel-planer" aria-selected="false" tabindex="-1">Planer <span class="tag">podgląd</span></button>
+      <button class="tab" role="tab" id="tab-paszport" aria-controls="panel-paszport" aria-selected="false" tabindex="-1">Paszport</button>
     </nav>
   </div>
   <nav class="nawf" aria-label="Skróty do funkcji mapy">
@@ -883,8 +942,6 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
             <li>Galeria zdjęć od mieszkańców — miejsca z Torunia Ukrytego dostaną kadry od tych, którzy je polecili.</li>
             <li>Krótkie pętle wideo przy wybranych punktach, żeby zobaczyć miejsce, zanim się tam pojedzie.</li>
             <li>Korekta okien kwitnienia danymi pogodowymi — ciepła wiosna potrafi przesunąć magnolie o tydzień.</li>
-            <li>Zielony paszport — pieczęć za każde odwiedzone miejsce, zapisywana wyłącznie na Twoim
-                urządzeniu <em>(możliwa funkcjonalność, jeszcze nie działa)</em>.</li>
             <li>Wpisy odsłaniane na spacerze — treść, która pojawia się dopiero kilkadziesiąt
                 metrów od punktu <em>(możliwa funkcjonalność, wymaga zgody na lokalizację)</em>.</li>
             <li>Prywatny zielnik — własne zdjęcia i notatki przy punktach
@@ -894,6 +951,36 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
       </div>
 
       <div id="odpowiedz" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section id="panel-paszport" role="tabpanel" aria-labelledby="tab-paszport" hidden>
+  <div class="wrap paszport">
+    <div class="pp__gora">
+      <div>
+        <p class="pp__eyebrow">Kolekcja zamiast rankingu</p>
+        <h2>Zielony Paszport</h2>
+      </div>
+      <p class="pp__lead">Prywatny zapis miejsc, które naprawdę zobaczyłeś. Pieczęć przybijasz
+        przyciskiem „Byłem tutaj" w Atlasie. Zapis zostaje na tym urządzeniu — nie wysyłamy go nigdzie
+        i nikt inny go nie widzi.</p>
+    </div>
+    <div class="book">
+      <div class="page page--l">
+        <p class="serial" id="ppSerial"></p>
+        <div class="pp__pasek">
+          <div class="progress"><i id="ppProgress"></i></div>
+          <small id="ppLicz"></small>
+        </div>
+        <p class="pp__eyebrow">Zadanie na teraz</p>
+        <div id="ppQuest"></div>
+        <p class="pp__reset"><button class="lnk" id="ppReset" type="button">wyczyść moje pieczęcie</button></p>
+      </div>
+      <div class="page page--r">
+        <p class="pp__eyebrow">Pieczęcie miejsc · klik otwiera Atlas</p>
+        <div class="stamps" id="ppStamps"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -3487,16 +3574,23 @@ var atlasId = null;
    niedostępny (tryb prywatny, zablokowane dane witryn), wszystko działa
    tak samo — tylko nic się nie pamięta. */
 var ZAZNACZ = (function(){
-  var KLUCZ = 'mzt-checklista', dane = {};
-  try { dane = JSON.parse(localStorage.getItem(KLUCZ)) || {}; } catch (e) { dane = {}; }
+  var KLUCZ = 'mzt-zapis', dane = { chk:{}, byl:{} };
+  try {
+    var w = JSON.parse(localStorage.getItem(KLUCZ));
+    if (w && typeof w === 'object') { dane.chk = w.chk || {}; dane.byl = w.byl || {}; }
+  } catch (e) {}
   function zapisz(){ try { localStorage.setItem(KLUCZ, JSON.stringify(dane)); } catch (e) {} }
   return {
-    ma: function(id, i){ return !!(dane[id] && dane[id][i]); },
+    ma: function(id, i){ return !!(dane.chk[id] && dane.chk[id][i]); },
     przelacz: function(id, i){
-      if (!dane[id]) dane[id] = {};
-      dane[id][i] = !dane[id][i];
+      if (!dane.chk[id]) dane.chk[id] = {};
+      dane.chk[id][i] = !dane.chk[id][i];
       zapisz();
-    }
+    },
+    byl: function(id){ return !!dane.byl[id]; },
+    przelaczByl: function(id){ dane.byl[id] = !dane.byl[id]; zapisz(); },
+    ileByl: function(){ return Object.keys(dane.byl).filter(function(k){ return dane.byl[k]; }).length; },
+    wyczysc: function(){ dane.byl = {}; zapisz(); }
   };
 })();
 
@@ -3522,7 +3616,10 @@ function zbudujAtlas(){
   $('atlasKarta').addEventListener('click', function(e){
     var b = e.target.closest('[data-akcja]'); if (!b) return;
     var p = PUNKTY.filter(function(x){ return x.id === atlasId; })[0]; if (!p) return;
-    if (b.dataset.akcja === 'mapa') {
+    if (b.dataset.akcja === 'byl') {
+      ZAZNACZ.przelaczByl(p.id); rysujAtlas();
+      if (!$('panel-paszport').hidden) rysujPaszport();
+    } else if (b.dataset.akcja === 'mapa') {
       zakladka('mapa'); stan.wybrany = p.id; odswiez();
       if (markery[p.id]) map.panInside(markery[p.id].getLatLng(), { padding:[60, 60] });
     } else if (b.dataset.akcja === 'nawig') {
@@ -3613,6 +3710,8 @@ function rysujAtlas(){
       'kwitnienia. Terminy są oszacowane dla Torunia i mogą się przesunąć o kilka dni.</p>' +
       check +
       '<div class="atlasactions">' +
+        '<button class="atlasakcja" type="button" data-akcja="byl" aria-pressed="' + ZAZNACZ.byl(p.id) + '">' +
+          (ZAZNACZ.byl(p.id) ? '✓ Pieczęć przybita' : '✓ Byłem tutaj') + '</button>' +
         '<button class="atlasakcja" type="button" data-akcja="mapa">◉ Pokaż na mapie</button>' +
         '<button class="atlasakcja" type="button" data-akcja="nawig">↗ Trasa w Google Maps</button>' +
       '</div>' +
@@ -3620,8 +3719,64 @@ function rysujAtlas(){
     '</div></div>';
 }
 
+/* ================= Zielony Paszport ================= */
+function zbudujPaszport(){
+  $('ppStamps').addEventListener('click', function(e){
+    var b = e.target.closest('[data-atlas]'); if (!b) return;
+    atlasId = b.dataset.atlas; zakladka('atlas');
+  });
+  $('ppQuest').addEventListener('click', function(e){
+    var b = e.target.closest('[data-atlas]'); if (!b) return;
+    atlasId = b.dataset.atlas; zakladka('atlas');
+  });
+  $('ppReset').addEventListener('click', function(){
+    ZAZNACZ.wyczysc(); rysujPaszport();
+    if (!$('panel-atlas').hidden) rysujAtlas();
+  });
+  rysujPaszport();
+}
+
+function rysujPaszport(){
+  var lista = PUNKTY.slice().sort(function(a, b){ return a.name.localeCompare(b.name, 'pl'); });
+  var ile = ZAZNACZ.ileByl(), suma = lista.length;
+  var proc = suma ? Math.round(ile / suma * 100) : 0;
+
+  $('ppSerial').textContent = 'TORUŃ · ZP / 2026 / ' + ('000' + (100 + ile)).slice(-4);
+  $('ppProgress').style.width = proc + '%';
+  $('ppLicz').textContent = ile + ' z ' + suma + ' pieczęci · ' + proc + '%';
+
+  $('ppStamps').innerHTML = lista.map(function(p){
+    var jest = ZAZNACZ.byl(p.id);
+    var krotkie = p.name.length > 22 ? p.name.slice(0, 20) + '…' : p.name;
+    return '<button class="stamp stamp--' + kat(p).klasa + (jest ? ' jest' : ' lock') +
+      '" type="button" data-atlas="' + esc(p.id) + '" title="' + esc(p.name) + '">' +
+      '<span class="kropla" aria-hidden="true"></span>' +
+      '<span>' + esc(krotkie) + '</span>' +
+      (jest ? '<span>✓</span>' : '<small>odkryj</small>') + '</button>';
+  }).join('');
+
+  /* zadanie z realnych zjawisk na wybraną datę */
+  var g = zjawiska(stan.doba);
+  if (g.length) {
+    var top = g[0], cele = top.punkty.slice(0, 4);
+    var nazwa = top.species ? top.label : top.punkty[0].p.name;
+    $('ppQuest').innerHTML = '<div class="questcard"><h3>Złap teraz: ' + esc(nazwa) + '</h3>' +
+      '<p>To zjawisko trwa ' + esc(dataTekst(stan.doba)) + ' w ' + top.punkty.length + ' ' +
+      pl(top.punkty.length, 'miejscu', 'miejscach', 'miejscach') +
+      '. Odwiedź jedno z nich i przybij pieczęć w Atlasie.</p>' +
+      '<div class="questcard__cel">' + cele.map(function(y){
+        return '<button class="qchip" type="button" data-atlas="' + esc(y.p.id) + '">' +
+          esc(y.p.name) + '</button>';
+      }).join('') + '</div></div>';
+  } else {
+    $('ppQuest').innerHTML = '<div class="questcard"><h3>Poczekaj na sezon</h3>' +
+      '<p>W wybranym dniu nie trwa żadne z opisanych zjawisk. Przeskocz na inny miesiąc ' +
+      'w zakładce „Mapa", żeby zobaczyć, kiedy znów coś ruszy.</p></div>';
+  }
+}
+
 /* ================= zakładki ================= */
-var ZAKLADKI = ['mapa', 'atlas', 'planer'];
+var ZAKLADKI = ['mapa', 'atlas', 'planer', 'paszport'];
 
 function zakladka(ktora){
   if (ZAKLADKI.indexOf(ktora) === -1) ktora = 'mapa';
@@ -3633,6 +3788,7 @@ function zakladka(ktora){
   });
   if (ktora === 'mapa' && map) setTimeout(function(){ map.invalidateSize(); }, 0);
   if (ktora === 'atlas') rysujAtlas();
+  if (ktora === 'paszport') rysujPaszport();
 }
 
 /* ================= planer ================= */
@@ -3756,6 +3912,7 @@ function start(){
   zbudujPlaner();
   zbudujAtlas();
   zbudujKreator();
+  zbudujPaszport();
 
   $('karta').addEventListener('click', function(e){
     var b = e.target.closest('[data-lupa]'); if (!b) return;
