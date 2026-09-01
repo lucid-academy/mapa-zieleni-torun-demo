@@ -27,10 +27,19 @@
 
 /* ---------- paleta ---------- */
 :root{
-  --papier:#F7F8F5; --atrament:#1D2B21; --linia:#D6DBD4;
-  --cichy:#5E6D62;
-  --ark:#FFFFFF;
+  /* Papier jest lekko ciepły, nie biały — cała strona ma czytać się jak zielnik,
+     a nie jak surowy dokument. Pigmenty pomocnicze są stałe, niezależne od pory roku. */
+  --papier:#F3EFE3; --atrament:#1F2B23; --linia:#D2CCBB;
+  --cichy:#566057;
+  --ark:#FFFDF7;
+  --cegla:#9C513C; --piernik:#6D452F; --sepia:#796A4C; --wisla:#668997;
+  --cien-1:0 2px 4px rgba(62,48,32,.08);
+  --cien-2:0 2px 5px rgba(62,48,32,.08), 0 18px 38px -24px rgba(62,48,32,.38);
   --akcent:#7FB069; --akcent2:#E8A0BF; --na-akcencie:#1D2B21; --na-akcencie2:#1D2B21;
+  /* Tożsamość kategorii jest stała — kolor pory roku mówi „co teraz",
+     kolor kategorii mówi „co to za miejsce". Te dwa znaczenia się nie mieszają. */
+  --kat-park:#2F7A4F;   --kat-park-tint:#EDF4EE;   --kat-park-linia:#BFDCC9;
+  --kat-ukryte:#A6567F; --kat-ukryte-tint:#F7ECF2; --kat-ukryte-linia:#E5C6D8;
   --r:3px;
 }
 body[data-sezon="wiosna"]{ --akcent:#7FB069; --akcent2:#E8A0BF; --na-akcencie:#1D2B21; --na-akcencie2:#1D2B21 }
@@ -45,8 +54,19 @@ input[type=range]::-webkit-slider-thumb, input[type=range]::-moz-range-thumb{
 /* ---------- podstawy ---------- */
 *{ box-sizing:border-box }
 html{ -webkit-text-size-adjust:100% }
+html{ background:#DDD4C1 }
 body{
-  margin:0; background:var(--papier); color:var(--atrament);
+  margin:0; color:var(--atrament);
+  background-color:var(--papier);
+  background-image:
+    radial-gradient(ellipse at 50% -20%, rgba(255,255,255,.72), transparent 56%),
+    radial-gradient(ellipse at 0 50%, rgba(109,69,47,.045), transparent 28%),
+    radial-gradient(ellipse at 100% 50%, rgba(109,69,47,.045), transparent 28%),
+    repeating-linear-gradient(0deg, rgba(83,66,43,.025) 0, rgba(83,66,43,.025) 1px,
+      transparent 1px, transparent 5px),
+    repeating-linear-gradient(93deg, rgba(255,255,255,.06) 0, rgba(255,255,255,.06) 1px,
+      transparent 1px, transparent 17px);
+  background-attachment:fixed;
   font-family:'Raleway',system-ui,'Segoe UI',sans-serif; font-size:15px; line-height:1.55;
   font-variant-numeric:tabular-nums;
 }
@@ -66,6 +86,33 @@ a:hover{ color:var(--akcent) }
 .top h1{ font-size:clamp(1.1rem,1.5vw,1.4rem); letter-spacing:-.01em;
          display:flex; align-items:baseline; gap:.6rem; flex-wrap:wrap }
 .tag--alpha{ font-family:'Raleway',system-ui,sans-serif; border-color:var(--akcent) }
+
+/* ---------- pasek szybkich filtrów ---------- */
+.nawf{ border-top:1px solid var(--linia);
+      background:color-mix(in srgb, var(--ark) 91%, var(--papier));
+      box-shadow:0 2px 12px rgba(64,48,29,.06) }
+.top{ position:relative }
+/* wąski pas gotyckiej cegły — sygnatura Torunia, nigdy pod tekstem */
+.top::after{ content:''; position:absolute; left:0; right:0; bottom:-3px; height:3px;
+      background:repeating-linear-gradient(90deg,
+        color-mix(in srgb, var(--cegla) 42%, transparent) 0 14px,
+        transparent 14px 16px);
+      opacity:.55; pointer-events:none }
+.nawf__in{ display:flex; align-items:center; gap:.25rem; flex-wrap:wrap; padding:.3rem 0 }
+.nawf__i{ background:none; border:0; border-radius:var(--r); padding:.38rem .58rem; cursor:pointer;
+      font-size:.84rem; font-weight:600; color:var(--cichy); display:inline-flex; align-items:center;
+      gap:.4rem; white-space:nowrap; line-height:1;
+      transition:background-color .16s ease, color .16s ease }
+.nawf__i:hover{ background:color-mix(in srgb, var(--akcent) 12%, var(--ark)); color:var(--atrament) }
+.nawf__i[aria-pressed="true"]{ color:var(--atrament); background:color-mix(in srgb, var(--akcent) 16%, var(--ark)) }
+.nawf__ik{ font-size:.95em; line-height:1; color:var(--akcent);
+      font-family:'Segoe UI Symbol',system-ui,sans-serif }
+.nawf__ik--park,.nawf__ik--ukryte{ width:10px; height:10px; border:2px solid var(--kat-park);
+      background:var(--kat-park); flex:none; border-radius:50% }
+.nawf__ik--ukryte{ border-color:var(--kat-ukryte); background:var(--kat-ukryte);
+      border-radius:1px; transform:rotate(45deg) }
+.nawf__licz{ margin-left:auto; font-size:.8rem; color:var(--cichy); white-space:nowrap }
+.nawf__licz b{ color:var(--atrament) }
 .top__sub{ font-size:.8rem; color:var(--cichy); margin-top:.1rem }
 .top__marka{ display:flex; align-items:center; gap:.5rem; border:0; margin-left:auto;
              align-self:center; flex:none }
@@ -80,13 +127,27 @@ a:hover{ color:var(--akcent) }
 .tab[aria-selected="true"] .tag{ border-color:var(--akcent); color:var(--atrament) }
 
 /* ---------- pasek co teraz ---------- */
-.teraz{ background:var(--papier); background:color-mix(in srgb, var(--akcent) 11%, var(--papier));
+.teraz{ position:relative; overflow:hidden;
+        background:var(--papier); background:color-mix(in srgb, var(--akcent) 10%, var(--papier));
         border-bottom:1px solid var(--linia); transition:background-color .28s ease }
+/* almanach: koło roku jako cichy nawias astronomiczny (Toruń Kopernika) */
+.teraz::before, .teraz::after{ content:''; position:absolute; border-radius:50%;
+      pointer-events:none; border:1px solid color-mix(in srgb, var(--sepia) 22%, transparent) }
+.teraz::before{ width:240px; height:240px; right:-75px; top:-112px;
+      box-shadow:0 0 0 18px color-mix(in srgb, var(--sepia) 5%, transparent),
+                 0 0 0 42px color-mix(in srgb, var(--sepia) 3%, transparent) }
+.teraz::after{ width:8px; height:8px; right:47px; top:46px;
+      background:var(--akcent2); border-color:var(--akcent2);
+      box-shadow:-42px 17px 0 -2px var(--akcent), 34px 33px 0 -2px var(--cegla) }
+.teraz__in{ position:relative; z-index:1 }
+.teraz h2{ color:var(--piernik) }
 .teraz__in{ padding-top:.75rem; padding-bottom:.85rem }
 .teraz__top{ display:flex; align-items:baseline; gap:.6rem 1.6rem; flex-wrap:wrap; margin-bottom:.6rem }
 .teraz h2{ font-size:1.05rem; font-weight:600; white-space:nowrap }
-.teraz h2::after{ content:''; display:inline-block; width:26px; height:3px; background:var(--akcent);
-                  vertical-align:.28em; margin-left:.55rem }
+.teraz h2::after{ content:''; display:inline-block; width:48px; height:11px; margin-left:.7rem;
+      vertical-align:.05em; background:var(--piernik);
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 22'%3E%3Cpath d='M0 10h28c4 0 5-8 12-8s8 8 12 8h44v2H52c-4 0-5 8-12 8s-8-8-12-8H0Z' fill='black'/%3E%3C/svg%3E") center/contain no-repeat;
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 22'%3E%3Cpath d='M0 10h28c4 0 5-8 12-8s8 8 12 8h44v2H52c-4 0-5 8-12 8s-8-8-12-8H0Z' fill='black'/%3E%3C/svg%3E") center/contain no-repeat }
 .lead{ font-size:.95rem; color:var(--cichy); flex:1 1 16rem; min-width:0 }
 .lead b{ color:var(--atrament); font-weight:600 }
 
@@ -176,7 +237,8 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
    Wcześniej panel boczny miał własny, łatwy do przeoczenia pasek przewijania,
    przez co zdjęcia w karcie oglądało się przez wąską szczelinę. */
 .robocze{ display:grid; grid-template-columns:minmax(0,1fr) clamp(360px,32vw,520px);
-          align-items:start; border:1px solid var(--linia); border-radius:var(--r); overflow:clip }
+          align-items:start; border:1px solid var(--linia); border-radius:var(--r); overflow:clip;
+          box-shadow:var(--cien-2) }
 .mapa{ position:sticky; top:0; min-width:0; border-right:1px solid var(--linia);
        height:clamp(340px,calc(100vh - 8px),900px) }
 #map{ position:absolute; inset:0; background:var(--papier); z-index:1 }
@@ -193,15 +255,18 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 .legenda{ position:absolute; left:12px; top:12px; z-index:600; background:var(--ark); border:1px solid var(--linia);
           border-radius:var(--r); padding:.5rem .7rem; font-size:.78rem; color:var(--cichy); line-height:1.75;
           max-width:calc(100% - 24px) }
-.legenda i{ font-style:normal; display:inline-block; width:11px; height:11px; border:2px solid var(--atrament);
+.legenda i{ font-style:normal; display:inline-block; width:11px; height:11px; border:2px solid var(--kat-park);
             background:var(--papier); vertical-align:-1px; margin-right:.4rem; border-radius:50% }
-.legenda i.d{ transform:rotate(45deg); border-radius:2px }
-.legenda i.a{ background:var(--akcent); border-color:var(--atrament) }
+.legenda i.d{ transform:rotate(45deg); border-radius:2px; border-color:var(--kat-ukryte) }
+.legenda i.a{ background:var(--kat-park) }
 
 .pin{ display:block; width:16px; height:16px; border:2px solid var(--atrament); background:var(--papier);
       border-radius:50%; box-shadow:0 1px 2px rgba(29,43,33,.35) }
 .pin--ukryte{ border-radius:2px; transform:rotate(45deg) }
-.pin.jest{ background:var(--akcent) }
+.pin{ border-color:var(--kat-park) }
+.pin--ukryte{ border-color:var(--kat-ukryte) }
+.pin.jest{ background:var(--kat-park) }
+.pin--ukryte.jest{ background:var(--kat-ukryte) }
 .pin.sel{ transform:scale(1.45); box-shadow:0 0 0 4px var(--akcent2), 0 1px 3px rgba(29,43,33,.4) }
 .pin--ukryte.sel{ transform:rotate(45deg) scale(1.45) }
 .pin-nr{ display:flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%;
@@ -218,6 +283,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
         transition:background-color .28s ease }
 .trasy__lab{ font-family:'Bitter',Georgia,serif; font-size:.95rem; font-weight:600; color:var(--atrament);
              display:flex; align-items:center; gap:.55rem; margin-bottom:.5rem }
+.trasy__lab::before{ content:'◆◆'; letter-spacing:-.15em; color:var(--sepia); opacity:.5; font-size:.7em }
 .trasy__lab::after{ content:''; flex:1; height:2px; background:var(--akcent); opacity:.55 }
 .trasy__row{ display:flex; gap:.35rem; flex-wrap:wrap }
 .trasa-chip{ background:var(--ark); border:1px solid var(--linia); border-radius:var(--r);
@@ -251,6 +317,19 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
          border-left:3px solid transparent; padding:.55rem clamp(.8rem,1.5vw,1.1rem); cursor:pointer; display:block }
 .wiersz:hover{ background:var(--ark) }
 .wiersz[aria-current="true"]{ border-left-color:var(--akcent); background:var(--ark) }
+.wiersz--park{ background:linear-gradient(90deg, var(--kat-park-tint), transparent 62%) }
+.wiersz--ukryte{ background:linear-gradient(90deg, var(--kat-ukryte-tint), transparent 62%) }
+.wiersz--park:hover, .wiersz--park[aria-current="true"]{
+      background:color-mix(in srgb, var(--kat-park) 15%, var(--ark)) }
+.wiersz--ukryte:hover, .wiersz--ukryte[aria-current="true"]{
+      background:color-mix(in srgb, var(--kat-ukryte) 14%, var(--ark)) }
+.wiersz__kat{ display:inline-flex; align-items:center; gap:.3rem; padding:.05rem .4rem;
+      border-radius:999px; font-size:.74rem; font-weight:600; white-space:nowrap }
+.wiersz__kat::before{ content:''; width:7px; height:7px; flex:none }
+.wiersz--park   .wiersz__kat{ color:var(--kat-park); box-shadow:inset 0 0 0 1px var(--kat-park-linia) }
+.wiersz--park   .wiersz__kat::before{ border-radius:50%; background:var(--kat-park) }
+.wiersz--ukryte .wiersz__kat{ color:var(--kat-ukryte); box-shadow:inset 0 0 0 1px var(--kat-ukryte-linia) }
+.wiersz--ukryte .wiersz__kat::before{ border-radius:1px; transform:rotate(45deg); background:var(--kat-ukryte) }
 .wiersz__g{ display:flex; align-items:baseline; gap:.5rem }
 .wiersz__ik{ font-size:1rem; flex:none; line-height:1; font-family:'Segoe UI Emoji',system-ui,sans-serif }
 .wiersz__n{ font-family:'Bitter',Georgia,serif; font-weight:600; font-size:1.02rem; line-height:1.25 }
@@ -359,6 +438,119 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
   .lupa__nav{ top:auto; bottom:1rem; transform:none }
 }
 
+/* ---------- Atlas miejsca ---------- */
+.atlas-wrap{ padding-bottom:3rem }
+.atlas__pasek{ display:flex; align-items:center; justify-content:space-between; gap:1rem;
+      flex-wrap:wrap; padding:1.1rem 0 1.2rem }
+.atlas__nawig{ display:flex; align-items:flex-end; gap:.5rem }
+.atlas__strzalka{ background:var(--ark); border:1px solid var(--linia); border-radius:var(--r);
+      width:2.3rem; height:2.3rem; font-size:1.2rem; cursor:pointer; color:var(--atrament); line-height:1 }
+.atlas__strzalka:hover{ border-color:var(--atrament); background:var(--akcent); color:var(--na-akcencie) }
+.atlas__wybor{ display:flex; flex-direction:column; gap:.2rem }
+.atlas__wybor span{ font-size:.72rem; color:var(--cichy); letter-spacing:.08em; font-weight:700 }
+.atlas__wybor select{ font-family:'Bitter',Georgia,serif; font-size:1.05rem; font-weight:600;
+      max-width:min(70vw,22rem) }
+.atlas__licz{ font-size:.82rem; color:var(--cichy) }
+.atlas__licz b{ font-family:'Bitter',Georgia,serif; color:var(--atrament) }
+.atlaskarta{ display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);
+      border:1px solid var(--linia); background:var(--ark); overflow:hidden; border-radius:var(--r);
+      box-shadow:var(--cien-2) }
+.atlaskarta--park{ border-top:4px solid var(--kat-park) }
+.atlaskarta--ukryte{ border-top:4px solid var(--kat-ukryte) }
+.hero{ position:relative; min-height:440px; background:var(--linia) center/cover no-repeat }
+.hero::after{ content:''; position:absolute; inset:0;
+      background:linear-gradient(180deg,transparent 45%,rgba(20,28,22,.82)) }
+.hero__cap{ position:absolute; z-index:2; left:24px; right:24px; bottom:22px; color:#fff }
+.hero__eye{ color:#fff; opacity:.9; font-size:.76rem; letter-spacing:.08em; font-weight:700 }
+.hero__cap h2{ font-size:clamp(1.6rem,3vw,2.4rem); letter-spacing:-.02em; margin:.35rem 0 .4rem;
+      color:#fff; text-shadow:0 1px 12px rgba(0,0,0,.35) }
+.hero__cap p{ font-size:.92rem; opacity:.92; line-height:1.5; max-width:44ch }
+.hero__brak{ display:flex; align-items:center; justify-content:center; text-align:center;
+      color:var(--cichy); font-size:.9rem; padding:2rem; height:100%; background:var(--papier) }
+.atlaspage{ padding:1.6rem 1.7rem 1.8rem; display:flex; flex-direction:column }
+.atlasnum{ font-family:'Bitter',Georgia,serif; font-style:italic; font-size:.85rem; color:var(--cichy) }
+.atlas__kat{ display:inline-flex; align-items:center; gap:.4rem; font-size:.78rem; font-weight:700;
+      margin:.5rem 0 .1rem; padding:.15rem .5rem .15rem .4rem; border-radius:999px;
+      align-self:flex-start; background:var(--ark) }
+.atlas__kat::before{ content:''; width:9px; height:9px; flex:none; border:2px solid currentColor;
+      background:currentColor }
+.atlaskarta--park .atlas__kat{ color:var(--kat-park); box-shadow:inset 0 0 0 1px var(--kat-park-linia) }
+.atlaskarta--park .atlas__kat::before{ border-radius:50% }
+.atlaskarta--ukryte .atlas__kat{ color:var(--kat-ukryte); box-shadow:inset 0 0 0 1px var(--kat-ukryte-linia) }
+.atlaskarta--ukryte .atlas__kat::before{ border-radius:2px; transform:rotate(45deg) }
+.atlaspage h3{ font-size:1.15rem; margin:1rem 0 .3rem }
+.phenology{ border-top:1px solid var(--atrament); padding-top:.4rem }
+.phrow{ display:grid; grid-template-columns:minmax(6rem,9.5rem) 1fr 5.4rem; align-items:center;
+      gap:.7rem; padding:.55rem 0; border-bottom:1px solid var(--linia); font-size:.86rem }
+.phrow__lab b{ font-weight:600 }
+.phrow__lab span{ display:block; font-size:.74rem; color:var(--cichy) }
+.bar{ height:8px; background:var(--linia); border-radius:999px; position:relative; overflow:hidden }
+.bar i{ display:block; height:100%; background:var(--akcent); border-radius:999px;
+      transition:width .4s ease }
+.bar.przed i{ background:color-mix(in srgb, var(--akcent) 35%, var(--linia)) }
+.phrow__gdzie{ text-align:right; font-size:.76rem; color:var(--cichy); line-height:1.3 }
+.phrow__gdzie b{ display:block; font-family:'Bitter',Georgia,serif; font-size:.88rem;
+      color:var(--atrament); font-weight:600 }
+.atlas__uwaga{ font-size:.76rem; color:var(--cichy); font-style:italic; margin-top:.6rem }
+.checklist{ margin-top:1.1rem; border:1px solid var(--linia); border-radius:var(--r);
+      padding:.9rem 1rem 1rem }
+.checklist b{ font-size:.95rem }
+.checklist__l{ display:flex; align-items:flex-start; gap:.55rem; padding:.5rem 0;
+      border-bottom:1px dotted var(--linia); font-size:.88rem; cursor:pointer }
+.checklist__l:last-child{ border-bottom:0 }
+.checklist input{ margin:.2rem 0 0; accent-color:var(--akcent); width:1rem; height:1rem; flex:none }
+.checklist input:checked + span{ color:var(--cichy); text-decoration:line-through }
+.atlasactions{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; margin-top:1.15rem }
+.atlasakcja{ border:1px solid var(--linia); border-radius:var(--r); background:var(--ark); cursor:pointer;
+      padding:.6rem .7rem; font-size:.85rem; font-weight:600; color:var(--atrament); text-align:left;
+      display:flex; align-items:center; gap:.45rem }
+.atlasakcja:hover{ border-color:var(--atrament) }
+.atlas__fakty{ font-size:.82rem; color:var(--cichy); margin-top:1rem; line-height:1.6 }
+
+/* ---------- kreator tras ---------- */
+.kreator__tytul{ font-size:clamp(1.5rem,2.4vw,2rem); letter-spacing:-.015em; margin-bottom:.4rem }
+.kreator{ display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); gap:1.2rem;
+      margin:1.2rem 0 2.4rem; align-items:start }
+.kreator__panel, .kreator__trasa{ border:1px solid var(--linia); border-radius:var(--r);
+      background:var(--ark); padding:1rem 1.1rem 1.2rem }
+.kreator__panel{ border-left:3px solid var(--akcent) }
+.kreator__lab{ font-size:.74rem; font-weight:700; letter-spacing:.06em; color:var(--cichy);
+      margin:.9rem 0 .35rem }
+.kreator__lab:first-child{ margin-top:0 }
+.kreator select{ width:100%; max-width:none }
+.kreator__tempo{ display:flex; gap:.35rem; flex-wrap:wrap }
+.kreator__t{ flex:1 1 6rem; background:var(--ark); border:1px solid var(--linia); border-radius:var(--r);
+      padding:.4rem .5rem; cursor:pointer; font-size:.82rem; text-align:center; line-height:1.25 }
+.kreator__t span{ display:block; font-size:.7rem; color:var(--cichy) }
+.kreator__t[aria-pressed="true"]{ background:color-mix(in srgb, var(--akcent) 88%, var(--atrament));
+      border-color:var(--akcent); color:var(--na-akcencie); font-weight:600 }
+.kreator__t[aria-pressed="true"] span{ color:inherit; opacity:.85 }
+.kreator__stat{ display:grid; grid-template-columns:1fr 1fr; gap:.7rem 1rem; margin:1.1rem 0 0 }
+.kreator__stat dt{ font-size:.72rem; color:var(--cichy); letter-spacing:.05em }
+.kreator__stat dd{ margin:0; font-family:'Bitter',Georgia,serif; font-size:1.35rem; font-weight:600;
+      line-height:1.2 }
+.kreator__pokaz{ width:100%; margin-top:1.1rem; background:var(--atrament); color:var(--papier);
+      border:0; border-radius:var(--r); padding:.65rem .8rem; font-size:.9rem; font-weight:600;
+      cursor:pointer }
+.kreator__pokaz:disabled{ opacity:.4; cursor:not-allowed }
+.kreator__uwaga{ font-size:.76rem; color:var(--cichy); font-style:italic; line-height:1.5;
+      margin-top:.8rem }
+.kreator__lista{ list-style:none; margin:0 0 .4rem; padding:0; counter-reset:kr }
+.kreator__lista li{ display:flex; align-items:center; gap:.5rem; padding:.45rem 0;
+      border-bottom:1px solid var(--linia) }
+.kreator__lista li::before{ counter-increment:kr; content:counter(kr); flex:none;
+      width:1.5rem; height:1.5rem; border-radius:50%; font-size:.78rem; font-weight:600;
+      background:color-mix(in srgb, var(--akcent) 88%, var(--atrament)); color:var(--na-akcencie);
+      display:flex; align-items:center; justify-content:center }
+.kreator__n{ flex:1; min-width:0; font-family:'Bitter',Georgia,serif; font-weight:600; font-size:.95rem }
+.kreator__n small{ display:block; font-family:'Raleway',sans-serif; font-weight:400; font-size:.74rem;
+      color:var(--cichy) }
+.kreator__akcja{ flex:none; background:none; border:1px solid var(--linia); border-radius:var(--r);
+      width:1.6rem; height:1.6rem; cursor:pointer; color:var(--cichy); font-size:.85rem; line-height:1;
+      padding:0 }
+.kreator__akcja:hover{ border-color:var(--atrament); color:var(--atrament) }
+.kreator__pusto{ font-style:italic; color:var(--cichy); font-size:.88rem; padding:.8rem 0 }
+
 /* ---------- planer ---------- */
 .planer{ padding-top:1.6rem; padding-bottom:3rem }
 .planer__grid{ display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); gap:clamp(1.5rem,4vw,3.5rem);
@@ -406,9 +598,16 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 .dalej h3{ font-size:1.05rem; margin-bottom:.6rem }
 .dalej ul{ margin:0; padding-left:1.1rem; display:flex; flex-direction:column; gap:.45rem }
 .dalej li{ font-size:.92rem; line-height:1.55 }
+.dalej em{ font-style:normal; color:var(--cichy); font-size:.88em }
 
 /* ---------- stopka ---------- */
-.stopka{ border-top:1px solid var(--linia); padding:.85rem 0 1.1rem; font-size:.72rem; color:var(--cichy) }
+.stopka{ position:relative; border-top:1px solid var(--linia); padding:1.5rem 0 1.1rem;
+      font-size:.72rem; color:var(--cichy) }
+/* zielnikowy fryz — pas ornamentu z motywem gałązki */
+.stopka::before{ content:''; position:absolute; left:0; right:0; top:.45rem; height:16px;
+      background:var(--piernik); opacity:.42; pointer-events:none;
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 20'%3E%3Cpath d='M0 12h34c3 0 4-7 9-7s6 7 9 7h34c3 0 4-7 9-7s6 7 9 7h16' fill='none' stroke='black' stroke-width='1.6'/%3E%3Ccircle cx='43' cy='7' r='2.2' fill='black'/%3E%3Ccircle cx='95' cy='7' r='2.2' fill='black'/%3E%3C/svg%3E") repeat-x center/120px 20px;
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 20'%3E%3Cpath d='M0 12h34c3 0 4-7 9-7s6 7 9 7h34c3 0 4-7 9-7s6 7 9 7h16' fill='none' stroke='black' stroke-width='1.6'/%3E%3Ccircle cx='43' cy='7' r='2.2' fill='black'/%3E%3Ccircle cx='95' cy='7' r='2.2' fill='black'/%3E%3C/svg%3E") repeat-x center/120px 20px }
 .stopka__in{ display:flex; gap:.8rem 1.5rem; align-items:center; flex-wrap:wrap }
 .stopka__marka{ flex:none; display:block; text-decoration:none; border:0 }
 .stopka__marka img{ display:block; width:100px; height:100px }
@@ -434,6 +633,9 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 
 @media (max-width:1080px){
   .planer__grid{ grid-template-columns:1fr }
+  .kreator{ grid-template-columns:1fr }
+  .atlaskarta{ grid-template-columns:1fr }
+  .hero{ min-height:280px }
 }
 @media (max-width:560px){
   .legenda{ font-size:.72rem; padding:.4rem .55rem; line-height:1.6 }
@@ -493,9 +695,25 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
     </a>
     <nav class="tabs" role="tablist" aria-label="Sekcje demo">
       <button class="tab" role="tab" id="tab-mapa" aria-controls="panel-mapa" aria-selected="true">Mapa</button>
+      <button class="tab" role="tab" id="tab-atlas" aria-controls="panel-atlas" aria-selected="false" tabindex="-1">Atlas</button>
       <button class="tab" role="tab" id="tab-planer" aria-controls="panel-planer" aria-selected="false" tabindex="-1">Planer <span class="tag">podgląd</span></button>
     </nav>
   </div>
+  <nav class="nawf" aria-label="Skróty do funkcji mapy">
+    <div class="wrap nawf__in">
+      <button class="nawf__i" type="button" data-skok="teraz">
+        <span class="nawf__ik" aria-hidden="true">✷</span>Co kwitnie dziś</button>
+      <button class="nawf__i" type="button" data-skok="filtry">
+        <span class="nawf__ik" aria-hidden="true">▽</span>Dobierz</button>
+      <button class="nawf__i" type="button" data-skok="trasy">
+        <span class="nawf__ik" aria-hidden="true">➜</span>Gotowe trasy</button>
+      <button class="nawf__i" type="button" data-kat="park-kieszonkowy" aria-pressed="false">
+        <span class="nawf__ik nawf__ik--park" aria-hidden="true"></span>Zieleń miejska</button>
+      <button class="nawf__i" type="button" data-kat="miejsce-ukryte" aria-pressed="false">
+        <span class="nawf__ik nawf__ik--ukryte" aria-hidden="true"></span>Niezwykły Toruń</button>
+      <span class="nawf__licz" id="nawfLicz" role="status"></span>
+    </div>
+  </nav>
 </header>
 
 <main id="tresc">
@@ -568,9 +786,9 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
         <span>Dotknij, aby przesuwać mapę</span>
       </button>
       <div class="legenda">
-        <i></i>park kieszonkowy<br>
-        <i class="d"></i>miejsce polecane przez mieszkańców<br>
-        <i class="a"></i>wypełnienie = coś się tam dzieje w wybranym dniu
+        <i></i>zieleń miejska — inwestycja miasta<br>
+        <i class="d"></i>niezwykły Toruń — poleca mieszkaniec<br>
+        <i class="a"></i>wypełniona pinezka = coś tam kwitnie w wybranym dniu
       </div>
     </div>
     <div class="bok">
@@ -589,13 +807,62 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
   </div></div>
 </section>
 
+<section id="panel-atlas" role="tabpanel" aria-labelledby="tab-atlas" hidden>
+  <div class="wrap atlas-wrap">
+    <div class="atlas__pasek">
+      <div class="atlas__nawig">
+        <button class="atlas__strzalka" id="atlasPrev" type="button" aria-label="Poprzednie miejsce">‹</button>
+        <label class="atlas__wybor"><span>Karta miejsca</span>
+          <select id="atlasSelect" aria-label="Wybierz miejsce"></select></label>
+        <button class="atlas__strzalka" id="atlasNext" type="button" aria-label="Następne miejsce">›</button>
+      </div>
+      <p class="atlas__licz" id="atlasLicz" role="status"></p>
+    </div>
+    <div id="atlasKarta"></div>
+  </div>
+</section>
+
 <section id="panel-planer" role="tabpanel" aria-labelledby="tab-planer" hidden>
   <div class="wrap planer">
+
+    <h2 class="kreator__tytul">Zbuduj własny spacer</h2>
+    <p class="planer__lead">Zacznij od gotowej trasy albo od zera, potem dokładaj i przestawiaj
+      przystanki. Czas i dystans przeliczają się na żywo.</p>
+
+    <div class="kreator">
+      <div class="kreator__panel">
+        <p class="kreator__lab">Zacznij od</p>
+        <select id="krStart"></select>
+
+        <p class="kreator__lab">Tempo</p>
+        <div class="kreator__tempo" id="krTempo" role="group" aria-label="Tempo zwiedzania"></div>
+
+        <dl class="kreator__stat">
+          <div><dt>Czas</dt><dd id="krCzas">0 min</dd></div>
+          <div><dt>Dystans</dt><dd id="krDyst">0 m</dd></div>
+          <div><dt>Kwitnie dziś</dt><dd id="krKwit">0 z 0</dd></div>
+          <div><dt>Przystanki</dt><dd id="krIle">0</dd></div>
+        </dl>
+
+        <button class="kreator__pokaz" id="krPokaz" type="button">Pokaż tę trasę na mapie</button>
+        <p class="kreator__uwaga">Dystans liczony ze współrzędnych przystanków, z poprawką +30% na
+          chodzenie ulicami. Trzy gotowe trasy z zakładki Mapa mają przebieg policzony po realnych
+          drogach — tutaj układasz swobodnie.</p>
+      </div>
+
+      <div class="kreator__trasa">
+        <p class="kreator__lab">Twoja trasa</p>
+        <ol class="kreator__lista" id="krLista"></ol>
+        <p class="kreator__lab">Dołóż przystanek</p>
+        <select id="krDodaj"></select>
+      </div>
+    </div>
+
     <div class="planer__grid">
       <div>
-        <h2>Planer <span class="tag">zapowiedź</span></h2>
-        <p class="planer__lead">Tak będzie wyglądać rozmowa z mapą: piszesz zwykłym zdaniem, dostajesz trasę
-          złożoną z punktów tej mapy. Poniżej trzy gotowe przykłady.</p>
+        <h2>Rozmowa z mapą <span class="tag">zapowiedź</span></h2>
+        <p class="planer__lead">Docelowo napiszesz zwykłe zdanie i dostaniesz trasę złożoną z punktów
+          tej mapy. Poniżej trzy gotowe przykłady tego, jak to zadziała.</p>
 
         <div class="pole">
           <textarea id="poleWpis" rows="3" disabled
@@ -616,6 +883,12 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
             <li>Galeria zdjęć od mieszkańców — miejsca z Torunia Ukrytego dostaną kadry od tych, którzy je polecili.</li>
             <li>Krótkie pętle wideo przy wybranych punktach, żeby zobaczyć miejsce, zanim się tam pojedzie.</li>
             <li>Korekta okien kwitnienia danymi pogodowymi — ciepła wiosna potrafi przesunąć magnolie o tydzień.</li>
+            <li>Zielony paszport — pieczęć za każde odwiedzone miejsce, zapisywana wyłącznie na Twoim
+                urządzeniu <em>(możliwa funkcjonalność, jeszcze nie działa)</em>.</li>
+            <li>Wpisy odsłaniane na spacerze — treść, która pojawia się dopiero kilkadziesiąt
+                metrów od punktu <em>(możliwa funkcjonalność, wymaga zgody na lokalizację)</em>.</li>
+            <li>Prywatny zielnik — własne zdjęcia i notatki przy punktach
+                <em>(możliwa funkcjonalność)</em>.</li>
           </ul>
         </div>
       </div>
@@ -2279,6 +2552,41 @@ function oknoTekst(h){
   return a.d + ' ' + MIES[a.m - 1] + ' – ' + b.d + ' ' + MIES[b.m - 1];
 }
 
+/* ================= kategorie i etykiety ================= */
+var KAT = {
+  'park-kieszonkowy': { nazwa:'Zieleń miejska', maly:'zieleń miejska',
+                        pelny:'Zieleń miejska · inwestycja miasta', klasa:'park' },
+  'miejsce-ukryte':   { nazwa:'Niezwykły Toruń', maly:'niezwykły Toruń',
+                        pelny:'Niezwykły Toruń · poleca mieszkaniec', klasa:'ukryte' }
+};
+function kat(p){ return KAT[p.type] || KAT['miejsce-ukryte']; }
+
+/* Pole `features` w danych jest slugiem bez polskich znaków ("roze",
+   "rosliny-miododajne"). Samo ładne złożenie sluga daje "Roze" i "Rosliny",
+   więc nazwy trzymamy tutaj. */
+var CECHY = {
+  'alpinarium':'Alpinarium', 'ogrod-deszczowy':'Ogród deszczowy',
+  'rosliny-srodziemnomorskie':'Rośliny śródziemnomorskie', 'drzewa-formowane':'Drzewa formowane',
+  'rosliny-tematyczne':'Rośliny tematyczne', 'hotel-dla-owadow':'Hotel dla owadów',
+  'fontanna':'Fontanna', 'drewno':'Drewno', 'zielen-lisciasta':'Zieleń liściasta',
+  'lawki':'Ławki', 'sciezka-edukacyjna':'Ścieżka edukacyjna', 'sztuka-w-parku':'Sztuka w parku',
+  'oswietlenie':'Oświetlenie', 'bioroznorodnosc':'Bioróżnorodność', 'roze':'Róże',
+  'bez-czarny':'Bez czarny', 'rosliny-miododajne':'Rośliny miododajne', 'retencja':'Retencja',
+  'deren':'Dereń', 'irga':'Irga', 'alejki':'Alejki', 'zielen-zacieniajaca':'Zieleń zacieniająca',
+  'krokusy':'Krokusy', 'dywan-kwiatowy':'Dywan kwiatowy', 'rosliny-alpejskie':'Rośliny alpejskie',
+  'tulipany':'Tulipany', 'zonkile':'Żonkile', 'laka-kwietna':'Łąka kwietna',
+  'swierzop':'Świerzop', 'gryka':'Gryka', 'rabaty':'Rabaty kwiatowe', 'pergola':'Pergola',
+  'hortensje':'Hortensje', 'czarna-porzeczka':'Czarna porzeczka', 'kalina':'Kalina',
+  'trawy-ozdobne':'Trawy ozdobne', 'lipa':'Lipa', 'glog':'Głóg', 'lawenda':'Lawenda',
+  'rozmaryn':'Rozmaryn', 'jasminowiec':'Jaśminowiec'
+};
+function etykietaCechy(f){
+  if (CECHY[f]) return CECHY[f];
+  if (DANE.species && DANE.species[f]) return DANE.species[f].label;
+  var s = String(f).replace(/-/g, ' ');
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 /* ================= stan ================= */
 var SEZONY = [
   { id:'wiosna', label:'Wiosna' }, { id:'lato', label:'Lato' },
@@ -2294,6 +2602,7 @@ var stan = {
   tylkoTrwa: false,
   dzielnica: '*',
   cien: '*',
+  typ: null,
   wybrany: null,
   trasa: null
 };
@@ -2309,7 +2618,8 @@ function testy(p){
     dzielnica: stan.dzielnica === '*' ||
       (stan.dzielnica === BEZ_DZIELNICY ? p.district == null : p.district === stan.dzielnica),
     cien: stan.cien === '*' ||
-      (stan.cien === BEZ_CIENIA ? p.shade == null : String(p.shade) === stan.cien)
+      (stan.cien === BEZ_CIENIA ? p.shade == null : String(p.shade) === stan.cien),
+    typ: !stan.typ || p.type === stan.typ
   };
 }
 function przechodzi(p, pomin){
@@ -2330,6 +2640,8 @@ function aktywneFiltry(){
   if (stan.dzielnica !== '*') out.push({ k:'dzielnica',
       opis:'dzielnica: ' + (stan.dzielnica === BEZ_DZIELNICY ? 'poza podziałem' : stan.dzielnica),
       zdejmij:function(){ stan.dzielnica = '*'; } });
+  if (stan.typ) out.push({ k:'typ', opis:'rodzaj: ' + kat({ type:stan.typ }).maly,
+      zdejmij:function(){ stan.typ = null; } });
   if (stan.cien !== '*') out.push({ k:'cien',
       opis:'cień: ' + (stan.cien === BEZ_CIENIA ? 'bez oceny' : stan.cien + '/3'),
       zdejmij:function(){ stan.cien = '*'; } });
@@ -2372,7 +2684,7 @@ function rysujTeraz(){
 
   if (!g.length) {
     var nb = najblizsze(n);
-    lead.innerHTML = '<b>' + esc(dataTekst(n)) + '</b> — w tym dniu nie trwa żadne z opisanych zjawisk.';
+    lead.innerHTML = 'W tym dniu nie trwa żadne z opisanych zjawisk.';
     items.innerHTML = nb ? ('<li class="zj zj--pusto">' +
         '<p class="zj__nazwa">' + esc(nb.h.species ? nb.h.label : nb.p.name) + '</p>' +
         '<p class="zj__gdzie">Najbliższe okno w kalendarzu · <b>' + esc(nb.p.name) + '</b></p>' +
@@ -2384,7 +2696,7 @@ function rysujTeraz(){
   var miejsca = {};
   g.forEach(function(x){ x.punkty.forEach(function(y){ miejsca[y.p.id] = 1; }); });
   var lm = Object.keys(miejsca).length;
-  lead.innerHTML = '<b>' + esc(dataTekst(n)) + '</b> — ' + pl(g.length, 'trwa', 'trwają', 'trwa') +
+  lead.innerHTML = pl(g.length, 'Trwa', 'Trwają', 'Trwa') +
     ' <b>' + g.length + '</b> ' + pl(g.length, 'zjawisko', 'zjawiska', 'zjawisk') +
     ' w <b>' + lm + '</b> ' + pl(lm, 'miejscu', 'miejscach', 'miejscach') + '.';
 
@@ -2526,7 +2838,6 @@ function rysujListe(lista){
   ol.innerHTML = kolejnosc.map(function(p, i){
     var akt = trwajace(p, stan.doba);
     var meta = [];
-    meta.push(p.type === 'park-kieszonkowy' ? 'park kieszonkowy' : 'miejsce polecane');
     meta.push(p.district ? p.district : 'poza podziałem');
     var teraz = akt.length
       ? '<span class="kropka">' + esc(akt[0].species ? akt[0].label : 'sezon otwarty') + '</span>'
@@ -2548,11 +2859,14 @@ function rysujListe(lista){
           '<span>' + ile + '</span></li>';
       }
     }
-    return naglowek + '<li><button class="wiersz" type="button" data-id="' + esc(p.id) + '"' +
+    var k = kat(p);
+    return naglowek + '<li><button class="wiersz wiersz--' + k.klasa + '" type="button" data-id="' + esc(p.id) + '"' +
       (p.id === stan.wybrany ? ' aria-current="true"' : '') + '>' +
       '<span class="wiersz__g">' + czolo +
       '<span class="wiersz__n">' + esc(p.name) + '</span></span>' +
-      '<span class="wiersz__m">' + leg + teraz + '<span>' + esc(meta.join(' · ')) + '</span></span>' +
+      '<span class="wiersz__m">' + leg + teraz +
+      '<span class="wiersz__kat">' + esc(k.maly) + '</span>' +
+      '<span>' + esc(meta.join(' · ')) + '</span></span>' +
       '</button></li>';
   }).join('');
 
@@ -2606,7 +2920,7 @@ var TRASY = [
     uwaga:'Przebieg policzony po realnych ścieżkach z OpenStreetMap, profilem pieszym.',
     punkty:['dziki-brzeg-wisly','niezwykle-zakatki','tajemnicza-sciezka','wodospad-zakochanych'] }
 ];
-var TEMPO = { pieszo:75, rower:250 };   // metrów na minutę
+var TEMPO = { pieszo:75, szybko:100, rower:250 };   // metrów na minutę
 
 function metry(a, b){
   var R = 6371000, r = function(x){ return x * Math.PI / 180; };
@@ -2650,7 +2964,16 @@ function trasaNawierzchnia(t){
     : '';
   return cz.length ? '<p class="trasa-info__n">' + cz.join(' · ') + '.' + ogon + '</p>' : '';
 }
+/* Trasa ułożona w kreatorze udaje zwykłą trasę, tylko bez policzonego
+   przebiegu — dlatego trasaOdcinki() spada dla niej na linię prostą ×1,3. */
+var kreator = { punkty: [], tempo: 'pieszo' };
+
 function trasaAktywna(){
+  if (stan.trasa === '__wlasna') {
+    if (!kreator.punkty.length) return null;
+    return { id:'__wlasna', nazwa:'Twoja trasa', tryb:kreator.tempo === 'rower' ? 'rower' : 'pieszo',
+             punkty:kreator.punkty.slice(), opis:'', uwaga:'' };
+  }
   if (!stan.trasa) return null;
   return TRASY.filter(function(t){ return t.id === stan.trasa; })[0] || null;
 }
@@ -2704,7 +3027,7 @@ function kartaHtml(p){
 
   var park = p.type === 'park-kieszonkowy';
   h.push('<p class="karta__typ"><i class="' + (park ? 'k' : 'd') + (akt.length ? ' a' : '') + '"></i>' +
-         (park ? 'Park kieszonkowy · inwestycja miasta' : 'Miejsce polecone przez mieszkańców') + '</p>');
+         kat(p).pelny + '</p>');
   h.push('<h3>' + esc(p.name) + (p.badge ? ' <span class="em" aria-hidden="true">' + esc(p.badge) + '</span>' : '') + '</h3>');
 
   if (p.quote) {
@@ -2782,7 +3105,7 @@ function pokazKarte(p){
   $('lista').hidden = true;
   $('listapusta').hidden = true;
   $('listahead').innerHTML = '<span>Karta punktu</span><span>' +
-    (p.type === 'park-kieszonkowy' ? 'park kieszonkowy' : 'Toruń Ukryty') + '</span>';
+    kat(p).maly + '</span>';
   $('wroc').addEventListener('click', function(){ stan.wybrany = null; odswiez(); });
   /* Fokus i przewijanie tylko przy otwarciu nowej karty. Przy każdym odświeżeniu
      (np. przeciąganiu suwaka daty) fokus przerywał gest i zjeżdżał stroną w dół. */
@@ -2893,7 +3216,7 @@ function zbudujFiltry(){
     if (stan.trasa === v) { stan.trasa = null; }
     else {
       stan.trasa = v;
-      stan.sezon = null; stan.tylkoTrwa = false; stan.dzielnica = '*'; stan.cien = '*';
+      stan.sezon = null; stan.tylkoTrwa = false; stan.dzielnica = '*'; stan.cien = '*'; stan.typ = null;
       stan.wybrany = null;
     }
     odswiez();
@@ -2904,8 +3227,22 @@ function zbudujFiltry(){
     }
   });
 
+  document.querySelector('.nawf__in').addEventListener('click', function(e){
+    var b = e.target.closest('[data-kat],[data-skok]'); if (!b) return;
+    if (b.dataset.kat) {
+      stan.typ = (stan.typ === b.dataset.kat) ? null : b.dataset.kat;
+      odswiez();
+      return;
+    }
+    zakladka('mapa');
+    var cel = { teraz:'.teraz', filtry:'.filtry', trasy:'.trasy' }[b.dataset.skok];
+    var e2 = cel && document.querySelector(cel);
+    if (e2) e2.scrollIntoView({ block:'start', behavior:'smooth' });
+  });
+
   $('zeruj').addEventListener('click', function(){
-    stan.sezon = null; stan.tylkoTrwa = false; stan.dzielnica = '*'; stan.cien = '*'; stan.trasa = null; odswiez();
+    stan.sezon = null; stan.tylkoTrwa = false; stan.dzielnica = '*'; stan.cien = '*';
+    stan.trasa = null; stan.typ = null; odswiez();
   });
 
   var SKROTY = ['sty','lut','mar','kwi','maj','cze','lip','sie','wrz','paź','lis','gru'];
@@ -2946,6 +3283,9 @@ function odswiezKontrolki(){
   Array.prototype.forEach.call($('miesiace').children, function(b){
     b.setAttribute('aria-pressed', String(+b.dataset.mies === mDziś));
   });
+  Array.prototype.forEach.call(document.querySelectorAll('.nawf__i[data-kat]'), function(b){
+    b.setAttribute('aria-pressed', String(b.dataset.kat === stan.typ));
+  });
   $('zeruj').disabled = aktywneFiltry().length === 0 && !stan.trasa;
   $('zeruj').style.opacity = ($('zeruj').disabled) ? '.45' : '1';
 }
@@ -2969,6 +3309,7 @@ function rysujStan(lista){
   }
   box2.hidden = true; box2.innerHTML = '';
   $('licznik').innerHTML = 'Na mapie: <b>' + lista.length + '</b> z ' + PUNKTY.length + ' punktów';
+  $('nawfLicz').innerHTML = 'W widoku: <b>' + lista.length + '</b> z ' + PUNKTY.length + ' miejsc';
 
   var box = $('pustka');
   if (lista.length > 0) { box.hidden = true; box.innerHTML = ''; return; }
@@ -2997,7 +3338,7 @@ function rysujStan(lista){
   box.querySelectorAll('[data-zdejmij]').forEach(function(b){
     b.addEventListener('click', function(){
       var v = b.dataset.zdejmij;
-      if (v === 'all') { stan.sezon = null; stan.tylkoTrwa = false; stan.dzielnica = '*'; stan.cien = '*'; }
+      if (v === 'all') { stan.sezon = null; stan.tylkoTrwa = false; stan.dzielnica = '*'; stan.cien = '*'; stan.typ = null; }
       else winni[+v].zdejmij();
       odswiez();
     });
@@ -3012,6 +3353,7 @@ function odswiez(){
 
   odswiezKontrolki();
   rysujTeraz();
+  if ($('krLista')) rysujKreator();
   rysujStan(lista);
   rysujPinezki(lista);
 
@@ -3020,16 +3362,277 @@ function odswiez(){
   else   { schowajKarte(); rysujListe(lista); }
 }
 
+/* ================= kreator tras ================= */
+var TEMPA = [
+  { id:'pieszo', nazwa:'Spokojnie', pod:'≈4,5 km/h' },
+  { id:'szybko', nazwa:'Żwawo',     pod:'≈6 km/h' },
+  { id:'rower',  nazwa:'Rowerem',   pod:'≈15 km/h' }
+];
+
+function zbudujKreator(){
+  $('krTempo').innerHTML = TEMPA.map(function(t){
+    return '<button class="kreator__t" type="button" data-tempo="' + t.id + '" aria-pressed="' +
+      (t.id === kreator.tempo) + '">' + t.nazwa + '<span>' + t.pod + '</span></button>';
+  }).join('');
+  $('krTempo').addEventListener('click', function(e){
+    var b = e.target.closest('[data-tempo]'); if (!b) return;
+    kreator.tempo = b.dataset.tempo;
+    if (stan.trasa === '__wlasna') odswiez();
+    rysujKreator();
+  });
+
+  $('krStart').innerHTML = '<option value="">— zacznij od zera —</option>' +
+    TRASY.map(function(t){
+      return '<option value="' + esc(t.id) + '">' + esc(t.nazwa) + '</option>';
+    }).join('');
+  $('krStart').addEventListener('change', function(e){
+    var t = TRASY.filter(function(x){ return x.id === e.target.value; })[0];
+    kreator.punkty = t ? t.punkty.slice() : [];
+    if (t) kreator.tempo = t.tryb === 'rower' ? 'rower' : 'pieszo';
+    if (stan.trasa === '__wlasna') odswiez();
+    rysujKreator();
+  });
+
+  $('krDodaj').addEventListener('change', function(e){
+    if (!e.target.value) return;
+    kreator.punkty.push(e.target.value);
+    e.target.value = '';
+    if (stan.trasa === '__wlasna') odswiez();
+    rysujKreator();
+  });
+
+  $('krLista').addEventListener('click', function(e){
+    var b = e.target.closest('[data-kr]'); if (!b) return;
+    var i = +b.dataset.i;
+    if (b.dataset.kr === 'usun') kreator.punkty.splice(i, 1);
+    else if (b.dataset.kr === 'gora' && i > 0) {
+      kreator.punkty.splice(i - 1, 0, kreator.punkty.splice(i, 1)[0]);
+    } else if (b.dataset.kr === 'dol' && i < kreator.punkty.length - 1) {
+      kreator.punkty.splice(i + 1, 0, kreator.punkty.splice(i, 1)[0]);
+    }
+    if (stan.trasa === '__wlasna') odswiez();
+    rysujKreator();
+  });
+
+  $('krPokaz').addEventListener('click', function(){
+    if (!kreator.punkty.length) return;
+    stan.trasa = '__wlasna';
+    stan.wybrany = null;
+    zakladka('mapa');
+    odswiez();
+    var pk = kreator.punkty.map(function(id){
+      return PUNKTY.filter(function(p){ return p.id === id; })[0];
+    }).filter(Boolean);
+    if (pk.length) map.fitBounds(L.latLngBounds(pk.map(function(p){ return [p.lat, p.lng]; })),
+                                 { padding:[50, 50], maxZoom:14 });
+  });
+
+  rysujKreator();
+}
+
+function rysujKreator(){
+  Array.prototype.forEach.call($('krTempo').children, function(b){
+    b.setAttribute('aria-pressed', String(b.dataset.tempo === kreator.tempo));
+  });
+
+  var pk = kreator.punkty.map(function(id){
+    return PUNKTY.filter(function(p){ return p.id === id; })[0];
+  }).filter(Boolean);
+
+  $('krLista').innerHTML = pk.length
+    ? pk.map(function(p, i){
+        var akt = trwajace(p, stan.doba);
+        return '<li><span class="kreator__n">' + esc(p.name) +
+          '<small>' + esc(kat(p).maly) + (akt.length ? ' · kwitnie dziś' : '') + '</small></span>' +
+          '<button class="kreator__akcja" type="button" data-kr="gora" data-i="' + i +
+            '" aria-label="Wyżej">↑</button>' +
+          '<button class="kreator__akcja" type="button" data-kr="dol" data-i="' + i +
+            '" aria-label="Niżej">↓</button>' +
+          '<button class="kreator__akcja" type="button" data-kr="usun" data-i="' + i +
+            '" aria-label="Usuń przystanek">✕</button></li>';
+      }).join('')
+    : '<li class="kreator__pusto">Trasa jest pusta. Wybierz gotową albo dołóż pierwszy przystanek poniżej.</li>';
+
+  var wolne = PUNKTY.slice().sort(function(a, b){ return a.name.localeCompare(b.name, 'pl'); });
+  $('krDodaj').innerHTML = '<option value="">+ wybierz miejsce…</option>' +
+    wolne.map(function(p){
+      return '<option value="' + esc(p.id) + '">' +
+        (p.type === 'park-kieszonkowy' ? '● ' : '◆ ') + esc(p.name) + '</option>';
+    }).join('');
+
+  /* Jeśli układ przystanków pokrywa się z gotową trasą, bierzemy jej realny
+     przebieg z routera zamiast liczyć w linii prostej — inaczej ta sama trasa
+     miałaby tu inny dystans niż na kafelku przy mapie. */
+  var klucz = kreator.punkty.join(">");
+  var gotowa = TRASY.filter(function(t){ return t.punkty.join(">") === klucz; })[0];
+  var suma = 0, poDrogach = false;
+  if (gotowa && TRASY_GEO[gotowa.id]) { suma = TRASY_GEO[gotowa.id].dystans; poDrogach = true; }
+  else for (var i = 1; i < pk.length; i++) {
+    suma += metry([pk[i-1].lat, pk[i-1].lng], [pk[i].lat, pk[i].lng]) * 1.3;
+  }
+  var kwitnie = pk.filter(function(p){ return trwajace(p, stan.doba).length > 0; }).length;
+
+  $('krCzas').textContent = pk.length > 1 ? Math.round(suma / TEMPO[kreator.tempo]) + ' min' : '0 min';
+  $('krDyst').textContent = km(suma) + (poDrogach ? ' ' : '');
+  $('krDyst').title = poDrogach ? 'przebieg policzony po realnych drogach' : 'linia prosta z poprawką +30%';
+  $('krKwit').textContent = kwitnie + ' z ' + pk.length;
+  $('krIle').textContent = pk.length;
+  $('krPokaz').disabled = pk.length < 2;
+}
+
+/* ================= Atlas miejsca ================= */
+var atlasId = null;
+
+/* Zaznaczenia na checkliście zostają na tym urządzeniu. Gdy zapis jest
+   niedostępny (tryb prywatny, zablokowane dane witryn), wszystko działa
+   tak samo — tylko nic się nie pamięta. */
+var ZAZNACZ = (function(){
+  var KLUCZ = 'mzt-checklista', dane = {};
+  try { dane = JSON.parse(localStorage.getItem(KLUCZ)) || {}; } catch (e) { dane = {}; }
+  function zapisz(){ try { localStorage.setItem(KLUCZ, JSON.stringify(dane)); } catch (e) {} }
+  return {
+    ma: function(id, i){ return !!(dane[id] && dane[id][i]); },
+    przelacz: function(id, i){
+      if (!dane[id]) dane[id] = {};
+      dane[id][i] = !dane[id][i];
+      zapisz();
+    }
+  };
+})();
+
+/* Gdzie jesteśmy w oknie kwitnienia. To pozycja w terminie, a nie intensywność
+   kwitnienia — takich danych nie mamy i nie zmyślamy ich. */
+function postepOkna(h, n){
+  var a = doba(h.from), b = doba(h.to);
+  var dlugosc = (a <= b ? b - a : 365 - a + b) + 1;
+  var dzien = ((n - a) % 365 + 365) % 365 + 1;
+  return { dzien:dzien, dlugosc:dlugosc, procent:Math.max(3, Math.round(100 * dzien / dlugosc)) };
+}
+
+function zbudujAtlas(){
+  var lista = PUNKTY.slice().sort(function(a, b){ return a.name.localeCompare(b.name, 'pl'); });
+  $('atlasSelect').innerHTML = lista.map(function(p){
+    return '<option value="' + esc(p.id) + '">' +
+      (p.type === 'park-kieszonkowy' ? '● ' : '◆ ') + esc(p.name) + '</option>';
+  }).join('');
+  $('atlasSelect').addEventListener('change', function(e){ atlasId = e.target.value; rysujAtlas(); });
+  $('atlasPrev').addEventListener('click', function(){ atlasSkok(-1); });
+  $('atlasNext').addEventListener('click', function(){ atlasSkok(1); });
+
+  $('atlasKarta').addEventListener('click', function(e){
+    var b = e.target.closest('[data-akcja]'); if (!b) return;
+    var p = PUNKTY.filter(function(x){ return x.id === atlasId; })[0]; if (!p) return;
+    if (b.dataset.akcja === 'mapa') {
+      zakladka('mapa'); stan.wybrany = p.id; odswiez();
+      if (markery[p.id]) map.panInside(markery[p.id].getLatLng(), { padding:[60, 60] });
+    } else if (b.dataset.akcja === 'nawig') {
+      window.open('https://www.google.com/maps/dir/?api=1&destination=' + p.lat + ',' + p.lng,
+                  '_blank', 'noopener');
+    }
+  });
+  $('atlasKarta').addEventListener('change', function(e){
+    var c = e.target.closest('[data-chk]'); if (!c) return;
+    ZAZNACZ.przelacz(atlasId, +c.dataset.chk);
+  });
+}
+
+function atlasSkok(k){
+  var opcje = Array.prototype.map.call($('atlasSelect').options, function(o){ return o.value; });
+  var i = opcje.indexOf(atlasId); if (i < 0) i = 0;
+  atlasId = opcje[(i + k + opcje.length) % opcje.length];
+  rysujAtlas();
+}
+
+function rysujAtlas(){
+  var opcje = Array.prototype.map.call($('atlasSelect').options, function(o){ return o.value; });
+  if (!atlasId || opcje.indexOf(atlasId) === -1) {
+    atlasId = (stan.wybrany && opcje.indexOf(stan.wybrany) !== -1) ? stan.wybrany : opcje[0];
+  }
+  $('atlasSelect').value = atlasId;
+  var p = PUNKTY.filter(function(x){ return x.id === atlasId; })[0]; if (!p) return;
+  var n = stan.doba, k = kat(p);
+
+  $('atlasLicz').innerHTML = 'Miejsce <b>' + (opcje.indexOf(atlasId) + 1) + '</b> z ' + opcje.length +
+    ' · ' + esc(dataTekst(n)) + ' w mapie';
+
+  var fot = zdjecia(p);
+  var hero = fot.length
+    ? '<div class="hero" style="background-image:url(\'' + esc(fot[0].src) + '\')">' +
+      '<div class="hero__cap"><p class="hero__eye">' + esc(k.nazwa) +
+      (p.district ? ' · ' + esc(p.district) : '') + '</p>' +
+      '<h2>' + esc(p.name) + '</h2>' +
+      '<p>' + esc(p.description) + '</p></div></div>'
+    : '<div class="hero"><div class="hero__brak">Zdjęcie w przygotowaniu — kadr do tego miejsca ' +
+      'dołożą mieszkańcy, którzy je polecili.</div></div>';
+
+  /* fenologia: najpierw to, co trwa i kończy się najwcześniej */
+  var okna = p.highlights.slice().sort(function(a, b){
+    var ta = trwa(n, a), tb = trwa(n, b);
+    if (ta !== tb) return ta ? -1 : 1;
+    if (ta) return zostaloDni(n, a) - zostaloDni(n, b);
+    return zaDni(n, a) - zaDni(n, b);
+  });
+  var phen = okna.map(function(o){
+    var tytul = o.species ? o.label : 'Sezon miejsca';
+    var podpis = o.species ? oknoTekst(o) : (o.label || '');
+    if (trwa(n, o)) {
+      var g = postepOkna(o, n);
+      return '<div class="phrow"><div class="phrow__lab"><b>' + esc(tytul) + '</b>' +
+        '<span>' + esc(podpis) + '</span></div>' +
+        '<div class="bar"><i style="width:' + g.procent + '%"></i></div>' +
+        '<div class="phrow__gdzie"><b>' + g.dzien + ' z ' + g.dlugosc + '</b>dnia okna</div></div>';
+    }
+    return '<div class="phrow"><div class="phrow__lab"><b>' + esc(tytul) + '</b>' +
+      '<span>' + esc(podpis) + '</span></div>' +
+      '<div class="bar przed"><i style="width:4%"></i></div>' +
+      '<div class="phrow__gdzie">' + esc(dniZa(zaDni(n, o))) + '</div></div>';
+  }).join('') || '<p class="atlas__uwaga">Dla tego miejsca nie opisano jeszcze okien kwitnienia.</p>';
+
+  var cechy = (p.features || []).slice(0, 6);
+  var check = cechy.length
+    ? '<div class="checklist"><b>Wypatrz podczas wizyty</b>' + cechy.map(function(f, i){
+        return '<label class="checklist__l"><input type="checkbox" data-chk="' + i + '"' +
+          (ZAZNACZ.ma(p.id, i) ? ' checked' : '') + '><span>' + esc(etykietaCechy(f)) + '</span></label>';
+      }).join('') + '</div>'
+    : '';
+
+  var fakty = [];
+  if (p.address)   fakty.push('adres: ' + esc(p.address));
+  if (p.area_m2)   fakty.push('powierzchnia: ' + liczba(p.area_m2) + ' m²');
+  if (p.transport) fakty.push('dojazd: ' + esc(p.transport));
+  if (p.time)      fakty.push('dobra pora: ' + esc(p.time));
+
+  $('atlasKarta').innerHTML =
+    '<div class="atlaskarta atlaskarta--' + k.klasa + '">' + hero +
+    '<div class="atlaspage">' +
+      '<p class="atlasnum">Karta terenowa № ' + String(opcje.indexOf(atlasId) + 1).padStart(2, '0') + '</p>' +
+      '<p class="atlas__kat">' + esc(k.nazwa) + '</p>' +
+      '<h3>Co zobaczysz teraz</h3>' +
+      '<div class="phenology">' + phen + '</div>' +
+      '<p class="atlas__uwaga">Pasek pokazuje, w którym miejscu okna jesteśmy — nie natężenie ' +
+      'kwitnienia. Terminy są oszacowane dla Torunia i mogą się przesunąć o kilka dni.</p>' +
+      check +
+      '<div class="atlasactions">' +
+        '<button class="atlasakcja" type="button" data-akcja="mapa">◉ Pokaż na mapie</button>' +
+        '<button class="atlasakcja" type="button" data-akcja="nawig">↗ Trasa w Google Maps</button>' +
+      '</div>' +
+      (fakty.length ? '<p class="atlas__fakty">' + fakty.join(' · ') + '</p>' : '') +
+    '</div></div>';
+}
+
 /* ================= zakładki ================= */
+var ZAKLADKI = ['mapa', 'atlas', 'planer'];
+
 function zakladka(ktora){
-  var mapaOn = ktora === 'mapa';
-  $('tab-mapa').setAttribute('aria-selected', String(mapaOn));
-  $('tab-planer').setAttribute('aria-selected', String(!mapaOn));
-  $('tab-mapa').tabIndex = mapaOn ? 0 : -1;
-  $('tab-planer').tabIndex = mapaOn ? -1 : 0;
-  $('panel-mapa').hidden = !mapaOn;
-  $('panel-planer').hidden = mapaOn;
-  if (mapaOn && map) setTimeout(function(){ map.invalidateSize(); }, 0);
+  if (ZAKLADKI.indexOf(ktora) === -1) ktora = 'mapa';
+  ZAKLADKI.forEach(function(k){
+    var wybrana = (k === ktora);
+    $('tab-' + k).setAttribute('aria-selected', String(wybrana));
+    $('tab-' + k).tabIndex = wybrana ? 0 : -1;
+    $('panel-' + k).hidden = !wybrana;
+  });
+  if (ktora === 'mapa' && map) setTimeout(function(){ map.invalidateSize(); }, 0);
+  if (ktora === 'atlas') rysujAtlas();
 }
 
 /* ================= planer ================= */
@@ -3151,6 +3754,8 @@ function start(){
   zbudujMape();
   zbudujFiltry();
   zbudujPlaner();
+  zbudujAtlas();
+  zbudujKreator();
 
   $('karta').addEventListener('click', function(e){
     var b = e.target.closest('[data-lupa]'); if (!b) return;
@@ -3167,14 +3772,17 @@ function start(){
     wybierz(b.dataset.id, 'lista');
   });
 
-  $('tab-mapa').addEventListener('click', function(){ zakladka('mapa'); });
-  $('tab-planer').addEventListener('click', function(){ zakladka('planer'); });
+  ZAKLADKI.forEach(function(k){
+    $('tab-' + k).addEventListener('click', function(){ zakladka(k); });
+  });
   document.querySelector('.tabs').addEventListener('keydown', function(e){
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
     e.preventDefault();
-    var doMapy = document.activeElement === $('tab-planer');
-    zakladka(doMapy ? 'mapa' : 'planer');
-    (doMapy ? $('tab-mapa') : $('tab-planer')).focus();
+    var i = ZAKLADKI.indexOf((document.activeElement.id || '').replace('tab-', ''));
+    if (i < 0) i = 0;
+    var j = (i + (e.key === 'ArrowRight' ? 1 : -1) + ZAKLADKI.length) % ZAKLADKI.length;
+    zakladka(ZAKLADKI[j]);
+    $('tab-' + ZAKLADKI[j]).focus();
   });
 
   document.addEventListener('keydown', function(e){
@@ -3198,7 +3806,16 @@ function start(){
   odswiez();
 
   var b = L.latLngBounds(PUNKTY.map(function(p){ return [p.lat, p.lng]; }));
-  map.fitBounds(b, { padding:[35, 35], maxZoom:12 });
+  /* Mapa jest wyższa niż to, co widać po wejściu na stronę. Bez tego punkty
+     lądują na dole kontenera, a nad zagięciem zostają puste pola pod Toruniem. */
+  dopasujWidok(b);
+}
+
+function dopasujWidok(granice){
+  var r = document.querySelector(".mapa").getBoundingClientRect();
+  var widoczne = Math.max(260, window.innerHeight - Math.max(0, r.top));
+  var dol = Math.max(40, Math.round(r.height - widoczne + 40));
+  map.fitBounds(granice, { paddingTopLeft:[40, 40], paddingBottomRight:[40, dol], maxZoom:12 });
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
