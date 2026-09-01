@@ -426,8 +426,11 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
   .mapa{ height:56vh; min-height:320px; border-right:0; border-bottom:1px solid var(--linia) }
   .bok{ height:auto; overflow:visible }
   .bok__scroll{ overflow:visible }
-  .zj{ flex-basis:100%; padding:0 0 .9rem; border-left:0; border-bottom:1px solid var(--linia); margin-bottom:.9rem }
-  .zj:last-child{ border-bottom:0; margin-bottom:0; padding-bottom:0 }
+  /* Na wąskim ekranie kafle idą po dwa w rzędzie i kontener rośnie z treścią —
+     stała wysokość ma sens tylko tam, gdzie stoją w jednej linii. */
+  .teraz__items{ height:auto; overflow:visible; display:grid; grid-template-columns:1fr 1fr; gap:.8rem 1rem }
+  .zj{ padding:0; border-left:0; border-bottom:0; margin:0 }
+  .zj__nazwa{ font-size:1.05rem }
   .stan{ margin-left:0; padding-top:0 }
   .top__in{ flex-direction:column; align-items:flex-start; gap:.5rem }
   .tabs{ align-self:flex-start }
