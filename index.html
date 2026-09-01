@@ -47,7 +47,7 @@ input[type=range]::-webkit-slider-thumb, input[type=range]::-moz-range-thumb{
 html{ -webkit-text-size-adjust:100% }
 body{
   margin:0; background:var(--papier); color:var(--atrament);
-  font-family:'Raleway',system-ui,'Segoe UI',sans-serif; font-size:16px; line-height:1.55;
+  font-family:'Raleway',system-ui,'Segoe UI',sans-serif; font-size:15px; line-height:1.55;
   font-variant-numeric:tabular-nums;
 }
 h1,h2,h3,h4{ font-family:'Bitter',Georgia,'Times New Roman',serif; font-weight:600; margin:0; line-height:1.2 }
@@ -58,7 +58,7 @@ a:hover{ color:var(--akcent) }
 :focus-visible{ outline:2px solid var(--atrament); outline-offset:2px; border-radius:2px }
 .skip{ position:absolute; left:-9999px; top:0; background:var(--ark); padding:.6rem 1rem; z-index:2000 }
 .skip:focus{ left:.5rem; top:.5rem }
-.wrap{ max-width:1560px; margin:0 auto; padding:0 clamp(.9rem,2.4vw,2rem) }
+.wrap{ max-width:1500px; margin:0 auto; padding:0 clamp(1.1rem,3vw,3rem) }
 
 /* ---------- naglowek ---------- */
 .top{ border-bottom:1px solid var(--linia); background:var(--papier) }
@@ -99,19 +99,24 @@ input[type=range]::-moz-range-thumb{ width:16px; height:16px; border-radius:50%;
       border-bottom:1px solid var(--linia) }
 .lnk:hover{ color:var(--atrament); border-bottom-color:var(--akcent) }
 
-.teraz__items{ list-style:none; margin:0; padding:0; display:flex; gap:0; flex-wrap:wrap }
+/* Stała wysokość: bez niej pasek rósł i malał przy przeciąganiu suwaka daty,
+   a cała strona skakała pod kursorem. */
+.teraz__items{ list-style:none; margin:0; padding:0; display:flex; gap:0; flex-wrap:wrap;
+               height:7.8rem; overflow:hidden; align-items:stretch }
 .zj{ flex:1 1 190px; min-width:0; padding:0 1.4rem; border-left:1px solid var(--linia);
      display:flex; flex-direction:column }
 .zj:first-child{ padding-left:0; border-left:0 }
-.zj__nazwa{ font-family:'Bitter',Georgia,serif; font-weight:600; font-size:clamp(1.2rem,1.7vw,1.6rem);
-            line-height:1.12; letter-spacing:-.015em; margin-bottom:.22rem; overflow-wrap:break-word }
-.zj__gdzie{ font-size:.9rem; color:var(--cichy); margin-bottom:.3rem }
+.zj__nazwa{ font-family:'Bitter',Georgia,serif; font-weight:600; font-size:clamp(1.15rem,1.6vw,1.5rem);
+            line-height:1.14; letter-spacing:-.015em; margin-bottom:.22rem; overflow-wrap:break-word;
+            display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden }
+.zj__gdzie{ font-size:.88rem; color:var(--cichy); margin-bottom:.3rem;
+            display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden }
 .zj__gdzie b{ color:var(--atrament); font-weight:600 }
 .zj__ile{ align-self:flex-start; margin-top:auto; font-size:.85rem; font-weight:700; padding:.18rem .5rem;
           background:var(--akcent2); color:var(--na-akcencie2); border-radius:var(--r);
           transition:background-color .28s ease, color .28s ease }
 .zj--pusto{ flex-basis:100%; padding-left:0; border-left:0 }
-.teraz__wiecej{ font-size:.85rem; color:var(--cichy); margin-top:.5rem }
+.teraz__wiecej{ font-size:.85rem; color:var(--cichy); margin-top:.5rem; min-height:1.25rem }
 
 /* ---------- filtry ---------- */
 .filtry{ border-bottom:1px solid var(--linia) }
@@ -156,12 +161,17 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 /* Mapa przykleja się do góry okna, a lista i karta płyną w normalnym biegu strony.
    Wcześniej panel boczny miał własny, łatwy do przeoczenia pasek przewijania,
    przez co zdjęcia w karcie oglądało się przez wąską szczelinę. */
-.robocze{ display:grid; grid-template-columns:minmax(0,1fr) clamp(380px,34vw,560px);
-          align-items:start; border-bottom:1px solid var(--linia) }
+.robocze{ display:grid; grid-template-columns:minmax(0,1fr) clamp(360px,32vw,520px);
+          align-items:start; border:1px solid var(--linia); border-radius:var(--r); overflow:hidden }
 .mapa{ position:sticky; top:0; min-width:0; border-right:1px solid var(--linia);
        height:clamp(340px,calc(100vh - 8px),900px) }
 #map{ position:absolute; inset:0; background:var(--papier); z-index:1 }
 .leaflet-container{ font-family:'Raleway',system-ui,sans-serif; background:var(--papier) }
+.mapa-blokada{ position:absolute; inset:0; z-index:700; border:0; background:transparent;
+       display:flex; align-items:flex-end; justify-content:center; padding-bottom:1.1rem; cursor:pointer }
+.mapa-blokada[hidden]{ display:none }
+.mapa-blokada span{ background:var(--atrament); color:var(--papier); font-size:.82rem; font-weight:600;
+       padding:.45rem .9rem; border-radius:999px; box-shadow:0 2px 8px rgba(29,43,33,.35) }
 .mapnota{ position:absolute; left:12px; right:12px; top:12px; z-index:600; background:var(--ark);
           border:1px solid var(--linia); border-left:3px solid var(--akcent2); border-radius:var(--r);
           padding:.55rem .75rem; font-size:.85rem; max-width:36rem }
@@ -410,7 +420,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
 }
 @media (max-width:860px){
   .robocze{ display:block; height:auto }
-  .mapa{ position:static; height:56vh }
+  .mapa{ position:static; height:45vh; min-height:260px }
   .listahead{ position:static }
   .karta__pas{ top:0 }
   .mapa{ height:56vh; min-height:320px; border-right:0; border-bottom:1px solid var(--linia) }
@@ -504,10 +514,13 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
     </div>
   </section>
 
-  <div class="robocze">
+  <div class="wrap"><div class="robocze">
     <div class="mapa">
       <div id="map"></div>
       <p class="mapnota" id="mapnota" hidden></p>
+      <button class="mapa-blokada" id="mapaBlokada" type="button" hidden>
+        <span>Dotknij, aby przesuwać mapę</span>
+      </button>
       <div class="legenda">
         <i></i>park kieszonkowy<br>
         <i class="d"></i>miejsce polecane przez mieszkańców<br>
@@ -527,7 +540,7 @@ select{ font:inherit; font-size:.88rem; background:var(--ark); border:1px solid 
         <div id="karta" hidden></div>
       </div>
     </div>
-  </div>
+  </div></div>
 </section>
 
 <section id="panel-planer" role="tabpanel" aria-labelledby="tab-planer" hidden>
@@ -2383,6 +2396,29 @@ function zbudujMape(){
   kafle = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19, attribution: '&copy; OpenStreetMap'
   }).addTo(map);
+
+  /* Na ekranie dotykowym mapa łapała gest przewijania strony i nie dało się jej minąć.
+     Do pierwszego dotknięcia mapa jest nieruchoma, a strona przewija się normalnie. */
+  if (window.matchMedia('(hover: none)').matches) {
+    var blok = $('mapaBlokada');
+    var uzbroj = function(){
+      map.dragging.disable();
+      if (map.tap) map.tap.disable();
+      blok.hidden = false;
+    };
+    var zwolnij = function(){
+      map.dragging.enable();
+      if (map.tap) map.tap.enable();
+      blok.hidden = true;
+    };
+    uzbroj();
+    blok.addEventListener('click', zwolnij);
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function(wpisy){
+        wpisy.forEach(function(w){ if (!w.isIntersecting && blok.hidden) uzbroj(); });
+      }, { threshold: 0 }).observe(document.querySelector('.mapa'));
+    }
+  }
 
   var wstalo = false, bledy = 0;
   kafle.on('tileload', function(){ wstalo = true; });
